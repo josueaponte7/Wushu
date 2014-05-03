@@ -1,0 +1,77 @@
+#container{
+    width: 1200px;
+    height: 550px;
+    margin: -5px auto
+}
+#header{
+    background-image: url("../img/cabeza.png");
+    border: 1px solid #555555;
+    border-radius: 7px;
+    height: 100px;
+    margin-bottom: 5px;
+    width: 1200px;
+}
+#conten{
+    width: 1200px;
+    background-color: transparent;
+    height: 650px;
+    margin-top: 45px;
+}
+#sidebar{
+    width: 250px;
+    background-color: #C8C8C8;
+    height: 650px;
+    float: left;
+    border: 1px solid #555555;
+    border-radius: 7px;
+}
+#cuerpo{
+    width: 943px;
+    background-color: #C8C8C8;
+    height: 650px;
+    float: right;
+    border: 1px solid #555555;
+    border-radius: 7px;
+}
+.divTitMiniBloque {
+    background-image: url("../img/barra.jpg");
+    border: 1px solid #555555;
+    border-radius: 7px;
+    color: #222222;
+    font-family: Verdana,Geneva,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    height: 15px;
+    margin-top: 4px;
+    text-align: center;
+    width: 96%;
+}
+.divTituloContenido {
+    background-image: url("../img/barra.jpg");
+    border: 1px solid #555555;
+    border-radius: 7px;
+    color: #222222;
+    font-family: Verdana,Geneva,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    height: 15px;
+    margin-top: 4px;
+    margin-left: 3px;
+    text-align: center;
+    width: 99%;
+}
+.divPie {
+    background-image: url("../img/123.png");
+    border: 1px solid #555555;
+    border-radius: 7px;
+    clear: both;
+    color: #000000;
+    font-family: Verdana,Geneva,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    height: 30px;
+    text-align: center;
+    vertical-align: middle;
+    width: 1200px;
+    margin-top: 5px;
+}

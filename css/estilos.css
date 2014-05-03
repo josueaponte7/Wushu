@@ -1,0 +1,16 @@
+.modificar{
+    color :#37df3c
+}
+
+.eliminar{
+    color :#FF0000;
+}
+.accion{
+    cursor: pointer;
+}
+
+.accion:hover{
+    cursor: pointer;
+    text-decoration: underline
+        
+}

@@ -1,0 +1,73 @@
+.TabMod{
+	width:99%;
+	height:443px;
+	overflow:auto;
+}
+
+.EncTabMod{
+	margin-top:5px;
+	width:99%;
+}
+
+.tdEncTabMod{
+	border:1px solid #555;
+	border-radius:3px;
+	background-color:#DDD;	
+	padding:2px;
+	font-size:12px;
+	font-weight:bold;
+	cursor:s-resize;
+}
+
+.DetTabMod{	
+	width:99%;		
+}
+
+.tdDetTabMod{
+	border-radius:3px;
+	font-size:12px;
+}
+
+.tdNER{
+	border-radius:3px;
+	color:#F00;
+	font-size:14px;
+	font-weight:bold;
+	text-align:center;
+}
+
+.OpcMod{
+	border:1px solid #555;
+	border-radius:7px;
+	width:99%;	
+	margin-top:5px;
+}
+
+.TabOpcMod{
+	width:100%;
+	margin-top:1px;
+}
+
+.tdTabOpcMod{
+	border-radius:3px;
+	border:0px solid #555;
+	width:10%;
+	height:48px;
+	text-align:center;
+	vertical-align:middle;
+	font-size:12px;
+	font-weight:bold;
+}
+
+.BotOpc{
+	width:48px;
+	height:48px;
+	cursor:pointer;
+}
+
+.BotFil{
+	width:16px;
+	height:16px;
+	cursor:pointer;
+	margin:1px;
+}

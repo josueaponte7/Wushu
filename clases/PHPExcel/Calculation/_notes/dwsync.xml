@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="Database.php" server="10.0.0.2//InvDefFW/" local="130115720250316458" remote="130177659600000000" />
+<file name="DateTime.php" server="10.0.0.2//InvDefFW/" local="130115720250536469" remote="130177659600000000" />
+<file name="Engineering.php" server="10.0.0.2//InvDefFW/" local="130115720250736479" remote="130177659600000000" />
+<file name="Exception.php" server="10.0.0.2//InvDefFW/" local="130115720251336508" remote="130177659600000000" />
+<file name="ExceptionHandler.php" server="10.0.0.2//InvDefFW/" local="130115720251526517" remote="130177659600000000" />
+<file name="Financial.php" server="10.0.0.2//InvDefFW/" local="130115720251726527" remote="130177659600000000" />
+<file name="FormulaParser.php" server="10.0.0.2//InvDefFW/" local="130115720251916536" remote="130177659600000000" />
+<file name="FormulaToken.php" server="10.0.0.2//InvDefFW/" local="130115720252116546" remote="130177659600000000" />
+<file name="Function.php" server="10.0.0.2//InvDefFW/" local="130115720252316556" remote="130177659600000000" />
+<file name="functionlist.txt" server="10.0.0.2//InvDefFW/" local="130115720252516565" remote="130177659600000000" />
+<file name="Functions.php" server="10.0.0.2//InvDefFW/" local="130115720252716575" remote="130177659600000000" />
+<file name="Logical.php" server="10.0.0.2//InvDefFW/" local="130115720253036591" remote="130177659600000000" />
+<file name="LookupRef.php" server="10.0.0.2//InvDefFW/" local="130115720253246601" remote="130177659600000000" />
+<file name="MathTrig.php" server="10.0.0.2//InvDefFW/" local="130115720253466612" remote="130177659600000000" />
+<file name="Statistical.php" server="10.0.0.2//InvDefFW/" local="130115720253686622" remote="130177659600000000" />
+<file name="TextData.php" server="10.0.0.2//InvDefFW/" local="130115720254146645" remote="130177659600000000" />
+</dwsync>
