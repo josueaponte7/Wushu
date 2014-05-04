@@ -33,82 +33,120 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
         <script type="text/javascript">
             $(document).ready(function() {
 
-            var TAatletas = $('#tbl_atletas').dataTable({
-            "iDisplayLength": 5,
+                var TAatletas = $('#tbl_atletas').dataTable({
+                    "iDisplayLength": 5,
                     "iDisplayStart": 0,
                     // "aLengthMenu": [5, 10, 20, 30, 40, 50],00
                     "bLengthChange": false,
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
-                    {"sClass": "center", "sWidth": "4%"},
-                    {"sClass": "center", "sWidth": "30%"},
-                    {"sWidth": "15%"},
-                    {"sWidth": "15%"},
-                    {"sWidth": "15%"},
-                    {"sWidth": "15%"},
-                    {"sClass": "center", "sWidth": "12%", "bSortable": false, "bSearchable": false}
+                        {"sClass": "right", "sWidth": "4%"},
+                        {"sClass": "center", "sWidth": "30%"},
+                        {"sWidth": "10%"},
+                        {"sWidth": "8%"},
+                        {"sWidth": "15%"},
+                        {"sWidth": "8%"},
+                        {"sClass": "center", "sWidth": "18%", "bSortable": false, "bSearchable": false}
                     ]
-            });
-                    /****Calendario*****/
-                    $('#fechnac').datepicker({
-            language: "es",
+                });
+                /****Calendario*****/
+                $('#fechnac').datepicker({
+                    language: "es",
                     format: 'dd/mm/yyyy',
                     startDate: "-75y",
                     endDate: "-15y",
                     autoclose: true
-            });
-                    $('#ingresar').click(function() {
+                });
+                $('#ingresar').click(function() {
 
-            var accion = $(this).text();
+                    var accion = $(this).text();
                     $('#accion').val(accion)
-                    $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
-                    if (resultado == 'exito') {
-                    alert('Registro con exito');
-                            $('input:text').val();
-                            $('input:radio#').prop('ckecked', true);
-                    } else if (resultado == 'existe') {
-                    alert('El Atleta ya esta registrado');
-                            $('#d_cedula').addClass('has-error');
-                            $('#cedula').focus();
-                            
-                            var ToltalRow = TDocente.fnGetData().length;
-                            var lastRow = TDocente.fnGetData(ToltalRow - 1);
-                            var cedula = parseInt(lastRow[1]) + 1;                
-                            var $check_cedula = '<input type="checkbox" name="cedula[]" value="' + cedula + '" />';
-                   
-                    });
-                    });
-                    $('table#tbl_atletas').on('click', '.modificar', function() {
-            var padre = $(this).closest('tr');
-                    var cedula = padre.find('td').eq(0).text();
-                    var rif = padre.find('td').eq(1).text();
-                    var pasaporte = padre.find('td').eq(2).text();
-                    var nombre = padre.find('td').eq(3).text();
-//                    var fecnac = padre.find('td').eq(4).text();
-//                    var peso = padre.find('td').eq(5).text();
+                    $('#cedula').prop('disabled',false);
+                    if (accion == 'Guardar') {
+                        $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
+                            if (resultado == 'exito') {
+                                alert('Registro con exito');
+                                $('input:text').val();
+                                $('input:radio').prop('ckecked', true);
+                                var sexo = $('input:radio[name="sexo"]:checked').val();
+                                var aso = $('#asociacion').find('option:selected').text();
+                                var modificar = '<span class="accion modificar">Modificar</span>';
+                                var eliminar = '<span class="accion eliminar">Eliminar</span>';
+                                var accion = modificar + '&nbsp;' + eliminar
+                                TAatletas.fnAddData([$('#cedula').val(), $('#nombre').val(), $('#fechnac').val(), sexo, aso, $('#peso').val(), accion]);
+                            } else if (resultado == 'existe') {
+                                alert('El Atleta ya esta registrado');
+                                $('#d_cedula').addClass('has-error');
+                                $('#cedula').focus();
+                            }
+                        });
+                    }else{
+                        var r = confirm("\u00BFDesea Modificar el Registro?");
+                        var fila = $("#fila").val();
+                            if (r == true) {
+                            var aso = $('#asociacion').find('option:selected').text();
+                                $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
+                                     if (resultado == 'exito') {
+                                        alert('Modificac\u00f3  con exito');
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fechnac').val());
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(4).html(aso);
+                                    }
+                                });
+                            } 
+                        }
+                });
+                $('table#tbl_atletas').on('click', '.modificar', function() {
 
+                    $('#fila').remove();
+                    var padre      = $(this).closest('tr');
+                    var cedula     = padre.find('td').eq(0).text();
+                    var nombre     = padre.find('td').eq(1).text();
+                    var fechnac    = padre.find('td').eq(2).text();
+                    var sexo       = padre.find('td').eq(3).text();
+                    var asociacion = padre.find('td').eq(4).text();
+                    var peso       = padre.find('td').eq(5).text();
+                    
+                    // obtener la fila a modificar
+                    var fila = padre.index();
+                     // crear el campo fila y añadir la fila
+                    var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
+                    $($fila).prependTo($('#frmatletas'));
 
+                    $('#ingresar').text('Modificar');
 
-                    $('#cedula').val(cedula);
-                    $('#rif').val(rif);
-                    $('#pasaporte').val(pasaporte);
+                    $('#cedula').val(cedula).prop('disabled',true);
                     $('#nombre').val(nombre);
-//                    $('#fecha').val(fecnac);
-//                    $('#direccion').val(direccion);
-//                    $('#peso').val(peso);
+                    $('#fechnac').val(fechnac);
+                    $('#peso').val(peso);
+                    $('input:radio[name="sexo"][value="' + sexo + '"]').prop('checked', true);
+                    $('#asociacion option:contains(' + asociacion + ')').attr('selected', true);
 
-                    $.post("../controlador/atletas.php", {nombre: nombre, accion: 'BuscarDatos'}, function(resultado) {
-                    var datos = resultado.split(";");
-                            $('#fechanac').val(datos[0]);
-                            $('#sexo').val(datos[1]);
-                            $('#email').val(datos[2]);
-                            if (datos[3] == 'activo') {
-                    $('#activo').prop('checked', true);
-                    } else {
-                    $('#inactivo').prop('checked', true);
-                    }
+
+                    $.post("../controlador/atletas.php", {cedula: cedula, accion: 'BuscarDatos'}, function(resultado) {
+                        var datos = resultado.split(";");
+                        $('#rif').val(datos[0]);
+                        $('#pasaporte').val(datos[1]);
+                        $('#telefono').val(datos[2]);
+                        $('#email').val(datos[3]);
+                        $('#direccion').val(datos[4]);
+                        $('#nivel_academico').val(datos[5]);
+                        $('#ocupacion').val(datos[6]);
+                        $('#patologias').val(datos[7]);
+                        $('#alergias').val(datos[8]);
+                        $('#tipo_sangre').val(datos[9]);
+                        $('#tal_zap').val(datos[10]);
+                        $('#tal_pan').val(datos[11]);
+                        $('#tal_cam').val(datos[12]);
+                        $('#tal_pet').val(datos[13]);
+                        $('#padre').val(datos[14]);
+                        $('#tel_padre').val(datos[15]);
+                        $('#madre').val(datos[16]);
+                        $('#tel_madre').val(datos[17]);
+                        $('input:radio[name="estatus"][value="' + datos[18] + '"]').prop('checked', true);
+
+
                     });
-            });
+                });
             });
         </script>
     </head>
@@ -359,21 +397,24 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                             FROM atletas atl
                                                             INNER JOIN asociaciones  aso ON atl.id_asociacion = aso.id_asociacion;";
                                     $resgistros = $obj_conexion->RetornarRegistros($sql);
-                                    for ($i = 0; $i < count($resgistros); $i++) {
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $resgistros[$i]['cedula'] ?></td>
-                                            <td><?php echo $resgistros[$i]['nombre'] ?></td>
-                                            <td><?php echo $resgistros[$i]['fecha'] ?></td>
-                                            <td><?php echo $resgistros[$i]['sexo'] ?></td>
-                                            <td><?php echo $resgistros[$i]['asociacion'] ?></td>
-                                            <td><?php echo $resgistros[$i]['peso'] ?></td>
-                                            <td>
-                                                <span class="accion modificar">Modificar</span>
-                                                <span class="accion eliminar">Eliminar</span>
-                                            </td>
-                                        </tr>
-                                        <?php
+                                    $es_array   = is_array($resgistros) ? TRUE : FALSE;
+                                    if ($es_array == TRUE) {
+                                        for ($i = 0; $i < count($resgistros); $i++) {
+                                            ?>
+                                            <tr>
+                                                <td align="right"><?php echo $resgistros[$i]['cedula'] ?></td>
+                                                <td><?php echo $resgistros[$i]['nombre'] ?></td>
+                                                <td><?php echo $resgistros[$i]['fecha'] ?></td>
+                                                <td><?php echo $resgistros[$i]['sexo'] ?></td>
+                                                <td><?php echo $resgistros[$i]['asociacion'] ?></td>
+                                                <td><?php echo $resgistros[$i]['peso'] ?></td>
+                                                <td>
+                                                    <span class="accion modificar">Modificar</span>
+                                                    <span class="accion eliminar">Eliminar</span>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
                                     }
                                     ?>
                                 </tbody>

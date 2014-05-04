@@ -111,7 +111,7 @@ if (isset($_POST['estatus'])) {
     $estatus = $_POST['estatus'];
 }
 
-$fechnac = $obj_conexion->formateaBD($fechnac);
+
 
 $dat_cedula   = explode('-', $cedula);
 $cedula       = $dat_cedula[1];
@@ -123,7 +123,7 @@ switch ($accion) {
         $sql_b       = "SELECT 1 FROM atletas WHERE cedula = '$cedula';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-
+            $fechnac = $obj_conexion->formateaBD($fechnac);
             $sql = "INSERT INTO atletas (nacionalidad, cedula, rif, pasaporte, nombre, fechnac, sexo, telefono, email, direccion, id_nivel,  ocupacion, id_asociacion, patologias,
                                          alergias, id_tipo, peso, tal_zap, tal_pan, tal_cam, tal_pet,  padre, tel_padre, madre, tel_madre, estatus)
                                  VALUES ('$nacionalidad', '$cedula', '$rif', '$pasaporte', '$nombre', '$fechnac', '$sexo', '$telefono', '$email', '$direccion', '$id_nivel', '$ocupacion', '$id_asociacion',
@@ -138,11 +138,64 @@ switch ($accion) {
         } else {
             echo 'Regitro existe';
         }
-        break;
-
+    break;
+    case 'Modificar':
+        $fechnac = $obj_conexion->formateaBD($fechnac);
+        $sql =" UPDATE atletas
+                SET 
+                    rif = '$rif',
+                    pasaporte = '$pasaporte',
+                    nombre = '$nombre',
+                    fechnac = '$fechnac',
+                    sexo = '$sexo',
+                    telefono = '$telefono',
+                    email = '$email',
+                    direccion = '$direccion',
+                    id_nivel = '$id_nivel',
+                    ocupacion = '$ocupacion',
+                    id_asociacion = '$id_asociacion',
+                    patologias = '$patologias',
+                    alergias = '$alergias',
+                    id_tipo = '$id_tipo',
+                    peso = '$peso',
+                    tal_zap = '$tal_zap',
+                    tal_pan = '$tal_pan',
+                    tal_cam = '$tal_cam',
+                    tal_pet = '$tal_pet',
+                    padre = '$padre',
+                    tel_padre = '$tel_padre',
+                    madre = '$madre',
+                    tel_madre = '$tel_madre',
+                    estatus = '$estatus'
+                WHERE cedula = $cedula ";
+        $resultado = $obj_conexion->_query($sql);
+        if ($resultado == TRUE) {
+            echo 'exito';
+        } else {
+            echo 'error';
+        }
+    break;
     case 'BuscarDatos':
-        $sql        = "SELECT  Email,  Direccion, EmailRep, Estatus  FROM atletas WHERE Nombre='$nombre'";
-        $resgistros = $obj_conexion->RetornarRegistros($sql);
-        echo $resgistros[0]['Email'] . ';' . $resgistros[0]['Direccion'] . ';' . $resgistros[0]['EmailRep'] . ';' . $resgistros[0]['Estatus'];
+        $sql        = "SELECT * FROM atletas WHERE cedula=$cedula";
+        $registro = $obj_conexion->RetornarRegistros($sql);
+        echo $registro[0]['rif'].';'.
+             $registro[0]['pasaporte'].';'.
+             $registro[0]['telefono'].';'.
+             $registro[0]['email'].';'.
+             $registro[0]['direccion'].';'.
+             $registro[0]['id_nivel'].';'.
+             $registro[0]['ocupacion'].';'.
+             $registro[0]['patologias'].';'.
+             $registro[0]['alergias'].';'.
+             $registro[0]['id_tipo'].';'.
+             $registro[0]['tal_zap'].';'.
+             $registro[0]['tal_pan'].';'.
+             $registro[0]['tal_cam'].';'.
+             $registro[0]['tal_pet'].';'.
+             $registro[0]['padre'].';'.
+             $registro[0]['tel_padre'].';'.
+             $registro[0]['madre'].';'.
+             $registro[0]['tel_madre'].';'.
+             $registro[0]['estatus'];
         break;
 }
