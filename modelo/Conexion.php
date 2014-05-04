@@ -70,4 +70,13 @@ class Conexion
     private function _cerrar_conn() {
         $this->_conn->close();
     }   
+    
+     public function formateaBD($fecha)
+    {
+        $fechaesp      = preg_split('/[\/-]+/', $fecha);
+        $revertirfecha = array_reverse($fechaesp);
+        $fechabd       = implode('-', $revertirfecha);
+        return $fechabd;
+    }
+    
 }

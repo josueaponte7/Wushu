@@ -13,7 +13,7 @@ $usuario = $_SESSION['usuario'];
         <style type="text/css">
              iframe {
                 width: 100%;
-                height: 950px;;
+                height: 4800px;
                 overflow: hidden;
                 border: none;
                 background-color:transparent;
@@ -85,11 +85,11 @@ $usuario = $_SESSION['usuario'];
             <div id="conten">
                 <div id="sidebar">
                     <div id="divTitMiniBloque1" class="divTitMiniBloque">Sistema</div>
-                    <img style="width:130px; height:90px;margin-left: 50px;margin-top: 15px;"   src="../img/logoinicio.png" alt="logoinicio"/>
-                    <div style="font-size: 27px;font-weight: bold;margin-top: 25px;padding: 15px;">
+                    <img style="width:130px; height:90px;margin-left: 50px;margin-top: 150px;"   src="../img/logoinicio.png" alt="logoinicio"/>
+                    <div style="font-size: 27px;font-weight: bold;margin-top: 25px;padding: 15px; text-align: center">
                         Federaci&oacute;n Venezolana de WUSHU
                     </div>
-                    <div id="divTitMiniBloque1" class="divTitMiniBloque" style="margin-top: 340px;margin-left: 5px;">Usuario:<?php echo $usuario;?></div>
+                    <div id="divTitMiniBloque1" class="divTitMiniBloque" style="margin-top: 613px;margin-left: 5px;">Usuario:<?php echo $usuario;?></div>
                 </div>
                 <div id="cuerpo">
                     <div id="divTituloContenido" class="divTituloContenido">SIFEVE-WUSHU</div>

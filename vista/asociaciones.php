@@ -104,10 +104,10 @@ $obj_conexion = new Conexion();
                                 <input type="text" class="form-control" id="email" name="email" value="" />
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;Direcci&oacute;n:</td>
+                        <td height="68" class="letras">&nbsp;&nbsp;&nbsp;Direcci&oacute;n</td>
                         <td>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="direccion" name="direccion" value="" />
+                                <textarea style="resize: none !important; height: 50px; width: 100%;" name="direccion" rows="2"  class="form-control"  id="direccion"></textarea>
                             </div>
                         </td>
                     </tr>
@@ -167,15 +167,15 @@ $obj_conexion = new Conexion();
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $sql          = "SELECT Nombre,Telefono,Representante,TelRep FROM asociaciones";
+                                    $sql          = "SELECT nombre,telefono,representante,tel_rep FROM asociaciones";
                                     $resgistros   = $obj_conexion->RetornarRegistros($sql);
                                     for ($i = 0; $i < count($resgistros); $i++) {
                                         ?>
                                         <tr>
-                                            <td><?php echo $resgistros[$i]['Nombre'] ?></td>
-                                            <td><?php echo $resgistros[$i]['Telefono'] ?></td>
-                                            <td><?php echo $resgistros[$i]['Representante'] ?></td>
-                                            <td><?php echo $resgistros[$i]['TelRep'] ?></td>
+                                            <td><?php echo $resgistros[$i]['nombre'] ?></td>
+                                            <td><?php echo $resgistros[$i]['telefono'] ?></td>
+                                            <td><?php echo $resgistros[$i]['representante'] ?></td>
+                                            <td><?php echo $resgistros[$i]['tel_rep'] ?></td>
                                             <td>
                                                 <span class="accion modificar">Modificar</span>
                                                 <span class="accion eliminar">Eliminar</span>

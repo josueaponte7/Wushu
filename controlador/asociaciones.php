@@ -58,3 +58,4 @@ switch ($accion) {
         echo $resgistros[0]['Email'].';'.$resgistros[0]['Direccion'].';'.$resgistros[0]['EmailRep'].';'.$resgistros[0]['Estatus'];
     break;
 }
+
