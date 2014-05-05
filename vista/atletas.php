@@ -49,6 +49,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                         {"sClass": "center", "sWidth": "18%", "bSortable": false, "bSearchable": false}
                     ]
                 });
+                
                 /****Calendario*****/
                 $('#fechnac').datepicker({
                     language: "es",
@@ -57,12 +58,13 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                     endDate: "-15y",
                     autoclose: true
                 });
+                
                 $('#ingresar').click(function() {
 
                     var accion = $(this).text();
                     $('#accion').val(accion)
                     $('#cedula').prop('disabled',false);
-                    if (accion == 'Guardar') {
+                    if (accion == 'Registrar') {
                         $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
                             if (resultado == 'exito') {
                                 alert('Registro con exito');
@@ -74,6 +76,10 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                 var eliminar = '<span class="accion eliminar">Eliminar</span>';
                                 var accion = modificar + '&nbsp;' + eliminar
                                 TAatletas.fnAddData([$('#cedula').val(), $('#nombre').val(), $('#fechnac').val(), sexo, aso, $('#peso').val(), accion]);
+                                $('input:text').val('');
+                                $('textarea').val('');
+                                $('select').val('0');                                
+                                
                             } else if (resultado == 'existe') {
                                 alert('El Atleta ya esta registrado');
                                 $('#d_cedula').addClass('has-error');
@@ -84,17 +90,26 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                         var r = confirm("\u00BFDesea Modificar el Registro?");
                         var fila = $("#fila").val();
                             if (r == true) {
+                            var sexo = $('input:radio[name="sexo"]:checked').val();
                             var aso = $('#asociacion').find('option:selected').text();
                                 $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
                                      if (resultado == 'exito') {
-                                        alert('Modificac\u00f3  con exito');
+                                        alert('Modificaci\u00f3n  con exito');
+                                        
                                         $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fechnac').val());
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
                                         $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(4).html(aso);
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(5).html($('#peso').val());
+                                        $('input:text').val('');
+                                        $('textarea').val('');
+                                        $('select').val('0');
+                                        $('#ingresar').text('Registrar');
                                     }
                                 });
                             } 
                         }
                 });
+                
                 $('table#tbl_atletas').on('click', '.modificar', function() {
 
                     $('#fila').remove();
@@ -102,10 +117,9 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                     var cedula     = padre.find('td').eq(0).text();
                     var nombre     = padre.find('td').eq(1).text();
                     var fechnac    = padre.find('td').eq(2).text();
-                    var sexo       = padre.find('td').eq(3).text();
-                    var asociacion = padre.find('td').eq(4).text();
+                    var sexo       = padre.find('td').eq(3).text();                   
                     var peso       = padre.find('td').eq(5).text();
-                    
+           
                     // obtener la fila a modificar
                     var fila = padre.index();
                      // crear el campo fila y añadir la fila
@@ -119,9 +133,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                     $('#fechnac').val(fechnac);
                     $('#peso').val(peso);
                     $('input:radio[name="sexo"][value="' + sexo + '"]').prop('checked', true);
-                    $('#asociacion option:contains(' + asociacion + ')').attr('selected', true);
-
-
+                   
                     $.post("../controlador/atletas.php", {cedula: cedula, accion: 'BuscarDatos'}, function(resultado) {
                         var datos = resultado.split(";");
                         $('#rif').val(datos[0]);
@@ -143,10 +155,19 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                         $('#madre').val(datos[16]);
                         $('#tel_madre').val(datos[17]);
                         $('input:radio[name="estatus"][value="' + datos[18] + '"]').prop('checked', true);
-
+                        $('#asociacion').val(datos[19]);
 
                     });
                 });
+
+                $('#limpiar').click(function() {
+                $('#cedula').prop('disabled',false);    
+                $('input:text').val('');
+                $('textarea').val('');
+                $('select').val('0');
+                $('#guardar').text('Guardar');
+                });
+
             });
         </script>
     </head>
@@ -187,7 +208,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                         <td width="106">FechaNac :</td>
                         <td width="337">
                             <div class="form-group">
-                                <input type="text" readonly class="form-control" id="fechnac" name="fechnac" value="" />
+                                <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fechnac" name="fechnac" value="" />
                             </div>
                         </td>
                         <td width="119">&nbsp;&nbsp;&nbsp;Sexo :</td>
@@ -249,7 +270,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                 <?php
                                 for ($i = 0; $i < count($resultado); $i++) {
                                     ?>
-                                    <option value="1"><?php echo $resultado[$i]['nombre'] ?> </option>
+                                        <option value="<?php echo $resultado[$i]['id_asociacion'] ?>"><?php echo $resultado[$i]['nombre'] ?></option>
                                     <?php
                                 }
                                 ?>
@@ -397,6 +418,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                             FROM atletas atl
                                                             INNER JOIN asociaciones  aso ON atl.id_asociacion = aso.id_asociacion;";
                                     $resgistros = $obj_conexion->RetornarRegistros($sql);
+                                    
                                     $es_array   = is_array($resgistros) ? TRUE : FALSE;
                                     if ($es_array == TRUE) {
                                         for ($i = 0; $i < count($resgistros); $i++) {

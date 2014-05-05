@@ -27,44 +27,134 @@ $obj_conexion = new Conexion();
                     "aLengthMenu": [5, 10, 20, 30, 40, 50],
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
-                        {"sClass": "center", "sWidth": "4%"},
-                        {"sWidth": "15%"},
-                        {"sClass": "center","sWidth": "12%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
+                        {"sClass": "center", "sWidth": "15%"},
+                        {"sWidth": "12%"},
+                        {"sClass": "center","sWidth": "4%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
                     ]
                 });
+                
                 $('#ingresar').click(function() {
-                    var usuario = $('#usuario').val();
-                    var clave = $('#clave').val();
-                    var accion = $(this).text();
 
+                    var accion = $(this).text();
                     $('#accion').val(accion)
-                    $.post("../controlador/modalidades.php", $("#frmmodalidades").serialize(), function(resultado) {
-                        if (resultado == 'exito') {
-                            alert('Registro con exito');
-                            $('input:text').val();
-                            $('input:radio#').prop('ckecked', true);
-                        } else if (resultado == 'existe') {
-                            alert('El Nombre de la Modalidad ya esta registrado');
-                            $('#d_descripcion').addClass('has-error');
-                            $('#descripcion').focus();
+                    $('#cedula').prop('disabled',false);
+                    if (accion == 'Registrar') {
+                        $.post("../controlador/modalidades.php", $("#frmmodalidades").serialize(), function(resultado) {
+                            if (resultado == 'exito') {
+                                alert('Registro con exito');
+                                $('input:text').val();
+                                $('input:radio').prop('ckecked', true);
+                                var sexo = $('input:radio[name="sexo"]:checked').val();
+                                var aso = $('#asociacion').find('option:selected').text();
+                                var modificar = '<span class="accion modificar">Modificar</span>';
+                                var eliminar = '<span class="accion eliminar">Eliminar</span>';
+                                var accion = modificar + '&nbsp;' + eliminar
+                                TAatletas.fnAddData([$('#cedula').val(), $('#nombre').val(), $('#fechnac').val(), sexo, aso, $('#peso').val(), accion]);
+                                $('input:text').val('');
+                                $('textarea').val('');
+                                $('select').val('0');                                
+                                
+                            } else if (resultado == 'existe') {
+                                alert('El Atleta ya esta registrado');
+                                $('#d_cedula').addClass('has-error');
+                                $('#cedula').focus();
+                            }
+                        });
+                    }else{
+                        var r = confirm("\u00BFDesea Modificar el Registro?");
+                        var fila = $("#fila").val();
+                            if (r == true) {
+                            var sexo = $('input:radio[name="sexo"]:checked').val();
+                            var aso = $('#asociacion').find('option:selected').text();
+                                $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
+                                     if (resultado == 'exito') {
+                                        alert('Modificaci\u00f3n  con exito');
+                                        
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fechnac').val());
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(4).html(aso);
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(5).html($('#peso').val());
+                                        $('input:text').val('');
+                                        $('textarea').val('');
+                                        $('select').val('0');
+                                        $('#ingresar').text('Registrar');
+                                    }
+                                });
+                            } 
                         }
-                    });
                 });
+                
+                                              
+//                $('#ingresar').click(function() {
+////                    var usuario = $('#usuario').val();
+////                    var clave = $('#clave').val();
+//                    var accion = $(this).text();                    
+//                    $('#accion').val(accion)
+//                    
+//                    if (accion == 'Registrar') {
+//                    $.post("../controlador/modalidades.php", $("#frmmodalidades").serialize(), function(resultado) {
+//                        if (resultado == 'exito') {
+//                            alert('Registro con exito');
+//                            $('input:text').val();
+//                            $('input:radio#').prop('ckecked', true);
+//                            var estatus = $('input:radio[name="estatus"]:checked').val();
+//                            var modificar = '<span class="accion modificar">Modificar</span>';
+//                            var eliminar = '<span class="accion eliminar">Eliminar</span>';
+//                            var accion = modificar + '&nbsp;' + eliminar
+//                            TAmodalidades.fnAddData([$('#descripcion').val(),estatus , accion]);
+//                                $('input:text').val('');
+//                                $('textarea').val('');                            
+//                            
+//                        } else if (resultado == 'existe') {
+//                            alert('El Nombre de la Modalidad ya esta registrado');
+//                            $('#d_descripcion').addClass('has-error');
+//                            $('#descripcion').focus();
+//                        }
+//                    });
+//                    
+//                    }else{
+//                        var r = confirm("\u00BFDesea Modificar el Registro?");
+//                        var fila = $("#fila").val();
+//                            if (r == true) {
+//                            var estatus = $('input:radio[name="estatus"]:checked').val();
+//                                $.post("../controlador/modalidades.php", $("#frmmodalidades").serialize(), function(resultado) {
+//                                     if (resultado == 'exito') {
+//                                        alert('Modificaci\u00f3n  con exito');
+//                                        
+//                                        $("#tbl_modalidades tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#descripcion').val());
+//                                        $("#tbl_modalidades tbody tr:eq(" + fila + ")").find("td").eq(1).html(estatus);
+//                                        $('input:text').val('');
+//                                        $('textarea').val('');
+//                                        $('#ingresar').text('Registrar');
+//                                    }
+//                                });
+//                            }                     
+//                    }                      
+//                });
                
                $('table#tbl_modalidades').on('click','.modificar',function (){
                  alert("Desea Modificar el registro");
                   var padre              = $(this).closest('tr');
                   var descripcion        = padre.find('td').eq(0).text();
+                  var estatus       = padre.find('td').eq(1).text();
+                  
+                  // obtener la fila a modificar
+                    var fila = padre.index();
+                     // crear el campo fila y añadir la fila
+                    var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
+                    $($fila).prependTo($('#frmatletas'));
+
+                    $('#ingresar').text('Modificar');
+                  
                   $('#descripcion').val(descripcion); 
+                   $('#estatus').val(estatus); 
       
                   $.post("../controlador/modalidades.php", {descripcion:descripcion,accion:'BuscarDatos'}, function(resultado) {
                       var datos = resultado.split(";");
                      
-                      if(datos[3] == 'activo'){
-                          $('#activo').prop('checked',true);
-                      }else{
-                           $('#inactivo').prop('checked',true);
-                      }
+                      var datos = resultado.split(";");
+                        $('#descripcion').val(datos[0]);
+                        $('#estatus').val(datos[1]);
                     });
               });
             });
@@ -99,7 +189,7 @@ $obj_conexion = new Conexion();
                         <td colspan="4" align="center">
                             <input type="hidden" id="accion" name="accion" value=""/>
                             <button type="button" id="ingresar" class="btn btn-info">Registrar</button>
-                            <button type="button" id="olvido" class="btn btn-info">Limpiar</button>
+                            <button type="button" id="limpiar" class="btn btn-info">Limpiar</button>
                         </td>
                     </tr>
                     <tr>
@@ -118,13 +208,13 @@ $obj_conexion = new Conexion();
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $sql          = "SELECT Descripcion,Estatus FROM modalidades";
-                                    $resgistros   = $obj_conexion->RetornarRegistros($sql);
-                                    for ($i = 0; $i < count($resgistros); $i++) {
+                                    $sql          = "SELECT descripcion,estatus FROM modalidades";
+                                    $registros   = $obj_conexion->RetornarRegistros($sql);
+                                    for ($i = 0; $i < count($registros); $i++) {
                                         ?>
                                         <tr>
-                                            <td><?php echo $resgistros[$i]['Descripcion'] ?></td>                                            
-                                            <td><?php echo $resgistros[$i]['Estatus'] ?></td>
+                                            <td><?php echo $registros[$i]['descripcion'] ?></td>                                            
+                                            <td><?php echo $registros[$i]['estatus'] ?></td>
                                             <td>
                                                 <span class="accion modificar">Modificar</span>
                                                 <span class="accion eliminar">Eliminar</span>

@@ -1,6 +1,9 @@
 <?php
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
+
+$sql        = "SELECT  id_asociacion, nombre FROM asociaciones";
+$resultado = $obj_conexion->RetornarRegistros($sql);
 ?>
 <!DOCTYPE html>
 <html>
@@ -11,7 +14,11 @@ $obj_conexion = new Conexion();
         <link href="../css/bootstrap.css" rel="stylesheet" media="screen"/>
         <link href="../css/estilos.css" rel="stylesheet" media="screen"/>
         <link href="../css/jquery.dataTables.css" rel="stylesheet" media="screen"/>
+        <link href="../css/datepicker.css" rel="stylesheet" media="screen"/>   
+
         <script type="text/javascript" src="../js/jquery-1.11.0.js"></script>
+        <script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="../js/bootstrap-datepicker.es.js"></script>  
         <script type="text/javascript" src="../js/jquery.dataTables.js"></script>
         <style type="text/css">
             body{
@@ -27,7 +34,7 @@ $obj_conexion = new Conexion();
                     "aLengthMenu": [5, 10, 20, 30, 40, 50],
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
-                        {"sClass": "center", "sWidth": "4%"},
+                        {"sClass": "center", "sWidth": "8%"},
                         {"sClass": "center", "sWidth": "30%"},
                         {"sWidth": "15%"},
                         {"sWidth": "15%"},
@@ -35,53 +42,108 @@ $obj_conexion = new Conexion();
                     ]
                 });
 
-                $('#ingresar').click(function() {
-                    var usuario = $('#usuario').val();
-                    var clave = $('#clave').val();
-                    var accion = $(this).text();
-
-                    $('#accion').val(accion)
-                    $.post("../controlador/entrenadores.php", $("#frmentrenadores").serialize(), function(resultado) {
-                        if (resultado == 'exito') {
-                            alert('Registro con exito');
-                            $('input:text').val();
-                            $('input:radio#').prop('ckecked', true);
-                        } else if (resultado == 'existe') {
-                            alert('El entrenador ya esta registrado');
-                            $('#d_cedula').addClass('has-error');
-                            $('#cedula').focus();
-                        }
-                    });
+                /****Calendario*****/
+                $('#fecha').datepicker({
+                    language: "es",
+                    format: 'dd/mm/yyyy',
+                    startDate: "-75y",
+                    endDate: "-15y",
+                    autoclose: true
                 });
+                
+                $('#ingresar').click(function() {
 
+                    var accion = $(this).text();
+                    $('#accion').val(accion)
+                    $('#cedula').prop('disabled',false);
+                    if (accion == 'Registrar') {
+                        $.post("../controlador/entrenadores.php", $("#frmentrenadores").serialize(), function(resultado) {
+                            if (resultado == 'exito') {
+                                alert('Registro con exito');
+                                $('input:text').val();
+                                $('input:radio').prop('ckecked', true);
+                                
+                                var sexo = $('input:radio[name="sexo"]:checked').val();
+                                var modificar = '<span class="accion modificar">Modificar</span>';
+                                var eliminar = '<span class="accion eliminar">Eliminar</span>';
+                                var accion = modificar + '&nbsp;' + eliminar
+                                TAentrenadores.fnAddData([$('#cedula').val(), $('#nombre').val(), $('#telefono').val(), sexo, accion]);
+                                $('input:text').val('');
+                                $('textarea').val('');
+                                $('select').val('0');                                
+                                
+                            } else if (resultado == 'existe') {
+                                alert('El Entrenador ya esta registrado');
+                                $('#d_cedula').addClass('has-error');
+                                $('#cedula').focus();
+                            }
+                        });
+                    }else{
+                        var r = confirm("\u00BFDesea Modificar el Registro?");
+                        var fila = $("#fila").val();
+                            if (r == true) {
+                            var sexo = $('input:radio[name="sexo"]:checked').val();
+                                $.post("../controlador/entrenadores.php", $("#frmentrenadores").serialize(), function(resultado) {
+                                     if (resultado == 'exito') {
+                                        alert('Modificaci\u00f3n  con exito');
+                                        
+                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#cedula').val());
+                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#nombre').val());
+                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#telefono').val());
+                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
+                                    $('input:text').val('');
+                                    $('textarea').val('');
+                                    $('select').val('0');
+                                    $('#ingresar').text('Registrar');
+                                    }
+                                });
+                            } 
+                        }
+                });
                 $('table#tbl_entrenadores').on('click', '.modificar', function() {
-                    var padre = $(this).closest('tr');
-                    var nombre = padre.find('td').eq(0).text();
-                    var cedula = padre.find('td').eq(1).text();
-                    var sexo = padre.find('td').eq(2).text();
-                    var telefono = padre.find('td').eq(3).text();
-                    var email = padre.find('td').eq(3).text();
+
+                    $('#fila').remove();
+                    var padre      = $(this).closest('tr');
+                    var cedula     = padre.find('td').eq(0).text();
+                    var nombre     = padre.find('td').eq(1).text();
+                    var telefono   = padre.find('td').eq(2).text();
+                    var sexo       = padre.find('td').eq(3).text(); 
+           
+                    // obtener la fila a modificar
+                    var fila = padre.index();
+                     // crear el campo fila y añadir la fila
+                    var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
+                    $($fila).prependTo($('#frmentrenadores'));
+
+                    $('#ingresar').text('Modificar');
+
+                    $('#cedula').val(cedula).prop('disabled',true);
                     $('#nombre').val(nombre);
-                    $('#cedula').val(cedula);
-                    $('#sexo').val(sexo);
                     $('#telefono').val(telefono);
-                    $('#email').val(email);
+                    $('input:radio[name="sexo"][value="' + sexo + '"]').prop('checked', true);
+                   
                     $.post("../controlador/entrenadores.php", {cedula: cedula, accion: 'BuscarDatos'}, function(resultado) {
                         var datos = resultado.split(";");
-                        $('#direccion').val(datos[0]);
-                        $('#nacionalidad').val(datos[1]);
-                        $('#asociacion').val(datos[2]);
-                        $('#fecha').val(datos[2]);
-                        $('#rif').val(datos[2]);
-
-                        if (datos[3] == 'activo') {
-                            $('#activo').prop('checked', true);
-                        } else {
-                            $('#inactivo').prop('checked', true);
-                        }
+                        $('#nacionalidad').val(datos[0]);
+                        $('#rif').val(datos[1]);
+                        $('#email').val(datos[2]); 
+                        $('#asociacion').val(datos[3]);
+                        $('#fecha').val(datos[4]);
+                        $('input:radio[name="estatus"][value="' + datos[5] + '"]').prop('checked', true);
+                        $('#direccion').val(datos[6]);
                     });
                 });
+
+                $('#limpiar').click(function() {
+                    $('#cedula').prop('disabled', false);
+                    $('input:text').val('');
+                    $('textarea').val('');
+                    $('select').val('0');
+                    $('#guardar').text('Guardar');
+                });
+
             });
+
         </script>
     </head>
     <body>
@@ -89,42 +151,42 @@ $obj_conexion = new Conexion();
             <form id="frmentrenadores">
                 <table width="912" border="0" align="center">
                     <tr>
-                        <td width="79">Nacionalidad:</td>
+                        <td>Nacionalidad:</td>
                         <td width="351">
-                            <select name="asociacion" class="form-control" id="asociacion">
+                            <select name="nacionalidad" class="form-control" id="nacionalidad">
                                 <option value="0">Seleccione</option>
-                                <option value="1">VENEZOLANO</option>
-                                <option value="2">EXTRAJERO</option>
+                                <option value="V">VENEZOLANO</option>
+                                <option value="E">EXTRAJERO</option>
                             </select>
                         </td>
                         <td width="88">&nbsp;&nbsp;&nbsp;C&eacute;dula:</td>
                         <td width="376">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="" />
+                                <input type="text" style="background-color: #ffffff"  class="form-control" id="cedula" name="cedula" value="" />
                             </div>
                         </td>
                     </tr>
 
                     <tr>
-                        <td width="79">Nombres:</td>
-                        <td width="351">
-                            <div id="d_cedula" class="form-group">
-                                <input type="text" class="form-control" id="cedula" name="cedula" value="" />
-                            </div>
-                        </td>
-                        <td width="88">&nbsp;&nbsp;&nbsp;Rif:</td>
+                        <td>Rif:</td>
                         <td width="376">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="" />
+                                <input type="text" class="form-control" id="rif" name="rif" value="" />
                             </div>
                         </td>
+                        <td width="79">&nbsp;&nbsp;&nbsp;Nombres:</td>
+                        <td width="351">
+                            <div id="d_cedula" class="form-group">
+                                <input type="text" class="form-control" id="nombre" name="nombre" value="" />
+                            </div>
+                        </td>                        
                     </tr>
                     <tr>
-                        <td width="79">Sexo:</td>
+                        <td>Sexo:</td>
                         <td width="351">
                             <div class="form-group">
-                                <input type="radio" name="sexo" value="f"   id="f" checked="checked" />Femenino
-                                <input type="radio" name="sexo" value="m" id="m" />Masculino
+                                <input type="radio" name="sexo" value="Masculino"   id="sexo" checked="checked" />Masculino
+                                <input type="radio" name="sexo" value="Femenino" id="sexo" />Femenino
                             </div>
                         </td>
                         <td>&nbsp;&nbsp;&nbsp;Email:</td>
@@ -142,33 +204,39 @@ $obj_conexion = new Conexion();
                                 <input type="text" class="form-control" id="telefono" name="telefono" value="" />
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;Asociaci&oacute;n :</td>
+                        <td>&nbsp;&nbsp;&nbsp;Asociaci&oacute;n:</td>
                         <td>
                             <select name="asociacion" class="form-control" id="asociacion">
                                 <option value="0">Seleccione</option>
-                                <option value="1">Aragua</option>
-                                <option value="2">Carabobo</option>
+                                <?php
+                                for ($i = 0; $i < count($resultado); $i++) {
+                                    ?>
+                                    <option value="<?php echo $resultado[$i]['id_asociacion'] ?>"><?php echo $resultado[$i]['nombre'] ?></option>
+                                    <?php
+                                }
+                                ?>
+
                             </select>
                         </td>                        
                     </tr>
 
                     <tr>
                         <td>Fecha:</td>
-                        <td>
+                        <td width="337">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="fecha" name="fecha" value="" />
+                                <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fecha" name="fecha" value="" />
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;Estatus:</td>
+                        <td height="45">&nbsp;&nbsp;&nbsp;Estatus:</td>
                         <td>
                             <div class="form-group">
-                                <input type="radio" name="estatus" value="activo"   id="activo" checked="checked" />Activo
-                                <input type="radio" name="estatus" value="inactivo" id="inactivo" />Inactivo
+                                <input type="radio" name="estatus" value="activo"   id="estatus" checked="checked" />Activo
+                                <input type="radio" name="estatus" value="inactivo" id="estatus" />Inactivo
                             </div>
-                        </td>                      
+                        </td>                     
                     </tr>
                     <tr height="60">
-                        <td height="68" class="letras">Direcci&oacute;n</td>
+                        <td>Direcci&oacute;n</td>
                         <td colspan="4">
                             <div class="form-group">
                                 <textarea style="resize: none !important;" name="direccion" rows="2"  class="form-control"  id="direccion"></textarea>
@@ -179,7 +247,7 @@ $obj_conexion = new Conexion();
                         <td colspan="4" align="center">
                             <input type="hidden" id="accion" name="accion" value=""/>
                             <button type="button" id="ingresar" class="btn btn-info">Registrar</button>
-                            <button type="button" id="olvido" class="btn btn-info">Limpiar</button>
+                            <button type="button" id="limpiar" class="btn btn-info">Limpiar</button>
                         </td>
                     </tr>
                     <tr>
@@ -192,28 +260,36 @@ $obj_conexion = new Conexion();
                                     <tr>
                                         <th>C&eacute;dula</th>
                                         <th>Nombre</th>
-                                        <th>tel&eacute;fono</th>
+                                        <th>Tel&eacute;fono</th>
                                         <th>Sexo</th>
                                         <th>Acci&oacute;n</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $sql          = "SELECT Nacionalidad,Asociacion,Fecha,Estatus,RIF FROM entrenadores";
-                                    $resgistros   = $obj_conexion->RetornarRegistros($sql);
-                                    for ($i = 0; $i < count($resgistros); $i++) {
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $resgistros[$i]['Nacionalidad'] ?></td>
-                                            <td><?php echo $resgistros[$i]['Asociacion'] ?></td>
-                                            <td><?php echo $resgistros[$i]['Fecha'] ?></td>
-                                            <td><?php echo $resgistros[$i]['RIF'] ?></td>
-                                            <td>
-                                                <span class="accion modificar">Modificar</span>
-                                                <span class="accion eliminar">Eliminar</span>
-                                            </td>
-                                        </tr>
-                                        <?php
+                                    $sql        = "SELECT CONCAT_WS('-', nacionalidad, cedula) AS cedula, 
+                                                                          nombre, 
+                                                                          telefono,
+                                                                          sexo
+                                                                 FROM entrenadores;";
+                                    $resgistros = $obj_conexion->RetornarRegistros($sql);
+
+                                    $es_array = is_array($resgistros) ? TRUE : FALSE;
+                                    if ($es_array == TRUE) {
+                                        for ($i = 0; $i < count($resgistros); $i++) {
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $resgistros[$i]['cedula'] ?></td>
+                                                <td><?php echo $resgistros[$i]['nombre'] ?></td>
+                                                <td><?php echo $resgistros[$i]['telefono'] ?></td>
+                                                <td><?php echo $resgistros[$i]['sexo'] ?></td>
+                                                <td>
+                                                    <span class="accion modificar">Modificar</span>
+                                                    <span class="accion eliminar">Eliminar</span>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
                                     }
                                     ?>
                                 </tbody>

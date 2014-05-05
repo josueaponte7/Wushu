@@ -36,14 +36,15 @@ if (isset($_POST['estatus'])) {
 
 switch ($accion) {
     case 'Registrar':
-        $sql_b       = "SELECT 1 FROM asociaciones WHERE Nombre = '$nombre';";
+        $sql_b       = "SELECT 1 FROM asociaciones WHERE nombre = '$nombre';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-            $sql       = "INSERT INTO asociaciones(Nombre,Telefono,Email,Direccion,Representante,TelRep,EmailRep, Estatus)
-                VALUES ('$nombre','$telefono','$email','$direccion','$representante','$tel_rep','$email_rep','$estatus');";
-            $resultado = $obj_conexion->_query($sql);
+            $sql       = "INSERT INTO asociaciones (nombre, telefono, email, direccion, representante, tel_rep, email_rep, estatus)
+                                            VALUES ('$nombre', '$telefono','$email', '$direccion','$representante', '$tel_rep', '$email_rep', '$estatus');";
+            
+         $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {
-                echo 'Registro con exito';
+                echo 'exito';
             } else {
                 echo 'error';
             }
@@ -51,11 +52,32 @@ switch ($accion) {
             echo 'Regitro existe';
         }
         break;
+    
+    case 'Modificar':
+      $sql = "UPDATE asociaciones
+                SET 
+                  nombre = '$nombre',
+                  telefono = '$telefono',
+                  email = '$email',
+                  direccion = '$direccion',
+                  representante = '$representante',
+                  tel_rep = '$tel_rep',
+                  email_rep = '$email_rep',
+                  estatus = '$estatus'
+                WHERE nombre = '$nombre';";
+        
+        $resultado = $obj_conexion->_query($sql);
+        if ($resultado == TRUE) {
+            echo 'exito';
+        } else {
+            echo 'error';
+        }
+    break;
 
     case 'BuscarDatos':
-        $sql          = "SELECT  Email,  Direccion, EmailRep, Estatus  FROM asociaciones WHERE Nombre='$nombre'";
-        $resgistros   = $obj_conexion->RetornarRegistros($sql);
-        echo $resgistros[0]['Email'].';'.$resgistros[0]['Direccion'].';'.$resgistros[0]['EmailRep'].';'.$resgistros[0]['Estatus'];
+        $sql          = "SELECT * FROM asociaciones WHERE nombre='$nombre'";
+        $registros   = $obj_conexion->RetornarRegistros($sql);
+        echo $registros[0]['email'].';'.$registros[0]['direccion'].';'.$registros[0]['email_rep'].';'.$registros[0]['estatus'];
     break;
 }
 

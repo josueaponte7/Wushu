@@ -139,9 +139,10 @@ switch ($accion) {
             echo 'Regitro existe';
         }
     break;
+    
     case 'Modificar':
         $fechnac = $obj_conexion->formateaBD($fechnac);
-        $sql =" UPDATE atletas
+       $sql =" UPDATE atletas
                 SET 
                     rif = '$rif',
                     pasaporte = '$pasaporte',
@@ -168,6 +169,7 @@ switch ($accion) {
                     tel_madre = '$tel_madre',
                     estatus = '$estatus'
                 WHERE cedula = $cedula ";
+   
         $resultado = $obj_conexion->_query($sql);
         if ($resultado == TRUE) {
             echo 'exito';
@@ -175,6 +177,7 @@ switch ($accion) {
             echo 'error';
         }
     break;
+    
     case 'BuscarDatos':
         $sql        = "SELECT * FROM atletas WHERE cedula=$cedula";
         $registro = $obj_conexion->RetornarRegistros($sql);
@@ -196,6 +199,7 @@ switch ($accion) {
              $registro[0]['tel_padre'].';'.
              $registro[0]['madre'].';'.
              $registro[0]['tel_madre'].';'.
-             $registro[0]['estatus'];
+             $registro[0]['estatus'].';'.
+             $registro[0]['id_asociacion'];
         break;
 }

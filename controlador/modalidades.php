@@ -19,11 +19,11 @@ if (isset($_POST['estatus'])) {
 
 switch ($accion) {
     case 'Registrar':
-        $sql_b       = "SELECT 1 FROM modalidades WHERE Descripcion = '$Descripcion';";
+        $sql_b       = "SELECT 1 FROM modalidades WHERE descripcion = '$descripcion';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-            $sql       = "INSERT INTO modalidades(Descripcion,Estatus)
-                VALUES ('$Descripcion','$estatus');";
+            $sql       = "INSERT INTO modalidades(descripcion,estatus)
+                                          VALUES ('$descripcion','$estatus');";
             $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {
                 echo 'exito';
@@ -36,8 +36,9 @@ switch ($accion) {
         break;
 
     case 'BuscarDatos':
-        $sql          = "SELECT  Descripcion,   Estatus  FROM modalidades WHERE Descripcion='$Descripcion'";
-        $resgistros   = $obj_conexion->RetornarRegistros($sql);
-        echo $resgistros[0]['Estatus'];
+        $sql          = "SELECT  descripcion,   estatus  FROM modalidades WHERE descripcion='$descripcion'";
+        $registros   = $obj_conexion->RetornarRegistros($sql);
+        echo $registros[0]['descripcion'];
+             $registros[0]['estatus'];
     break;
 }
