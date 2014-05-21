@@ -2,7 +2,7 @@
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
-$sql        = "SELECT  id_asociacion, nombre FROM asociaciones";
+$sql       = "SELECT  id_asociacion, nombre FROM asociaciones";
 $resultado = $obj_conexion->RetornarRegistros($sql);
 ?>
 <!DOCTYPE html>
@@ -17,6 +17,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
         <link href="../css/datepicker.css" rel="stylesheet" media="screen"/>   
 
         <script type="text/javascript" src="../js/jquery-1.11.0.js"></script>
+        <script type="text/javascript" src="../js/validarcampos.js"></script>
         <script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
         <script type="text/javascript" src="../js/bootstrap-datepicker.es.js"></script>  
         <script type="text/javascript" src="../js/jquery.dataTables.js"></script>
@@ -42,6 +43,18 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                     ]
                 });
 
+                var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
+                $('#nombre').validar(letra);
+
+                var numero = '0123456789';
+                $('#cedula').validar(numero);
+
+                var numero = '0123456789-ve';
+                $('#rif').validar(numero);
+
+                var numero = '0123456789-';
+                $('#telefono').validar(numero);
+
                 /****Calendario*****/
                 $('#fecha').datepicker({
                     language: "es",
@@ -50,19 +63,19 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                     endDate: "-15y",
                     autoclose: true
                 });
-                
+
                 $('#ingresar').click(function() {
 
                     var accion = $(this).text();
                     $('#accion').val(accion)
-                    $('#cedula').prop('disabled',false);
+                    $('#cedula').prop('disabled', false);
                     if (accion == 'Registrar') {
                         $.post("../controlador/entrenadores.php", $("#frmentrenadores").serialize(), function(resultado) {
                             if (resultado == 'exito') {
                                 alert('Registro con exito');
                                 $('input:text').val();
                                 $('input:radio').prop('ckecked', true);
-                                
+
                                 var sexo = $('input:radio[name="sexo"]:checked').val();
                                 var modificar = '<span class="accion modificar">Modificar</span>';
                                 var eliminar = '<span class="accion eliminar">Eliminar</span>';
@@ -70,23 +83,23 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                 TAentrenadores.fnAddData([$('#cedula').val(), $('#nombre').val(), $('#telefono').val(), sexo, accion]);
                                 $('input:text').val('');
                                 $('textarea').val('');
-                                $('select').val('0');                                
-                                
+                                $('select').val('0');
+
                             } else if (resultado == 'existe') {
                                 alert('El Entrenador ya esta registrado');
                                 $('#d_cedula').addClass('has-error');
                                 $('#cedula').focus();
                             }
                         });
-                    }else{
+                    } else {
                         var r = confirm("\u00BFDesea Modificar el Registro?");
                         var fila = $("#fila").val();
-                            if (r == true) {
+                        if (r == true) {
                             var sexo = $('input:radio[name="sexo"]:checked').val();
-                                $.post("../controlador/entrenadores.php", $("#frmentrenadores").serialize(), function(resultado) {
-                                     if (resultado == 'exito') {
-                                        alert('Modificaci\u00f3n  con exito');
-                                        
+                            $.post("../controlador/entrenadores.php", $("#frmentrenadores").serialize(), function(resultado) {
+                                if (resultado == 'exito') {
+                                    alert('Modificaci\u00f3n  con exito');
+
                                     $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#cedula').val());
                                     $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#nombre').val());
                                     $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#telefono').val());
@@ -95,38 +108,39 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                     $('textarea').val('');
                                     $('select').val('0');
                                     $('#ingresar').text('Registrar');
-                                    }
-                                });
-                            } 
+                                }
+                            });
                         }
+                    }
                 });
                 $('table#tbl_entrenadores').on('click', '.modificar', function() {
 
                     $('#fila').remove();
-                    var padre      = $(this).closest('tr');
-                    var cedula     = padre.find('td').eq(0).text();
-                    var nombre     = padre.find('td').eq(1).text();
-                    var telefono   = padre.find('td').eq(2).text();
-                    var sexo       = padre.find('td').eq(3).text(); 
-           
+                    var padre = $(this).closest('tr');
+                    var cedula = padre.find('td').eq(0).text();
+                    var nombre = padre.find('td').eq(1).text();
+                    var telefono = padre.find('td').eq(2).text();
+                    var sexo = padre.find('td').eq(3).text();
+
                     // obtener la fila a modificar
                     var fila = padre.index();
-                     // crear el campo fila y añadir la fila
+                    
+                    // crear el campo fila y añadir la fila
                     var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
                     $($fila).prependTo($('#frmentrenadores'));
 
                     $('#ingresar').text('Modificar');
 
-                    $('#cedula').val(cedula).prop('disabled',true);
+                    $('#cedula').val(cedula).prop('disabled', true);
                     $('#nombre').val(nombre);
                     $('#telefono').val(telefono);
                     $('input:radio[name="sexo"][value="' + sexo + '"]').prop('checked', true);
-                   
+
                     $.post("../controlador/entrenadores.php", {cedula: cedula, accion: 'BuscarDatos'}, function(resultado) {
                         var datos = resultado.split(";");
                         $('#nacionalidad').val(datos[0]);
                         $('#rif').val(datos[1]);
-                        $('#email').val(datos[2]); 
+                        $('#email').val(datos[2]);
                         $('#asociacion').val(datos[3]);
                         $('#fecha').val(datos[4]);
                         $('input:radio[name="estatus"][value="' + datos[5] + '"]').prop('checked', true);
@@ -139,7 +153,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                     $('input:text').val('');
                     $('textarea').val('');
                     $('select').val('0');
-                    $('#guardar').text('Guardar');
+                    $('#ingresar').text('Guardar');
                 });
 
             });
@@ -162,7 +176,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                         <td width="88">&nbsp;&nbsp;&nbsp;C&eacute;dula:</td>
                         <td width="376">
                             <div class="form-group">
-                                <input type="text" style="background-color: #ffffff"  class="form-control" id="cedula" name="cedula" value="" />
+                                <input type="text" style="background-color: #ffffff"  class="form-control" id="cedula" name="cedula" value="" maxlength="8" />
                             </div>
                         </td>
                     </tr>
@@ -171,7 +185,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                         <td>Rif:</td>
                         <td width="376">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="rif" name="rif" value="" />
+                                <input type="text" class="form-control" id="rif" name="rif" value="" maxlength="12"/>
                             </div>
                         </td>
                         <td width="79">&nbsp;&nbsp;&nbsp;Nombres:</td>
@@ -201,7 +215,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                         <td>Tel&eacute;fonos:</td>
                         <td>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="telefono" name="telefono" value="" />
+                                <input type="text" class="form-control" id="telefono" name="telefono" value="" maxlength="12"/>
                             </div>
                         </td>
                         <td>&nbsp;&nbsp;&nbsp;Asociaci&oacute;n:</td>
@@ -215,7 +229,6 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                     <?php
                                 }
                                 ?>
-
                             </select>
                         </td>                        
                     </tr>

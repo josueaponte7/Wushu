@@ -15,30 +15,43 @@ if (isset($_POST['estatus'])) {
     $estatus = $_POST['estatus'];
 }
 
-
-
 switch ($accion) {
     case 'Registrar':
         $sql_b       = "SELECT 1 FROM modalidades WHERE descripcion = '$descripcion';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-            $sql       = "INSERT INTO modalidades(descripcion,estatus)
-                                          VALUES ('$descripcion','$estatus');";
+            $sql = "INSERT INTO modalidades(descripcion,estatus) VALUES ('$descripcion','$estatus');";
+
             $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {
                 echo 'exito';
             } else {
                 echo 'error';
             }
-        }else{
+        } else {
             echo 'existe';
         }
         break;
 
+    case 'Modificar':
+        $sql = "UPDATE modalidades
+                SET 
+                  descripcion = '$descripcion',
+                  estatus = '$estatus'
+                WHERE descripcion = '$descripcion';";
+
+        $resultado = $obj_conexion->_query($sql);
+        if ($resultado == TRUE) {
+            echo 'exito';
+        } else {
+            echo 'error';
+        }
+        break;
+
     case 'BuscarDatos':
-        $sql          = "SELECT  descripcion,   estatus  FROM modalidades WHERE descripcion='$descripcion'";
-        $registros   = $obj_conexion->RetornarRegistros($sql);
-        echo $registros[0]['descripcion'];
-             $registros[0]['estatus'];
-    break;
+        $sql       = "SELECT  descripcion,   estatus  FROM modalidades WHERE descripcion='$descripcion'";
+        $registros = $obj_conexion->RetornarRegistros($sql);
+        echo $registros[0]['descripcion'] . ';' .
+        $registros[0]['estatus'];
+        break;
 }

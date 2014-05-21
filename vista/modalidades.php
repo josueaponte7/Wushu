@@ -11,7 +11,9 @@ $obj_conexion = new Conexion();
         <link href="../css/bootstrap.css" rel="stylesheet" media="screen"/>
         <link href="../css/estilos.css" rel="stylesheet" media="screen"/>
         <link href="../css/jquery.dataTables.css" rel="stylesheet" media="screen"/>
+
         <script type="text/javascript" src="../js/jquery-1.11.0.js"></script>
+        <script type="text/javascript" src="../js/validarcampos.js"></script>
         <script type="text/javascript" src="../js/jquery.dataTables.js"></script>
         <style type="text/css">
             body{
@@ -29,136 +31,96 @@ $obj_conexion = new Conexion();
                     "aoColumns": [
                         {"sClass": "center", "sWidth": "15%"},
                         {"sWidth": "12%"},
-                        {"sClass": "center","sWidth": "4%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
+                        {"sClass": "center", "sWidth": "4%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
                     ]
                 });
-                
+
+                var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
+                $('#descripcion').validar(letra);
+
                 $('#ingresar').click(function() {
 
                     var accion = $(this).text();
                     $('#accion').val(accion)
-                    $('#cedula').prop('disabled',false);
+                    $('#descripcion').prop('disabled', false);
                     if (accion == 'Registrar') {
                         $.post("../controlador/modalidades.php", $("#frmmodalidades").serialize(), function(resultado) {
                             if (resultado == 'exito') {
                                 alert('Registro con exito');
                                 $('input:text').val();
                                 $('input:radio').prop('ckecked', true);
-                                var sexo = $('input:radio[name="sexo"]:checked').val();
-                                var aso = $('#asociacion').find('option:selected').text();
+
+                                var estatus = $('input:radio[name="estatus"]:checked').val();
                                 var modificar = '<span class="accion modificar">Modificar</span>';
                                 var eliminar = '<span class="accion eliminar">Eliminar</span>';
                                 var accion = modificar + '&nbsp;' + eliminar
-                                TAatletas.fnAddData([$('#cedula').val(), $('#nombre').val(), $('#fechnac').val(), sexo, aso, $('#peso').val(), accion]);
+                                TAmodalidades.fnAddData([$('#descripcion').val(), estatus, accion]);
                                 $('input:text').val('');
                                 $('textarea').val('');
-                                $('select').val('0');                                
-                                
+
                             } else if (resultado == 'existe') {
-                                alert('El Atleta ya esta registrado');
-                                $('#d_cedula').addClass('has-error');
-                                $('#cedula').focus();
+                                alert('El Nombre de la Modalidad ya esta registrado');
+                                $('#d_descripcion').addClass('has-error');
+                                $('#descripcion').focus();
                             }
                         });
-                    }else{
+                    } else {
                         var r = confirm("\u00BFDesea Modificar el Registro?");
                         var fila = $("#fila").val();
-                            if (r == true) {
-                            var sexo = $('input:radio[name="sexo"]:checked').val();
-                            var aso = $('#asociacion').find('option:selected').text();
-                                $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
-                                     if (resultado == 'exito') {
-                                        alert('Modificaci\u00f3n  con exito');
-                                        
-                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fechnac').val());
-                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
-                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(4).html(aso);
-                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(5).html($('#peso').val());
-                                        $('input:text').val('');
-                                        $('textarea').val('');
-                                        $('select').val('0');
-                                        $('#ingresar').text('Registrar');
-                                    }
-                                });
-                            } 
+                        if (r == true) {
+
+                            var estatus = $('input:radio[name="estatus"]:checked').val();
+
+                            $.post("../controlador/modalidades.php", $("#frmmodalidades").serialize(), function(resultado) {
+                                if (resultado == 'exito') {
+                                    alert('Modificaci\u00f3n  con exito');
+
+                                    $("#tbl_modalidades tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#descripcion').val());
+                                    $("#tbl_modalidades tbody tr:eq(" + fila + ")").find("td").eq(1).html(estatus);
+                                    $('input:text').val('');
+                                    $('textarea').val('');
+                                    $('#ingresar').text('Registrar');
+                                }
+                            });
                         }
+                    }
                 });
-                
-                                              
-//                $('#ingresar').click(function() {
-////                    var usuario = $('#usuario').val();
-////                    var clave = $('#clave').val();
-//                    var accion = $(this).text();                    
-//                    $('#accion').val(accion)
-//                    
-//                    if (accion == 'Registrar') {
-//                    $.post("../controlador/modalidades.php", $("#frmmodalidades").serialize(), function(resultado) {
-//                        if (resultado == 'exito') {
-//                            alert('Registro con exito');
-//                            $('input:text').val();
-//                            $('input:radio#').prop('ckecked', true);
-//                            var estatus = $('input:radio[name="estatus"]:checked').val();
-//                            var modificar = '<span class="accion modificar">Modificar</span>';
-//                            var eliminar = '<span class="accion eliminar">Eliminar</span>';
-//                            var accion = modificar + '&nbsp;' + eliminar
-//                            TAmodalidades.fnAddData([$('#descripcion').val(),estatus , accion]);
-//                                $('input:text').val('');
-//                                $('textarea').val('');                            
-//                            
-//                        } else if (resultado == 'existe') {
-//                            alert('El Nombre de la Modalidad ya esta registrado');
-//                            $('#d_descripcion').addClass('has-error');
-//                            $('#descripcion').focus();
-//                        }
-//                    });
-//                    
-//                    }else{
-//                        var r = confirm("\u00BFDesea Modificar el Registro?");
-//                        var fila = $("#fila").val();
-//                            if (r == true) {
-//                            var estatus = $('input:radio[name="estatus"]:checked').val();
-//                                $.post("../controlador/modalidades.php", $("#frmmodalidades").serialize(), function(resultado) {
-//                                     if (resultado == 'exito') {
-//                                        alert('Modificaci\u00f3n  con exito');
-//                                        
-//                                        $("#tbl_modalidades tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#descripcion').val());
-//                                        $("#tbl_modalidades tbody tr:eq(" + fila + ")").find("td").eq(1).html(estatus);
-//                                        $('input:text').val('');
-//                                        $('textarea').val('');
-//                                        $('#ingresar').text('Registrar');
-//                                    }
-//                                });
-//                            }                     
-//                    }                      
-//                });
-               
-               $('table#tbl_modalidades').on('click','.modificar',function (){
-                 alert("Desea Modificar el registro");
-                  var padre              = $(this).closest('tr');
-                  var descripcion        = padre.find('td').eq(0).text();
-                  var estatus       = padre.find('td').eq(1).text();
-                  
-                  // obtener la fila a modificar
+
+                $('table#tbl_modalidades').on('click', '.modificar', function() {
+
+                    var padre = $(this).closest('tr');
+                    var descripcion = padre.find('td').eq(0).text();
+                    var estatus = padre.find('td').eq(1).text();
+
+                    // obtener la fila a modificar
                     var fila = padre.index();
-                     // crear el campo fila y añadir la fila
+
+                    // crear el campo fila y añadir la fila
                     var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
-                    $($fila).prependTo($('#frmatletas'));
+                    $($fila).prependTo($('#frmmodalidades'));
 
                     $('#ingresar').text('Modificar');
-                  
-                  $('#descripcion').val(descripcion); 
-                   $('#estatus').val(estatus); 
-      
-                  $.post("../controlador/modalidades.php", {descripcion:descripcion,accion:'BuscarDatos'}, function(resultado) {
-                      var datos = resultado.split(";");
-                     
-                      var datos = resultado.split(";");
+
+                    //$('#descripcion').val(descripcion);
+                    $('#descripcion').val(descripcion).prop('disabled', true);
+                    $('input:radio[name="estatus"][value="' + estatus + '"]').prop('checked', true);
+
+                    $.post("../controlador/modalidades.php", {descripcion: descripcion, accion: 'BuscarDatos'}, function(resultado) {
+
+                        var datos = resultado.split(";");
                         $('#descripcion').val(datos[0]);
-                        $('#estatus').val(datos[1]);
+                        $('input:radio[name="estatus"][value="' + datos[1] + '"]').prop('checked', true);
                     });
-              });
+                });
+
+                $('#limpiar').click(function() {
+                    $('#descripcion').prop('disabled', false);
+                    $('input:text').val('');
+                    $('textarea').val('');
+                    $('#ingresar').text('Guardar');
+                });
             });
-        </script>
+        </script>        
     </head>
     <body>
         <div style="margin-top: 5%;position: relative;display: block">
@@ -166,19 +128,19 @@ $obj_conexion = new Conexion();
                 <table width="912" border="0" align="center">
                     <tr>
                         <td height="49"> Descripci&oacute;n </td>
-                                <td>
-                                    <div id="div_desc" class="form-group">
-                                        <textarea style="width:605px !important; resize: none !important;"  name="descripcion" rows="2"  class="form-control input-sm"  id="descripcion"></textarea>
-                                    </div>
-                                </td>
+                        <td>
+                            <div id="div_desc" class="form-group">
+                                <textarea style="width:605px !important; resize: none !important; background-color: #ffffff;"  name="descripcion" rows="2"  class="form-control input-sm"  id="descripcion"></textarea>
+                            </div>
+                        </td>
                     </tr>
                     <tr>  
-                    <td width="107">Estatus :</td>
+                        <td width="107">Estatus :</td>
                         <td>
-                           
+
                             <div class="form-group">
-                                <input type="radio" name="estatus" value="activo"   id="activo" checked="checked" />Activo
-                                <input type="radio" name="estatus" value="inactivo" id="inactivo" />Inactivo
+                                <input type="radio" name="estatus" value="Activo"   id="activo" checked="checked" />Activo
+                                <input type="radio" name="estatus" value="Inactivo" id="inactivo" />Inactivo
                             </div>
                         </td>
                     </tr>
@@ -203,24 +165,28 @@ $obj_conexion = new Conexion();
                                         <th>Descripcion</th>
                                         <th>Estatus</th>
                                         <th>Acci&oacute;n</th>
-                                        
+
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     $sql          = "SELECT descripcion,estatus FROM modalidades";
-                                    $registros   = $obj_conexion->RetornarRegistros($sql);
-                                    for ($i = 0; $i < count($registros); $i++) {
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $registros[$i]['descripcion'] ?></td>                                            
-                                            <td><?php echo $registros[$i]['estatus'] ?></td>
-                                            <td>
-                                                <span class="accion modificar">Modificar</span>
-                                                <span class="accion eliminar">Eliminar</span>
-                                            </td>
-                                        </tr>
-                                        <?php
+                                    $resgistros   = $obj_conexion->RetornarRegistros($sql);
+
+                                    $es_array = is_array($resgistros) ? TRUE : FALSE;
+                                    if ($es_array == TRUE) {
+                                        for ($i = 0; $i < count($resgistros); $i++) {
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $resgistros[$i]['descripcion'] ?></td>
+                                                <td><?php echo $resgistros[$i]['estatus'] ?></td>
+                                                <td>
+                                                    <span class="accion modificar">Modificar</span>
+                                                    <span class="accion eliminar">Eliminar</span>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
                                     }
                                     ?>
                                 </tbody>

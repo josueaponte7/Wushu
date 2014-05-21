@@ -11,5 +11,5 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])){
 $Usuario = "root"; 
 $Pass = "";
 
-$link = new mysqli("localhost",$Usuario,$Pass,"wushu");
+$link = new mysqli("localhost",$Usuario,$Pass,"wushu1");
 ?>

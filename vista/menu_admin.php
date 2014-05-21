@@ -52,8 +52,8 @@ $usuario = $_SESSION['usuario'];
                     <li>
                         <a href="#">ACTIVIDADES</a>
                         <ul>
-                            <li><a href="#">EVENTOS</a></li>
-                            <li><a href="#">INSCRIPCIONES</a></li>
+                            <li><a href="eventos.php">EVENTOS</a></li>
+                            <li><a href="inscripcion.php">INSCRIPCIONES</a></li>
                             <li><a href="#">PREMIACION</a></li>
                         </ul>
                     </li>

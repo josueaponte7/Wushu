@@ -24,7 +24,7 @@ if (isset($_POST['nombre'])) {
 }
 
 if (isset($_POST['sexo'])) {
-    $sexo= $_POST['sexo'];
+    $sexo = $_POST['sexo'];
 }
 
 if (isset($_POST['email'])) {
@@ -62,23 +62,23 @@ switch ($accion) {
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
             $fecha = $obj_conexion->formateaBD($fecha);
-           $sql       = "INSERT INTO entrenadores (nacionalidad,cedula, rif, nombre, sexo, telefono, email, direccion, id_asociacion, fecha, estatus)
+            $sql   = "INSERT INTO entrenadores (nacionalidad,cedula, rif, nombre, sexo, telefono, email, direccion, id_asociacion, fecha, estatus)
                                             VALUES ('$nacionalidad','$cedula','$rif', '$nombre', '$sexo', '$telefono', '$email', '$direccion', '$id_asociacion', '$fecha', '$estatus');";
-        
-       $resultado = $obj_conexion->_query($sql);
+
+            $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {
                 echo 'exito';
             } else {
                 echo 'error';
             }
-        }else{
+        } else {
             echo 'existe';
         }
         break;
-        
-     case 'Modificar':
-          $fecha  = $obj_conexion->formateaBD($fecha);
-   $sql = " UPDATE entrenadores
+
+    case 'Modificar':
+        $fecha = $obj_conexion->formateaBD($fecha);
+        $sql   = " UPDATE entrenadores
                     SET 
                       nacionalidad = '$nacionalidad',
                       rif = '$rif',
@@ -91,24 +91,24 @@ switch ($accion) {
                       fecha = '$fecha',
                       estatus = '$estatus'
                     WHERE cedula= $cedula;";
-        
+
         $resultado = $obj_conexion->_query($sql);
         if ($resultado == TRUE) {
             echo 'exito';
         } else {
             echo 'error';
         }
-    break;
-        
+        break;
+
     case 'BuscarDatos':
-        $sql          = "SELECT  * FROM entrenadores WHERE cedula='$cedula'";
-        $registros   = $obj_conexion->RetornarRegistros($sql);        
-        echo $registros[0]['nacionalidad'].';'.
-             $registros[0]['rif'].';'.
-             $registros[0]['email'].';'.
-             $registros[0]['id_asociacion'].';'.
-             $registros[0]['fecha'].';'.
-             $registros[0]['estatus'].';'.
-             $registros[0]['direccion'];
-    break;
+        $sql       = "SELECT  * FROM entrenadores WHERE cedula='$cedula'";
+        $registros = $obj_conexion->RetornarRegistros($sql);
+        echo $registros[0]['nacionalidad'] . ';' .
+        $registros[0]['rif'] . ';' .
+        $registros[0]['email'] . ';' .
+        $registros[0]['id_asociacion'] . ';' .
+        $registros[0]['fecha'] . ';' .
+        $registros[0]['estatus'] . ';' .
+        $registros[0]['direccion'];
+        break;
 }

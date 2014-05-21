@@ -11,7 +11,9 @@ $obj_conexion = new Conexion();
         <link href="../css/bootstrap.css" rel="stylesheet" media="screen"/>
         <link href="../css/estilos.css" rel="stylesheet" media="screen"/>
         <link href="../css/jquery.dataTables.css" rel="stylesheet" media="screen"/>
+
         <script type="text/javascript" src="../js/jquery-1.11.0.js"></script>
+        <script type="text/javascript" src="../js/validarcampos.js"></script>
         <script type="text/javascript" src="../js/jquery.dataTables.js"></script>
         <style type="text/css">
             body{
@@ -35,9 +37,15 @@ $obj_conexion = new Conexion();
                     ]
                 });
 
+                var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
+                $('#nombre').validar(letra);
+                $('#representante').validar(letra);
+
+                var numero = '0123456789-';
+                $('#telefono').validar(numero);
+                $('#tel_rep').validar(numero);
+
                 $('#ingresar').click(function() {
-//                    var usuario = $('#usuario').val();
-//                    var clave = $('#clave').val();
                     var accion = $(this).text();
                     $('#accion').val(accion)
                     $('#nombre').prop('disabled', false);
@@ -92,6 +100,7 @@ $obj_conexion = new Conexion();
 
                     // obtener la fila a modificar
                     var fila = padre.index();
+                    
                     // crear el campo fila y añadir la fila
                     var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
                     $($fila).prependTo($('#frmasociaciones'));
@@ -114,9 +123,8 @@ $obj_conexion = new Conexion();
                 $('#limpiar').click(function() {
                     $('input:text').val('');
                     $('textarea').val('');
-                    $('#guardar').text('Guardar');
+                    $('#ingresar').text('Guardar');
                 });
-
             });
         </script>
     </head>
@@ -134,7 +142,7 @@ $obj_conexion = new Conexion();
                         <td width="115">&nbsp;&nbsp;&nbsp;Tel&eacute;fono:</td>
                         <td width="349">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="telefono" name="telefono" value="" />
+                                <input type="text" class="form-control" id="telefono" name="telefono" value="" maxlength="12" />
                             </div>
                         </td>
                     </tr>
@@ -162,7 +170,7 @@ $obj_conexion = new Conexion();
                         <td>&nbsp;&nbsp;&nbsp;Tel Represe:</td>
                         <td>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="tel_rep" name="tel_rep" value="" />
+                                <input type="text" class="form-control" id="tel_rep" name="tel_rep" value="" maxlength="12"/>
                             </div>
                         </td>
                     </tr>

@@ -32,29 +32,27 @@ if (isset($_POST['estatus'])) {
     $estatus = $_POST['estatus'];
 }
 
-
-
 switch ($accion) {
     case 'Registrar':
         $sql_b       = "SELECT 1 FROM asociaciones WHERE nombre = '$nombre';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-            $sql       = "INSERT INTO asociaciones (nombre, telefono, email, direccion, representante, tel_rep, email_rep, estatus)
+            $sql = "INSERT INTO asociaciones (nombre, telefono, email, direccion, representante, tel_rep, email_rep, estatus)
                                             VALUES ('$nombre', '$telefono','$email', '$direccion','$representante', '$tel_rep', '$email_rep', '$estatus');";
-            
-         $resultado = $obj_conexion->_query($sql);
+
+            $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {
                 echo 'exito';
             } else {
                 echo 'error';
             }
-        }else{
+        } else {
             echo 'Regitro existe';
         }
         break;
-    
+
     case 'Modificar':
-      $sql = "UPDATE asociaciones
+        $sql = "UPDATE asociaciones
                 SET 
                   nombre = '$nombre',
                   telefono = '$telefono',
@@ -65,19 +63,19 @@ switch ($accion) {
                   email_rep = '$email_rep',
                   estatus = '$estatus'
                 WHERE nombre = '$nombre';";
-        
+
         $resultado = $obj_conexion->_query($sql);
         if ($resultado == TRUE) {
             echo 'exito';
         } else {
             echo 'error';
         }
-    break;
+        break;
 
     case 'BuscarDatos':
-        $sql          = "SELECT * FROM asociaciones WHERE nombre='$nombre'";
-        $registros   = $obj_conexion->RetornarRegistros($sql);
-        echo $registros[0]['email'].';'.$registros[0]['direccion'].';'.$registros[0]['email_rep'].';'.$registros[0]['estatus'];
-    break;
+        $sql       = "SELECT * FROM asociaciones WHERE nombre='$nombre'";
+        $registros = $obj_conexion->RetornarRegistros($sql);
+        echo $registros[0]['email'] . ';' . $registros[0]['direccion'] . ';' . $registros[0]['email_rep'] . ';' . $registros[0]['estatus'];
+        break;
 }
 

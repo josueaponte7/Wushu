@@ -165,49 +165,67 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
     <body>
         <!--<div id="divTitMiniBloque1" class="divTitMiniBloque" style="margin-top:10px; margin-left: 18px; height: 20px;">Principal</div>-->
         <div style="margin-top: 5%;position: relative;display: block">            
-            <form id="frmcategorias">
+            <form id="frminscripcion">
                 <table width="912" border="0" align="center">
                     <tr>
-                        <td width="86">Descripci&oacute;n :</td>
-                        <td width="332">
-                            <div id="div_desc" class="form-group">
-                                <textarea style="height: 50px; resize: none !important; background-color: #ffffff;"  name="descripcion" rows="2"  class="form-control input-sm"  id="descripcion"></textarea>
-                            </div>
-                        </td>
-                        <td width="125">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Edad:</td>
+                        <td width="79" height="50" class="letras">Atletas:</td>
+                                <td width="741"> 
+                                    <select  name="cedula" class="form-control" id="cedula">
+                                        <option value="0">Seleccione</option>
+                                        <option value="0">V-13575772 Yergiroska Aguirre</option>
+                                    </select>
+                                </td>
+                        <td width="125">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buscar:</td>
                         <td width="351">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="edad" name="edad" value="" maxlength="5"/>
+                                 <button type="button" id="buscar" class="btn btn-info">Buscar</button>
                             </div>
                         </td>
                     </tr>
-
+                </table>
+                
+                
+                <table width="912" border="0" align="center" style="margin-top: 50px;">
                     <tr>
-                        <td width="86">Genero:</td>
-                        <td width="332">
-                            <div class="form-group">
-                                <input type="radio" name="sexo" value="Masculino"   id="sexo" checked="checked" />Masculino
-                                <input type="radio" name="sexo" value="Femenino" id="sexo" />Femenino
+                        <td height="59" colspan="4" align="center">
+                            <fieldset>
+                                <legend> 
+                                    <span style="margin-left: -550px;">  Datos del Atleta </span> 
+                                </legend>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>                        
+                        <td width="68">Nombres:</td>
+                        <td width="328">
+                            <div id="d_nombre" class="form-group">
+                                <input type="text" class="form-control" id="pasaporte" name="pasaporte" value="" maxlength="10"/>
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modlidad:</td>
+                        <td width="185"><span style="margin-left: 140px;">Edad:</span></td>
+                        <td width="313">
+                            <div id="d_nombre" class="form-group">
+                                <input type="text" class="form-control" id="nombre" name="nombre" value="" />
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>                        
+                        <td>Sexo:</td>
                         <td>
-                            <div class="form-group">
-                                <select name="modalidad" class="form-control" id="modalidad">
-                                    <option value="0">Seleccione</option>
-                                    <?php
-                                    for ($i = 0; $i < count($resultado); $i++) {
-                                        ?>
-                                        <option value="<?php echo $resultado[$i]['num_registro']; ?>"><?php echo $resultado[$i]['descripcion']; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
+                            <div id="d_nombre" class="form-group">
+                                <input type="text" class="form-control" id="pasaporte" name="pasaporte" value="" maxlength="10"/>
+                            </div>
+                        </td>
+                        <td><span style="margin-left: 140px;">Paso:</span></td>
+                        <td>
+                            <div id="d_nombre" class="form-group">
+                                <input type="text" class="form-control" id="nombre" name="nombre" value="" />
                             </div>
                         </td>
                     </tr>
 
-                    <tr>
+<!--                    <tr>
                         <td>Estilo :</td>
                         <td>
                             <div class="form-group">
@@ -238,8 +256,8 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                                 </select>
                             </div>
                         </td>
-                    </tr>
-                    <tr>
+                    </tr>-->
+<!--                    <tr>
                         <td>T&eacute;cnica :</td>
                         <td>
                             <div class="form-group">
@@ -262,10 +280,11 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                                 <input type="radio" name="estatus" value="inactivo" id="inactivo" />Inactivo
                             </div>
                         </td>
-                    </tr>
+                    </tr>-->
                     <tr>
                         <td colspan="4">&nbsp;</td>
-                    </tr>
+                    </tr>               
+                    
                     <tr>
                         <td colspan="4" align="center">
                             <input type="hidden" id="accion" name="accion" value=""/>
@@ -273,6 +292,8 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                             <button type="button" id="limpiar" class="btn btn-info">Limpiar</button>
                         </td>
                     </tr>
+                    </table>
+                    
                     <tr>
                         <td colspan="4" align="center">&nbsp;</td>
                     </tr>
