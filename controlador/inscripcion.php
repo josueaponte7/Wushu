@@ -7,14 +7,23 @@ require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 $accion       = $_POST['accion'];
 
-if (isset($_POST['descripcion'])) {
-    $descripcion = $_POST['descripcion'];
+if (isset($_POST['cedula'])) {
+    $cedula = $_POST['cedula'];
+}
+if (isset($_POST['nombre'])) {
+    $nombre = $_POST['nombre'];
 }
 if (isset($_POST['edad'])) {
     $edad = $_POST['edad'];
 }
 if (isset($_POST['sexo'])) {
     $sexo = $_POST['sexo'];
+}
+if (isset($_POST['peso'])) {
+    $peso = $_POST['peso'];
+}
+if (isset($_POST['categoria'])) {
+    $categoria = $_POST['categoria'];
 }
 if (isset($_POST['modalidad'])) {
     $modalidad = $_POST['modalidad'];
@@ -24,9 +33,6 @@ if (isset($_POST['estilo'])) {
 }
 if (isset($_POST['region'])) {
     $id_region = $_POST['region'];
-}
-if (isset($_POST['tecnica'])) {
-    $id_tecnica = $_POST['tecnica'];
 }
 if (isset($_POST['estatus'])) {
     $estatus = $_POST['estatus'];
@@ -72,15 +78,15 @@ switch ($accion) {
         }
         break;
 
-    case 'BuscarDatos':
-        $sql        = "SELECT * FROM categorias WHERE descripcion='$descripcion'";
-        $resgistros = $obj_conexion->RetornarRegistros($sql);
-
-        echo $resgistros[0]['edad'] . ';' .
-        $resgistros[0]['modalidad'] . ';' .
-        $resgistros[0]['id_estilo'] . ';' .
-        $resgistros[0]['id_region'] . ';' .
-        $resgistros[0]['id_tecnica'] . ';' .
-        $resgistros[0]['estatus'];
-        break;
+     case 'Buscar':
+            $sql   = "SELECT nombre,(YEAR(CURDATE())-YEAR(fechnac)) - (RIGHT(CURDATE(),5)<RIGHT(fechnac,5)) AS edad, sexo, peso FROM atletas WHERE cedula = $cedula";
+       //   $sql   = "SELECT nombre,(YEAR(CURDATE())-YEAR(fechnac)) - (RIGHT(CURDATE(),5)<RIGHT(fechnac,5)) AS edad, sexo, peso FROM atletas WHERE cedula = $cedula ORDER BY 1";
+//            $data['condicion'] = "num_registro, CONCAT_WS('-', nacionalidad, cedula, nombre) AS datos'";
+//            $data['limite']    = "1";
+//            $resultado         = $obj_conexion->RetornarRegistros($data);
+            $resgistros = $obj_conexion->RetornarRegistros($sql);
+           
+                echo $resgistros[0]['nombre'].';'.$resgistros[0]['edad'].';'.$resgistros[0]['sexo'].';'.$resgistros[0]['peso'];
+           
+            break;
 }

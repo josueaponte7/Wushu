@@ -7,11 +7,13 @@ $sql     = "SELECT  num_registro,  descripcion FROM modalidades";
 $estilo  = "SELECT  id_estilo,  nombre_estilo FROM estilo";
 $region  = "SELECT  id_region,  nombre_region FROM region ";
 $tecnica = "SELECT  id_tecnica,  nombre_tecnica FROM tecnica ";
+$datos   = "SELECT cedula, CONCAT_WS('-', nacionalidad, cedula, nombre )AS datos FROM atletas ";
 
 $resultado = $obj_conexion->RetornarRegistros($sql);
 $result    = $obj_conexion->RetornarRegistros($estilo);
 $resul     = $obj_conexion->RetornarRegistros($region);
 $resultec  = $obj_conexion->RetornarRegistros($tecnica);
+$d_resul   = $obj_conexion->RetornarRegistros($datos);
 ?>
 <!DOCTYPE html>
 <html>
@@ -56,6 +58,23 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
 
                 var numero = '0123456789-';
                 $('#edad').validar(numero);
+
+                $('#cedula').change(function() {
+                    var cedula = $(this).val();
+                    if (cedula != 0) {
+                        $.post("../controlador/inscripcion.php", {cedula: cedula, accion: 'Buscar'}, function(respuesta) {
+                            if (respuesta != 0) {
+                                var datos = respuesta.split(';');
+                                $('#nombre').val(datos[0]);
+                                $('#edad').val(datos[1]);
+                                $('#sexo').val(datos[2]);
+                                $('#peso').val(datos[3]);
+                            } else {
+
+                            }
+                        });
+                    }
+                });
 
                 $('#ingresar').click(function() {
 
@@ -168,29 +187,35 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
             <form id="frminscripcion">
                 <table width="912" border="0" align="center">
                     <tr>
-                        <td width="79" height="50" class="letras">Atletas:</td>
-                                <td width="741"> 
-                                    <select  name="cedula" class="form-control" id="cedula">
-                                        <option value="0">Seleccione</option>
-                                        <option value="0">V-13575772 Yergiroska Aguirre</option>
-                                    </select>
-                                </td>
-                        <td width="125">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Buscar:</td>
+                        <td width="79" height="50">Atletas:</td>
+                        <td width="741"> 
+                            <select  name="cedula" class="form-control" id="cedula">
+                                <option value="0">Seleccione</option>
+                                <?php
+                                for ($i = 0; $i < count($d_resul); $i++) {
+                                    ?>
+                                    <option value="<?php echo $d_resul[$i]['cedula']; ?>"><?php echo $d_resul[$i]['datos']; ?></option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </td>                       
                         <td width="351">
-                            <div class="form-group">
-                                 <button type="button" id="buscar" class="btn btn-info">Buscar</button>
-                            </div>
+                            &nbsp;
                         </td>
                     </tr>
                 </table>
-                
-                
+
+
                 <table width="912" border="0" align="center" style="margin-top: 50px;">
                     <tr>
                         <td height="59" colspan="4" align="center">
                             <fieldset>
                                 <legend> 
-                                    <span style="margin-left: -550px;">  Datos del Atleta </span> 
+                                    <span style="margin-left: -550px;
+                                          color: #333333;
+                                          font-family: Helvetica,Arial,sans-serif;
+                                          font-size: 16px; ">  Datos del Atleta </span> 
                                 </legend>
                             </fieldset>
                         </td>
@@ -198,29 +223,29 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                     <tr>                        
                         <td width="68">Nombres:</td>
                         <td width="328">
-                            <div id="d_nombre" class="form-group">
-                                <input type="text" class="form-control" id="pasaporte" name="pasaporte" value="" maxlength="10"/>
+                            <div class="form-group">
+                                <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="nombre" name="nombre" value="" maxlength="10"/>
                             </div>
                         </td>
                         <td width="185"><span style="margin-left: 140px;">Edad:</span></td>
                         <td width="313">
-                            <div id="d_nombre" class="form-group">
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="" />
+                            <div class="form-group">
+                                <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="edad" name="edad" value="" />
                             </div>
                         </td>
                     </tr>
-                    
+
                     <tr>                        
                         <td>Sexo:</td>
                         <td>
-                            <div id="d_nombre" class="form-group">
-                                <input type="text" class="form-control" id="pasaporte" name="pasaporte" value="" maxlength="10"/>
+                            <div class="form-group">
+                                <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="sexo" name="sexo" value="" maxlength="10"/>
                             </div>
                         </td>
-                        <td><span style="margin-left: 140px;">Paso:</span></td>
+                        <td><span style="margin-left: 140px;">Peso:</span></td>
                         <td>
-                            <div id="d_nombre" class="form-group">
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="" />
+                            <div class="form-group">
+                                <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="peso" name="peso" value="" />
                             </div>
                         </td>
                     </tr>
@@ -231,13 +256,13 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                             <div class="form-group">
                                 <select name="estilo" class="form-control" id="estilo">
                                     <option value="0">Seleccione</option>
-                                    <?php
-                                    for ($i = 0; $i < count($result); $i++) {
-                                        ?>
-                                        <option value="<?php echo $result[$i]['id_estilo']; ?>"><?php echo $result[$i]['nombre_estilo']; ?></option>
-                                        <?php
-                                    }
-                                    ?>
+                    <?php
+                    for ($i = 0; $i < count($result); $i++) {
+                        ?>
+                                            <option value="<?php echo $result[$i]['id_estilo']; ?>"><?php echo $result[$i]['nombre_estilo']; ?></option>
+                        <?php
+                    }
+                    ?>
                                 </select>
                             </div>
                         </td>
@@ -246,13 +271,13 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                             <div class="form-group">
                                 <select name="region" class="form-control" id="region">
                                     <option value="0">Seleccione</option>
-                                    <?php
-                                    for ($i = 0; $i < count($resul); $i++) {
-                                        ?>
-                                        <option value="<?php echo $resul[$i]['id_region']; ?>"><?php echo $resul[$i]['nombre_region']; ?></option>
-                                        <?php
-                                    }
-                                    ?>
+                    <?php
+                    for ($i = 0; $i < count($resul); $i++) {
+                        ?>
+                                            <option value="<?php echo $resul[$i]['id_region']; ?>"><?php echo $resul[$i]['nombre_region']; ?></option>
+                        <?php
+                    }
+                    ?>
                                 </select>
                             </div>
                         </td>
@@ -263,13 +288,13 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                             <div class="form-group">
                                 <select name="tecnica" class="form-control" id="tecnica">
                                     <option value="0">Seleccione</option>
-                                    <?php
-                                    for ($i = 0; $i < count($resultec); $i++) {
-                                        ?>
-                                        <option value="<?php echo $resultec[$i]['id_tecnica']; ?>"><?php echo $resultec[$i]['nombre_tecnica']; ?></option>
-                                        <?php
-                                    }
-                                    ?>
+                    <?php
+                    for ($i = 0; $i < count($resultec); $i++) {
+                        ?>
+                                            <option value="<?php echo $resultec[$i]['id_tecnica']; ?>"><?php echo $resultec[$i]['nombre_tecnica']; ?></option>
+                        <?php
+                    }
+                    ?>
                                 </select>
                             </div>
                         </td>
@@ -284,7 +309,7 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                     <tr>
                         <td colspan="4">&nbsp;</td>
                     </tr>               
-                    
+
                     <tr>
                         <td colspan="4" align="center">
                             <input type="hidden" id="accion" name="accion" value=""/>
@@ -292,27 +317,27 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                             <button type="button" id="limpiar" class="btn btn-info">Limpiar</button>
                         </td>
                     </tr>
-                    </table>
-                    
-                    <tr>
-                        <td colspan="4" align="center">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" align="center">
-                            <table border="0" id="tbl_categoria" class="dataTable">
-                                <thead>
-                                    <tr>
-                                        <th>Descripci&oacute;n</th>
-                                        <th>Edad</th>
-                                        <th>Genero</th>
-                                        <th>Estilo</th>
-                                        <th>Regi&oacute;n</th>
-                                        <th>Acci&oacute;n</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $sql        = "SELECT  
+                </table>
+
+                <tr>
+                    <td colspan="4" align="center">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="4" align="center">
+                        <table border="0" id="tbl_categoria" class="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Descripci&oacute;n</th>
+                                    <th>Edad</th>
+                                    <th>Genero</th>
+                                    <th>Estilo</th>
+                                    <th>Regi&oacute;n</th>
+                                    <th>Acci&oacute;n</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $sql        = "SELECT  
                                                     ca.descripcion,  
                                                     ca.edad,  
                                                     ca.sexo,
@@ -321,34 +346,34 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                                                     FROM categorias ca
                                                     INNER JOIN estilo AS es ON ca.id_estilo = es.id_estilo
                                                     INNER JOIN region AS re ON ca.id_region = re.id_region";
-                                    $resgistros = $obj_conexion->RetornarRegistros($sql);
+                                $resgistros = $obj_conexion->RetornarRegistros($sql);
 
-                                    $es_array = is_array($resgistros) ? TRUE : FALSE;
-                                    if ($es_array == TRUE) {
-                                        for ($i = 0; $i < count($resgistros); $i++) {
-                                            ?>
-                                            <tr>
-                                                <td><?php echo $resgistros[$i]['descripcion'] ?></td>
-                                                <td><?php echo $resgistros[$i]['edad'] ?></td>
-                                                <td><?php echo $resgistros[$i]['sexo'] ?></td>
-                                                <td><?php echo $resgistros[$i]['estilo'] ?></td>
-                                                <td><?php echo $resgistros[$i]['region'] ?></td>
-                                                <td>
-                                                    <span class="accion modificar">Modificar</span>
-                                                    <span class="accion eliminar">Eliminar</span>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                        }
+                                $es_array = is_array($resgistros) ? TRUE : FALSE;
+                                if ($es_array == TRUE) {
+                                    for ($i = 0; $i < count($resgistros); $i++) {
+                                        ?>
+                                        <tr>
+                                            <td><?php echo $resgistros[$i]['descripcion'] ?></td>
+                                            <td><?php echo $resgistros[$i]['edad'] ?></td>
+                                            <td><?php echo $resgistros[$i]['sexo'] ?></td>
+                                            <td><?php echo $resgistros[$i]['estilo'] ?></td>
+                                            <td><?php echo $resgistros[$i]['region'] ?></td>
+                                            <td>
+                                                <span class="accion modificar">Modificar</span>
+                                                <span class="accion eliminar">Eliminar</span>
+                                            </td>
+                                        </tr>
+                                        <?php
                                     }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" align="center">&nbsp;</td>
-                    </tr>
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" align="center">&nbsp;</td>
+                </tr>
                 </table>
             </form>
         </div>
