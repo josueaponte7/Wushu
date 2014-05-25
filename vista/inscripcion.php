@@ -7,12 +7,14 @@ $categoria = "SELECT  num_registro,  descripcion FROM categorias ";
 $modalidad = "SELECT  num_registro,  descripcion FROM modalidades";
 $estilo    = "SELECT  id_estilo,  nombre_estilo FROM estilo";
 $region    = "SELECT  id_region,  nombre_region FROM region ";
+$evento    = "SELECT  id_estatus,  estatus_evento FROM estatus_evento";
 
 $d_resul   = $obj_conexion->RetornarRegistros($datos);
 $resultec  = $obj_conexion->RetornarRegistros($categoria);
 $resultado = $obj_conexion->RetornarRegistros($modalidad);
 $result    = $obj_conexion->RetornarRegistros($estilo);
 $resul     = $obj_conexion->RetornarRegistros($region);
+$res       = $obj_conexion->RetornarRegistros($evento);
 ?>
 <!DOCTYPE html>
 <html>
@@ -327,6 +329,27 @@ $resul     = $obj_conexion->RetornarRegistros($region);
                             </div>
                         </td>
                     </tr>
+                    
+                    <tr>
+                        <td>Estatus :</td>
+                        <td>
+                            <div class="form-group">
+                                <select name="estatus" class="form-control" id="estatus">
+                                    <option value="0">Seleccione</option>
+                                    <?php
+                                    for ($i = 0; $i < count($res); $i++) {
+                                        ?>
+                                        <option value="<?php echo $res[$i]['id_estatus']; ?>"><?php echo $res[$i]['estatus_evento']; ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
 
                     <tr>
                         <td colspan="4">&nbsp;</td>
@@ -342,8 +365,9 @@ $resul     = $obj_conexion->RetornarRegistros($region);
                 </table>
 
                 <tr>
-                    <td colspan="4" align="center">&nbsp;</td>
-                </tr>
+                    <td colspan="4">&nbsp;</td>
+                </tr> 
+                
                 <tr>
                     <td colspan="4" align="center">
                         <table border="0" id="tbl_categoria" class="dataTable">
