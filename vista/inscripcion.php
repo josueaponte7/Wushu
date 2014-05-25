@@ -2,18 +2,17 @@
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
+$datos     = "SELECT cedula, CONCAT_WS('-', nacionalidad, cedula, nombre )AS datos FROM atletas ";
+$categoria = "SELECT  num_registro,  descripcion FROM categorias ";
+$modalidad = "SELECT  num_registro,  descripcion FROM modalidades";
+$estilo    = "SELECT  id_estilo,  nombre_estilo FROM estilo";
+$region    = "SELECT  id_region,  nombre_region FROM region ";
 
-$sql     = "SELECT  num_registro,  descripcion FROM modalidades";
-$estilo  = "SELECT  id_estilo,  nombre_estilo FROM estilo";
-$region  = "SELECT  id_region,  nombre_region FROM region ";
-$tecnica = "SELECT  id_tecnica,  nombre_tecnica FROM tecnica ";
-$datos   = "SELECT cedula, CONCAT_WS('-', nacionalidad, cedula, nombre )AS datos FROM atletas ";
-
-$resultado = $obj_conexion->RetornarRegistros($sql);
+$d_resul   = $obj_conexion->RetornarRegistros($datos);
+$resultec  = $obj_conexion->RetornarRegistros($categoria);
+$resultado = $obj_conexion->RetornarRegistros($modalidad);
 $result    = $obj_conexion->RetornarRegistros($estilo);
 $resul     = $obj_conexion->RetornarRegistros($region);
-$resultec  = $obj_conexion->RetornarRegistros($tecnica);
-$d_resul   = $obj_conexion->RetornarRegistros($datos);
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,7 +26,7 @@ $d_resul   = $obj_conexion->RetornarRegistros($datos);
         <link href="../css/maquetacion.css" rel="stylesheet" media="screen"/>
 
         <script type="text/javascript" src="../js/jquery-1.11.0.js"></script>
-        <script type="text/javascript" src="../js/validarcampos.js"></script>
+        <script type="text/javascript" src="../js/validarcampos.js"></script>               
         <script type="text/javascript" src="../js/jquery.dataTables.js"></script>
 
         <style type="text/css">
@@ -215,7 +214,7 @@ $d_resul   = $obj_conexion->RetornarRegistros($datos);
                                     <span style="margin-left: -550px;
                                           color: #333333;
                                           font-family: Helvetica,Arial,sans-serif;
-                                          font-size: 16px; ">  Datos del Atleta </span> 
+                                          font-size: 16px; ">  Datos Personales </span> 
                                 </legend>
                             </fieldset>
                         </td>
@@ -250,62 +249,85 @@ $d_resul   = $obj_conexion->RetornarRegistros($datos);
                         </td>
                     </tr>
 
-<!--                    <tr>
+                    <tr>
+                        <td height="59" colspan="4" align="center">
+                            <fieldset>
+                                <legend> 
+                                    <span style="margin-left: -590px;
+                                          color: #333333;
+                                          font-family: Helvetica,Arial,sans-serif;
+                                          font-size: 16px; ">  Otros Datos </span> 
+                                </legend>
+                            </fieldset>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Categor&iacute;as:</td>
+                        <td>
+                            <div class="form-group">
+                                <select name="categorias" class="form-control" id="categorias">
+                                    <option value="0">Seleccione</option>
+                                    <?php
+                                    for ($i = 0; $i < count($resultec); $i++) {
+                                        ?>
+                                        <option value="<?php echo $resultec[$i]['num_registro']; ?>"><?php echo $resultec[$i]['descripcion']; ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </td>
+                        <td><span style="margin-left: 140px;">Modalidades:</span></td>
+                        <td>
+                            <div class="form-group">
+                                <select name="modalidad" class="form-control" id="modalidad">
+                                    <option value="0">Seleccione</option>
+                                    <?php
+                                    for ($i = 0; $i < count($resultado); $i++) {
+                                        ?>
+                                        <option value="<?php echo $resultado[$i]['num_registro']; ?>"><?php echo $resultado[$i]['descripcion']; ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
                         <td>Estilo :</td>
                         <td>
                             <div class="form-group">
                                 <select name="estilo" class="form-control" id="estilo">
                                     <option value="0">Seleccione</option>
-                    <?php
-                    for ($i = 0; $i < count($result); $i++) {
-                        ?>
-                                            <option value="<?php echo $result[$i]['id_estilo']; ?>"><?php echo $result[$i]['nombre_estilo']; ?></option>
-                        <?php
-                    }
-                    ?>
+                                    <?php
+                                    for ($i = 0; $i < count($result); $i++) {
+                                        ?>
+                                        <option value="<?php echo $result[$i]['id_estilo']; ?>"><?php echo $result[$i]['nombre_estilo']; ?></option>
+                                        <?php
+                                    }
+                                    ?>
                                 </select>
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Regi&oacute;n :</td>
+                        <td><span style="margin-left: 140px;">Regi&oacute;n:</span></td>
                         <td>
                             <div class="form-group">
                                 <select name="region" class="form-control" id="region">
                                     <option value="0">Seleccione</option>
-                    <?php
-                    for ($i = 0; $i < count($resul); $i++) {
-                        ?>
-                                            <option value="<?php echo $resul[$i]['id_region']; ?>"><?php echo $resul[$i]['nombre_region']; ?></option>
-                        <?php
-                    }
-                    ?>
+                                    <?php
+                                    for ($i = 0; $i < count($resul); $i++) {
+                                        ?>
+                                        <option value="<?php echo $resul[$i]['id_region']; ?>"><?php echo $resul[$i]['nombre_region']; ?></option>
+                                        <?php
+                                    }
+                                    ?>
                                 </select>
                             </div>
                         </td>
-                    </tr>-->
-<!--                    <tr>
-                        <td>T&eacute;cnica :</td>
-                        <td>
-                            <div class="form-group">
-                                <select name="tecnica" class="form-control" id="tecnica">
-                                    <option value="0">Seleccione</option>
-                    <?php
-                    for ($i = 0; $i < count($resultec); $i++) {
-                        ?>
-                                            <option value="<?php echo $resultec[$i]['id_tecnica']; ?>"><?php echo $resultec[$i]['nombre_tecnica']; ?></option>
-                        <?php
-                    }
-                    ?>
-                                </select>
-                            </div>
-                        </td>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Estatus:</td>
-                        <td>
-                            <div class="form-group">
-                                <input type="radio" name="estatus" value="activo"   id="activo" checked="checked" />Activo
-                                <input type="radio" name="estatus" value="inactivo" id="inactivo" />Inactivo
-                            </div>
-                        </td>
-                    </tr>-->
+                    </tr>
+
                     <tr>
                         <td colspan="4">&nbsp;</td>
                     </tr>               

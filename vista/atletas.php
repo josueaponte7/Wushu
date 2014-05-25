@@ -24,7 +24,8 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
         <script type="text/javascript" src="../js/jquery-1.11.0.js"></script>
         <script type="text/javascript" src="../js/validarcampos.js"></script>
         <script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
-        <script type="text/javascript" src="../js/bootstrap-datepicker.es.js"></script>        
+        <script type="text/javascript" src="../js/bootstrap-datepicker.es.js"></script>      
+        <script type="text/javascript" src="../js/tab.js"></script>
         <script type="text/javascript" src="../js/jquery.dataTables.js"></script>
         <style type="text/css">
             body{
@@ -50,24 +51,27 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                         {"sClass": "center", "sWidth": "18%", "bSortable": false, "bSearchable": false}
                     ]
                 });
-
-                var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
-                $('#nombre, #padre, #madre, #ocupacion, #patologias, #alergias').validar(letra);
-
+                
                 var numero = '0123456789-ve';
-                $('#cedula, #rif, #pasaporte').validar(numero);
-
+                $('#cedula,#rif, #pasaporte').validar(numero);
+                
+                var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
+                $('#nombre, #padre, #madre').validar(letra);   
+                
                 var numero = '0123456789-';
-                $('#telefono, #tel_madre, #tel_padre').validar(numero);
-
-                var numero = '0123456789kg';
-                $('#peso').validar(numero);
-
-                var numero = '0123456789mlsxgp';
+                $('#telefono,#tel_madre, #tel_padre').validar(numero);
+                
+                var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
+                $('#ocupacion, #patologias, #alergias').validar(letra);
+                
+                  var numero = '0123456789kg';
+                 $('#peso').validar(numero);
+                 
+                 var numero = '0123456789mlsxgp';
                 $('#tal_zap, #tal_pan, #tal_cam, #tal_pet').validar(numero);
 
-                var numero = '0123456789-';
-                $('#telefono, #tel_madre, #tel_padre').validar(numero);
+//               var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
+//                $('#padre').validar(letra);
 
                 /****Calendario*****/
                 $('#fechnac').datepicker({
@@ -115,7 +119,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                 if (resultado == 'exito') {
                                     alert('Modificaci\u00f3n  con exito');
 
-                                    $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fechnac').val());
+//                                    $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fechnac').val());
                                     $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
                                     $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(4).html(aso);
                                     $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(5).html($('#peso').val());
@@ -163,20 +167,20 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                         $('#direccion').val(datos[4]);
                         $('#nivel_academico').val(datos[5]);
                         $('#ocupacion').val(datos[6]);
-                        $('#patologias').val(datos[7]);
-                        $('#alergias').val(datos[8]);
-                        $('#tipo_sangre').val(datos[9]);
-                        $('#tal_zap').val(datos[10]);
-                        $('#tal_pan').val(datos[11]);
-                        $('#tal_cam').val(datos[12]);
-                        $('#tal_pet').val(datos[13]);
-                        $('#padre').val(datos[14]);
-                        $('#tel_padre').val(datos[15]);
-                        $('#madre').val(datos[16]);
-                        $('#tel_madre').val(datos[17]);
-                        $('input:radio[name="estatus"][value="' + datos[18] + '"]').prop('checked', true);
-                        $('#asociacion').val(datos[19]);
-
+                        $('#asociacion').val(datos[7]);
+                        $('input:radio[name="estatus"][value="' + datos[8] + '"]').prop('checked', true);
+                        $('#patologias').val(datos[9]);
+                        $('#alergias').val(datos[10]);
+                        $('#tipo_sangre').val(datos[11]);
+                        $('#tal_zap').val(datos[12]);
+                        $('#tal_pan').val(datos[13]);
+                        $('#tal_cam').val(datos[14]);
+                        $('#tal_pet').val(datos[15]);
+                        $('#padre').val(datos[16]);
+                        $('#tel_padre').val(datos[17]);
+                        $('#madre').val(datos[18]);
+                        $('#tel_madre').val(datos[19]);
+                        
                     });
                 });
 
@@ -196,9 +200,22 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
             <form id="frmatletas">
                 <table width="912" border="0" align="center">
                     <tr>
+                        <td height="59" colspan="4" align="center">
+                            <fieldset>
+                                <legend style="margin-top: -50px;"> 
+                                    <span style="margin-left: -550px;
+                                          color: #333333;
+                                          font-family: Helvetica,Arial,sans-serif;
+                                          font-size: 16px; ">  Datos Personales </span> 
+                                </legend>
+                            </fieldset>
+                        </td>
+                    </tr>
+
+                    <tr>
                         <td width="106">C&eacute;dula :</td>
                         <td width="337">
-                            <div class="form-group">
+                            <div  id="d_cedula" class="form-group">
                                 <input type="text" class="form-control" id="cedula" name="cedula" value="" maxlength="10"/>
                             </div>
                         </td>
@@ -213,13 +230,13 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                     <tr>                        
                         <td width="106">Pasaporte:</td>
                         <td width="337">
-                            <div id="d_nombre" class="form-group">
+                            <div  class="form-group">
                                 <input type="text" class="form-control" id="pasaporte" name="pasaporte" value="" maxlength="10"/>
                             </div>
                         </td>
                         <td width="119">&nbsp;&nbsp;&nbsp;Nombres:</td>
                         <td width="332">
-                            <div id="d_nombre" class="form-group">
+                            <div  class="form-group">
                                 <input type="text" class="form-control" id="nombre" name="nombre" value="" />
                             </div>
                         </td>
@@ -239,173 +256,261 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                 <input type="radio" name="sexo" value="Femenino" id="sexo" />Femenino
                             </div>
                         </td>
+                    </tr> 
+
+                    <tr>
+                        <td height="59" colspan="4" align="center">
+                            <fieldset>
+                                <legend style="margin-top: -10px;"> 
+                                    <span style="margin-left: -550px;
+                                          color: #333333;
+                                          font-family: Helvetica,Arial,sans-serif;
+                                          font-size: 16px; ">  Otros Datos</span> 
+                                </legend>
+                            </fieldset>
+                        </td>
                     </tr>
 
                     <tr>
-                        <td width="106">Tel&eacute;fono:</td>
+                        <td height="59" colspan="4" align="center">
+                            <table width="706">
+                                <ul class="nav nav-tabs" style="width: 707px; margin-left: 20px;">
+                                    <li class="active">
+                                        <a href="#direccion" data-toggle="tab">Direcci&oacute;n, Nivel Instrucci&oacute;n</a>
+                                    </li>
+                                    <li>
+                                        <a href="#mision" data-toggle="tab">Salud</a>
+                                    </li>
+                                    <li>
+                                        <a href="#vivienda" data-toggle="tab">Tallas</a>
+                                    </li>
+                                    <li>
+                                        <a href="#diversidad" data-toggle="tab">Padre, Madre</a>
+                                    </li>
+                                </ul>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td height="100" colspan="4" >
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="direccion" style="margin-top: 30px;">
+                                    <table width="912" border="0" align="center">
+                                        <tr>
+                         <td width="106">Tel&eacute;fono:</td>
                         <td width="337">
-                            <div id="d_nombre" class="form-group">
+                            <div class="form-group">
                                 <input type="text" class="form-control" id="telefono" name="telefono" value="" maxlength="12"/>
                             </div>
                         </td>
-                        <td width="119">&nbsp;&nbsp;&nbsp;Email:</td>
-                        <td>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="email" name="email" value="" />
-                            </div>
-                        </td>
-                    </tr>
+                                            <td width="119">&nbsp;&nbsp;&nbsp;Email:</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="email" name="email" value="" />
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                    <tr>
-                        <td height="68" class="letras">Direcci&oacute;n</td>
-                        <td>
-                            <div class="form-group">
-                                <textarea style="resize: none !important; height: 50px; width: 100%;" name="direccion" rows="2"  class="form-control"  id="direccion"></textarea>
-                            </div>
-                        </td>
-                        <td>&nbsp;&nbsp;&nbsp;Nivel Academco:</td>
-                        <td>
-                            <select name="nivel_academico" class="form-control" id="nivel_academico">
-                                <option value="0">Seleccione</option>
-                                <?php
-                                for ($i = 0; $i < count($result); $i++) {
-                                    ?>
-                                    <option value="<?php echo $result[$i]['id_nivel']; ?>"><?php echo $result[$i]['nivel']; ?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                        </td> 
-                    </tr>
+                                        <tr>
+                                            <td height="68">Direcci&oacute;n</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <textarea style="resize: none !important; height: 60px; width: 240%;" name="direccion" rows="2"  class="form-control"  id="direccion"></textarea>
+                                                </div>
+                                            </td>                                            
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td height="59" colspan="4" align="center">
+                                                <fieldset>
+                                                    <legend style="margin-top: -10px;"> 
+                                                        <span style="margin-left: -550px;
+                                                              color: #333333;
+                                                              font-family: Helvetica,Arial,sans-serif;
+                                                              font-size: 14px; ">Nivel Instrucci&oacute;n</span> 
+                                                    </legend>
+                                                </fieldset>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="106">N. Academico:</td>
+                                            <td width="337">
+                                                <div class="form-group">
+                                                    <select name="nivel_academico" class="form-control" id="nivel_academico">
+                                                        <option value="0">Seleccione</option>
+                                                        <?php
+                                                        for ($i = 0; $i < count($result); $i++) {
+                                                            ?>
+                                                            <option value="<?php echo $result[$i]['id_nivel']; ?>"><?php echo $result[$i]['nivel']; ?></option>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>Ocupaci&oacute;n:</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="ocupacion" name="ocupacion" value="" />
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                    <tr>
-                        <td>Ocupaci&oacute;n:</td>
-                        <td>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="ocupacion" name="ocupacion" value="" />
-                            </div>
-                        </td>
-                        <td width="119">&nbsp;&nbsp;&nbsp;Asociaci&oacute;n :</td>
-                        <td>
-                            <select name="asociacion" class="form-control" id="asociacion">
-                                <option value="0">Seleccione</option>
-                                <?php
-                                for ($i = 0; $i < count($resultado); $i++) {
-                                    ?>
-                                    <option value="<?php echo $resultado[$i]['id_asociacion'] ?>"><?php echo $resultado[$i]['nombre'] ?></option>
-                                    <?php
-                                }
-                                ?>
+                                        <tr>
+                                            <td width="106">Asociaci&oacute;n :</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <select name="asociacion" class="form-control" id="asociacion">
+                                                        <option value="0">Seleccione</option>
+                                                        <?php
+                                                        for ($i = 0; $i < count($resultado); $i++) {
+                                                            ?>
+                                                            <option value="<?php echo $resultado[$i]['id_asociacion'] ?>"><?php echo $resultado[$i]['nombre'] ?></option>
+                                                            <?php
+                                                        }
+                                                        ?>
 
-                            </select>
-                        </td>   
-                    </tr>
+                                                    </select>
+                                                </div>
+                                            </td>   
+                                            <td height="45">Estatus:</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="radio" name="estatus" value="activo"   id="estatus" checked="checked" />Activo
+                                                    <input type="radio" name="estatus" value="inactivo" id="estatus" />Inactivo
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </table>                                  
+                                </div> 
 
-                    <tr>
-                        <td height="68" class="letras">Patolog&iacute;as</td>
-                        <td>
-                            <div class="form-group">
-                                <textarea style="resize: none !important; height: 50px; width: 100%" name="patologias" rows="2"  class="form-control"  id="patologias"></textarea>
-                            </div>
-                        </td>
-                        <td height="68" class="letras">&nbsp;&nbsp;&nbsp;Alergias</td>
-                        <td>
-                            <div class="form-group">
-                                <textarea style="resize: none !important; height: 50px; width: 100%" name="alergias" rows="2"  class="form-control"  id="alergias"></textarea>
-                            </div>
-                        </td>
-                    </tr>
+                                <div class="tab-pane" id="mision" style="margin-top: 30px;">
+                                    <table width="912" border="0" align="center">
+                                        <tr>
+                                            <td width="106">Patolog&iacute;as:</td>
+                                            <td width="337">
+                                                <div class="form-group">
+                                                    <textarea style="resize: none !important; height: 50px; width: 100%" name="patologias" rows="2"  class="form-control"  id="patologias"></textarea>
+                                                </div>
+                                            </td>
+                                            <td width="106">Alergias:</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <textarea style="resize: none !important; height: 50px; width: 100%" name="alergias" rows="2"  class="form-control"  id="alergias"></textarea>
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                    <tr>
-                        <td height="43">Tipo de Sangre:</td>
-                        <td>
-                            <select name="tipo_sangre" class="form-control" id="tipo_sangre">
-                                <option value="0">Seleccione</option>
-                                <?php
-                                for ($i = 0; $i < count($resul); $i++) {
-                                    ?>
-                                    <option value="<?php echo $resul[$i]['id_tipo']; ?>"><?php echo $resul[$i]['tipo_sangre']; ?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                        </td>   
-                        <td width="119">&nbsp;&nbsp;&nbsp;Peso Kg:</td>
-                        <td>
-                            <input type="text" class="form-control" id="peso" name="peso" value="" maxlength="5"/>
-                        </td> 
-                    </tr>
+                                        <tr>
+                                            <td width="106">Tipo de Sangre:</td>
+                                            <td width="337">
+                                                <div class="form-group">
+                                                    <select name="tipo_sangre" class="form-control" id="tipo_sangre">
+                                                        <option value="0">Seleccione</option>
+                                                        <?php
+                                                        for ($i = 0; $i < count($resul); $i++) {
+                                                            ?>
+                                                            <option value="<?php echo $resul[$i]['id_tipo']; ?>"><?php echo $resul[$i]['tipo_sangre']; ?></option>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td width="106">Peso:</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="peso" name="peso" value="" maxlength="5"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </table> 
+                                </div>
+                                
+                                <div class="tab-pane" id="vivienda" style="margin-top: 30px;">
+                                    <table width="912" border="0" align="center">
+                                        <tr>
+                                            <td width="106">Talla Zapato:</td>
+                                            <td width="337">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="tal_zap" name="tal_zap" value="" maxlength="2"/>
+                                                </div>
+                                            </td>
+                                            <td width="106">Talla Pantal&oacute;n:</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="tal_pan" name="tal_pan" value="" maxlength="3"/>
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                    <tr>
-                        <td width="106">Talla Zapato:</td>
-                        <td width="337">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="tal_zap" name="tal_zap" value="" maxlength="2"/>
-                            </div>
-                        </td>
-                        <td width="119">&nbsp;&nbsp;&nbsp;Talla Pantalon:</td>
-                        <td width="332">
-                            <div id="d_nombre" class="form-group">
-                                <input type="text" class="form-control" id="tal_pan" name="tal_pan" value="" maxlength="3"/>
-                            </div>
-                        </td>
-                    </tr>
+                                        <tr>
+                                            <td width="106">Talla Camisa:</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="tal_cam" name="tal_cam" value="" maxlength="3"/>
+                                                </div>
+                                            </td>
+                                            <td width="106">Talla Peto:</td>
+                                            <td width="337">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="tal_pet" name="tal_pet" value="" maxlength="3"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </table> 
+                                </div>
+                                
+                                <div class="tab-pane" id="diversidad" style="margin-top: 30px;">
+                                    <table width="912" border="0" align="center">
+                                        <tr>
+                                            <td width="106">Padre:</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="padre" name="padre" value="" />
+                                                </div>
+                                            </td>
+                                            <td width="106">Telf. Padre:</td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="tel_padre" name="tel_padre" value="" maxlength="12"/>
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                    <tr>
-                        <td width="106">Talla Camisa:</td>
-                        <td width="337">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="tal_cam" name="tal_cam" value="" maxlength="3"/>
-                            </div>
-                        </td>
-                        <td width="119">&nbsp;&nbsp;&nbsp;Talla Peto:</td>
-                        <td width="332">
-                            <div id="d_nombre" class="form-group">
-                                <input type="text" class="form-control" id="tal_pet" name="tal_pet" value="" maxlength="3"/>
-                            </div>
-                        </td>
-                    </tr>
+                                        <tr>
+                                            <td width="106">Madre:</td>
+                                            <td width="337">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="madre" name="madre" value="" />
+                                                </div>
+                                            </td>
+                                            <td width="106">Telf. Madre:</td>
+                                            <td width="337">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="tel_madre" name="tel_madre" value="" maxlength="12"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </table> 
+                                </div>
 
-                    <tr>
-                        <td width="106">Padre :</td>
-                        <td width="337">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="padre" name="padre" value="" />
                             </div>
-                        </td>
-                        <td width="119">&nbsp;&nbsp;&nbsp;Telf. Padre :</td>
-                        <td width="332">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="tel_padre" name="tel_padre" value="" maxlength="12"/>
-                            </div>
-                        </td>                      
-                    </tr>
-
-                    <tr>
-                        <td width="106">Madre :</td>
-                        <td width="337">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="madre" name="madre" value="" />
-                            </div>
-                        </td>
-                        <td width="119">&nbsp;&nbsp;&nbsp;Telf. Madre:</td>
-                        <td width="332">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="tel_madre" name="tel_madre" value="" maxlength="12"/>
-                            </div>
-                        </td>                      
-                    </tr>
-
-                    <tr>
-                        <td height="45">Estatus:</td>
-                        <td>
-                            <div class="form-group">
-                                <input type="radio" name="estatus" value="activo"   id="estatus" checked="checked" />Activo
-                                <input type="radio" name="estatus" value="inactivo" id="estatus" />Inactivo
-                            </div>
-                        </td>
-                        <td>&nbsp;
-
                         </td>
                     </tr>
 
@@ -456,22 +561,22 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                 <td><?php echo $resgistros[$i]['peso'] ?></td>
                                                 <td>
                                                     <span class="accion modificar">Modificar</span>
-                                                    <span class="accion eliminar">Eliminar</span>
-                                                </td>
-                                            </tr>
-                                            <?php
+                                                           <span class="accion eliminar">Eliminar</span>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
                                         }
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" align="center">&nbsp;</td>
-                    </tr>
-                </table>
-            </form>
-        </div>
-    </body>
-</html>
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" align="center">&nbsp;</td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </body>
+    </html>

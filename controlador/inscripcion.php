@@ -34,9 +34,7 @@ if (isset($_POST['estilo'])) {
 if (isset($_POST['region'])) {
     $id_region = $_POST['region'];
 }
-if (isset($_POST['estatus'])) {
-    $estatus = $_POST['estatus'];
-}
+
 
 switch ($accion) {
     case 'Registrar':

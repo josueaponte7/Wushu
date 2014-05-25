@@ -176,7 +176,7 @@ switch ($accion) {
         break;
 
     case 'BuscarDatos':
-        $sql      = "SELECT * FROM atletas WHERE cedula=$cedula";
+        $sql      = "SELECT * FROM atletas WHERE cedula=$cedula";        
         $registro = $obj_conexion->RetornarRegistros($sql);
         echo $registro[0]['rif'] . ';' .
         $registro[0]['pasaporte'] . ';' .
@@ -185,6 +185,8 @@ switch ($accion) {
         $registro[0]['direccion'] . ';' .
         $registro[0]['id_nivel'] . ';' .
         $registro[0]['ocupacion'] . ';' .
+        $registro[0]['id_asociacion'].';'.
+        $registro[0]['estatus'] . ';' .
         $registro[0]['patologias'] . ';' .
         $registro[0]['alergias'] . ';' .
         $registro[0]['id_tipo'] . ';' .
@@ -195,8 +197,6 @@ switch ($accion) {
         $registro[0]['padre'] . ';' .
         $registro[0]['tel_padre'] . ';' .
         $registro[0]['madre'] . ';' .
-        $registro[0]['tel_madre'] . ';' .
-        $registro[0]['estatus'] . ';' .
-        $registro[0]['id_asociacion'];
+        $registro[0]['tel_madre'];
         break;
 }

@@ -190,7 +190,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                         </td>
                         <td width="79">&nbsp;&nbsp;&nbsp;Nombres:</td>
                         <td width="351">
-                            <div id="d_cedula" class="form-group">
+                            <div  class="form-group">
                                 <input type="text" class="form-control" id="nombre" name="nombre" value="" />
                             </div>
                         </td>                        
