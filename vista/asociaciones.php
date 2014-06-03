@@ -1,6 +1,10 @@
 <?php
+session_start();
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
+$archivo_actual = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] =  $archivo_actual;
+$_SESSION['titulo'] = 'Agregar Registros de ASOCIACIONES';
 ?>
 <!DOCTYPE html>
 <html>
@@ -123,7 +127,7 @@ $obj_conexion = new Conexion();
                 $('#limpiar').click(function() {
                     $('input:text').val('');
                     $('textarea').val('');
-                    $('#ingresar').text('Guardar');
+                    $('#ingresar').text('Registrar');
                 });
             });
         </script>
@@ -139,7 +143,7 @@ $obj_conexion = new Conexion();
                                 <input type="text" style="background-color: #ffffff" class="form-control" id="nombre" name="nombre" value="" />
                             </div>
                         </td>
-                        <td width="115">&nbsp;&nbsp;&nbsp;Tel&eacute;fono:</td>
+                        <td width="115"><span style="margin-left: 30px;">Tel&eacute;fono:</span></td>
                         <td width="349">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="telefono" name="telefono" value="" maxlength="12" />
@@ -153,7 +157,7 @@ $obj_conexion = new Conexion();
                                 <input type="text" class="form-control" id="email" name="email" value="" />
                             </div>
                         </td>
-                        <td height="68" class="letras">&nbsp;&nbsp;&nbsp;Direcci&oacute;n</td>
+                        <td height="68" class="letras"><span style="margin-left: 30px;">Direcci&oacute;n:</span></td>
                         <td>
                             <div class="form-group">
                                 <textarea style="resize: none !important; height: 50px; width: 100%;" name="direccion" rows="2"  class="form-control"  id="direccion"></textarea>
@@ -167,7 +171,7 @@ $obj_conexion = new Conexion();
                                 <input type="text" class="form-control" id="representante" name="representante" value="" />
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;Tel Represe:</td>
+                        <td><span style="margin-left: 30px;">Tel Represe:</span></td>
                         <td>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="tel_rep" name="tel_rep" value="" maxlength="12"/>
@@ -181,7 +185,7 @@ $obj_conexion = new Conexion();
                                 <input type="text" class="form-control" id="email_rep" name="email_rep" value="" />
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;Estatus:</td>
+                        <td><span style="margin-left: 30px;">Estatus:</span></td>
                         <td>
                             <div class="form-group">
                                 <input type="radio" name="estatus" value="activo"   id="activo" checked="checked" />Activo

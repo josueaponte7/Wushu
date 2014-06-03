@@ -1,3 +1,11 @@
+<?php 
+session_start();
+$pagina = 'vista/login.php';
+if(isset($_SESSION['pagina'])){
+    $pagina = $_SESSION['pagina'];
+}
+
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,13 +25,8 @@
                 margin: auto;                
             }
         </style>
-        <script type="text/javascript">
-            $(document).ready(function (){
-               
-            })
-        </script>
     </head>
     <body>
-        <iframe  align="middle" src="vista/login.php" id="ifrmcuerpo" name="ifrmcuerpo"  frameborder="0" scrolling="no"></iframe>
+        <iframe  align="middle" src="<?php echo $pagina; ?>" id="ifrmcuerpo" name="ifrmcuerpo"  frameborder="0" scrolling="no"></iframe>
     </body>
 </html>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
@@ -9,6 +10,11 @@ $tip_sangre = "SELECT  id_tipo,  tipo_sangre FROM tipo_sangre";
 $resultado = $obj_conexion->RetornarRegistros($sql);
 $result    = $obj_conexion->RetornarRegistros($nivel);
 $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
+
+$archivo_actual = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] =  $archivo_actual;
+$_SESSION['titulo'] = 'Agregar Registros de ATLETAS';
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -189,7 +195,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                     $('input:text').val('');
                     $('textarea').val('');
                     $('select').val('0');
-                    $('#ingresar').text('Guardar');
+                    $('#ingresar').text('Registrar');
                 });
 
             });
@@ -219,7 +225,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                 <input type="text" class="form-control" id="cedula" name="cedula" value="" maxlength="10"/>
                             </div>
                         </td>
-                        <td width="119">&nbsp;&nbsp;&nbsp;Rif :</td>
+                        <td width="119"><span style="margin-left: 50px;">Rif :</span></td>
                         <td width="332">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="rif" name="rif" value="" maxlength="12"/>
@@ -234,7 +240,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                 <input type="text" class="form-control" id="pasaporte" name="pasaporte" value="" maxlength="10"/>
                             </div>
                         </td>
-                        <td width="119">&nbsp;&nbsp;&nbsp;Nombres:</td>
+                        <td width="119"><span style="margin-left: 50px;">Nombres:</span></td>
                         <td width="332">
                             <div  class="form-group">
                                 <input type="text" class="form-control" id="nombre" name="nombre" value="" />
@@ -249,7 +255,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                 <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fechnac" name="fechnac" value="" />
                             </div>
                         </td>
-                        <td width="119">&nbsp;&nbsp;&nbsp;Sexo :</td>
+                        <td width="119"><span style="margin-left: 50px;">Sexo :</span></td>
                         <td>
                             <div class="form-group">
                                 <input type="radio" name="sexo" value="Masculino"   id="sexo" checked="checked" />Masculino
@@ -279,13 +285,13 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                         <a href="#direccion" data-toggle="tab">Direcci&oacute;n, Nivel Instrucci&oacute;n</a>
                                     </li>
                                     <li>
-                                        <a href="#mision" data-toggle="tab">Salud</a>
+                                        <a href="#salud" data-toggle="tab">Salud</a>
                                     </li>
                                     <li>
-                                        <a href="#vivienda" data-toggle="tab">Tallas</a>
+                                        <a href="#tallas" data-toggle="tab">Tallas</a>
                                     </li>
                                     <li>
-                                        <a href="#diversidad" data-toggle="tab">Padre, Madre</a>
+                                        <a href="#pa_madre" data-toggle="tab">Padre, Madre</a>
                                     </li>
                                 </ul>
                             </table>
@@ -304,7 +310,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                 <input type="text" class="form-control" id="telefono" name="telefono" value="" maxlength="12"/>
                             </div>
                         </td>
-                                            <td width="119">&nbsp;&nbsp;&nbsp;Email:</td>
+                        <td width="119"><span style="margin-left: 50px;">Email:</span></td>
                                             <td>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" id="email" name="email" value="" />
@@ -313,7 +319,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                         </tr>
 
                                         <tr>
-                                            <td height="68">Direcci&oacute;n</td>
+                                            <td height="68">Direcci&oacute;n:</td>
                                             <td>
                                                 <div class="form-group">
                                                     <textarea style="resize: none !important; height: 60px; width: 240%;" name="direccion" rows="2"  class="form-control"  id="direccion"></textarea>
@@ -351,7 +357,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                     </select>
                                                 </div>
                                             </td>
-                                            <td>Ocupaci&oacute;n:</td>
+                                            <td><span style="margin-left: 40px;">Ocupaci&oacute;n:</span></td>
                                             <td>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" id="ocupacion" name="ocupacion" value="" />
@@ -376,7 +382,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                     </select>
                                                 </div>
                                             </td>   
-                                            <td height="45">Estatus:</td>
+                                            <td height="45"><sapan style="margin-left: 40px;">Estatus:</sapan></td>
                                             <td>
                                                 <div class="form-group">
                                                     <input type="radio" name="estatus" value="activo"   id="estatus" checked="checked" />Activo
@@ -390,7 +396,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                     </table>                                  
                                 </div> 
 
-                                <div class="tab-pane" id="mision" style="margin-top: 30px;">
+                                <div class="tab-pane" id="salud" style="margin-top: 30px;">
                                     <table width="912" border="0" align="center">
                                         <tr>
                                             <td width="106">Patolog&iacute;as:</td>
@@ -399,7 +405,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                     <textarea style="resize: none !important; height: 50px; width: 100%" name="patologias" rows="2"  class="form-control"  id="patologias"></textarea>
                                                 </div>
                                             </td>
-                                            <td width="106">Alergias:</td>
+                                            <td width="106"><span style="margin-left: 40px;">Alergias:</span></td>
                                             <td>
                                                 <div class="form-group">
                                                     <textarea style="resize: none !important; height: 50px; width: 100%" name="alergias" rows="2"  class="form-control"  id="alergias"></textarea>
@@ -423,7 +429,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                     </select>
                                                 </div>
                                             </td>
-                                            <td width="106">Peso:</td>
+                                            <td width="106"><span style="margin-left: 40px;">Peso:</span></td>
                                             <td>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" id="peso" name="peso" value="" maxlength="5"/>
@@ -436,7 +442,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                     </table> 
                                 </div>
                                 
-                                <div class="tab-pane" id="vivienda" style="margin-top: 30px;">
+                                <div class="tab-pane" id="tallas" style="margin-top: 30px;">
                                     <table width="912" border="0" align="center">
                                         <tr>
                                             <td width="106">Talla Zapato:</td>
@@ -445,7 +451,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                     <input type="text" class="form-control" id="tal_zap" name="tal_zap" value="" maxlength="2"/>
                                                 </div>
                                             </td>
-                                            <td width="106">Talla Pantal&oacute;n:</td>
+                                            <td width="106"><span style="margin-left: 10px;">Talla Pantal&oacute;n:</span></td>
                                             <td>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" id="tal_pan" name="tal_pan" value="" maxlength="3"/>
@@ -460,7 +466,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                     <input type="text" class="form-control" id="tal_cam" name="tal_cam" value="" maxlength="3"/>
                                                 </div>
                                             </td>
-                                            <td width="106">Talla Peto:</td>
+                                            <td width="106"><span style="margin-left: 10px;">Talla Peto:</span></td>
                                             <td width="337">
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" id="tal_pet" name="tal_pet" value="" maxlength="3"/>
@@ -473,7 +479,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                     </table> 
                                 </div>
                                 
-                                <div class="tab-pane" id="diversidad" style="margin-top: 30px;">
+                                <div class="tab-pane" id="pa_madre" style="margin-top: 30px;">
                                     <table width="912" border="0" align="center">
                                         <tr>
                                             <td width="106">Padre:</td>
@@ -482,7 +488,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                     <input type="text" class="form-control" id="padre" name="padre" value="" />
                                                 </div>
                                             </td>
-                                            <td width="106">Telf. Padre:</td>
+                                            <td width="106"><span style="margin-left: 25px;">Telf. Padre:</span></td>
                                             <td>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" id="tel_padre" name="tel_padre" value="" maxlength="12"/>
@@ -497,7 +503,7 @@ $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
                                                     <input type="text" class="form-control" id="madre" name="madre" value="" />
                                                 </div>
                                             </td>
-                                            <td width="106">Telf. Madre:</td>
+                                            <td width="106"><span style="margin-left: 25px;">Telf. Madre:</span></td>
                                             <td width="337">
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" id="tel_madre" name="tel_madre" value="" maxlength="12"/>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
@@ -15,6 +16,10 @@ $resultado = $obj_conexion->RetornarRegistros($modalidad);
 $result    = $obj_conexion->RetornarRegistros($estilo);
 $resul     = $obj_conexion->RetornarRegistros($region);
 $res       = $obj_conexion->RetornarRegistros($evento);
+
+$archivo_actual = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] =  $archivo_actual;
+$_SESSION['titulo'] = 'Agregar Registros de INSCRIPCION';
 ?>
 <!DOCTYPE html>
 <html>
@@ -176,7 +181,7 @@ $res       = $obj_conexion->RetornarRegistros($evento);
                     $('input:text').val('');
                     $('textarea').val('');
                     $('select').val('0');
-                    $('#ingresar').text('Guardar');
+                    $('#ingresar').text('Registrar');
                 });
 
             });
@@ -228,7 +233,7 @@ $res       = $obj_conexion->RetornarRegistros($evento);
                                 <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="nombre" name="nombre" value="" maxlength="10"/>
                             </div>
                         </td>
-                        <td width="185"><span style="margin-left: 140px;">Edad:</span></td>
+                        <td width="185"><span style="margin-left: 100px;">Edad:</span></td>
                         <td width="313">
                             <div class="form-group">
                                 <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="edad" name="edad" value="" />
@@ -243,7 +248,7 @@ $res       = $obj_conexion->RetornarRegistros($evento);
                                 <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="sexo" name="sexo" value="" maxlength="10"/>
                             </div>
                         </td>
-                        <td><span style="margin-left: 140px;">Peso:</span></td>
+                        <td><span style="margin-left: 100px;">Peso:</span></td>
                         <td>
                             <div class="form-group">
                                 <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="peso" name="peso" value="" />
@@ -280,7 +285,7 @@ $res       = $obj_conexion->RetornarRegistros($evento);
                                 </select>
                             </div>
                         </td>
-                        <td><span style="margin-left: 140px;">Modalidades:</span></td>
+                        <td><span style="margin-left: 100px;">Modalidades:</span></td>
                         <td>
                             <div class="form-group">
                                 <select name="modalidad" class="form-control" id="modalidad">
@@ -313,7 +318,7 @@ $res       = $obj_conexion->RetornarRegistros($evento);
                                 </select>
                             </div>
                         </td>
-                        <td><span style="margin-left: 140px;">Regi&oacute;n:</span></td>
+                        <td><span style="margin-left: 100px;">Regi&oacute;n:</span></td>
                         <td>
                             <div class="form-group">
                                 <select name="region" class="form-control" id="region">

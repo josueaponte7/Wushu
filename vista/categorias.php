@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
@@ -12,6 +13,10 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
 $result    = $obj_conexion->RetornarRegistros($estilo);
 $resul     = $obj_conexion->RetornarRegistros($region);
 $resultec  = $obj_conexion->RetornarRegistros($tecnica);
+
+$archivo_actual = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] =  $archivo_actual;
+$_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
 ?>
 <!DOCTYPE html>
 <html>
@@ -156,7 +161,7 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                     $('input:text').val('');
                     $('textarea').val('');
                     $('select').val('0');
-                    $('#ingresar').text('Guardar');
+                    $('#ingresar').text('Registrar');
                 });
 
             });
@@ -174,7 +179,7 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                                 <textarea style="height: 50px; resize: none !important; background-color: #ffffff;"  name="descripcion" rows="2"  class="form-control input-sm"  id="descripcion"></textarea>
                             </div>
                         </td>
-                        <td width="125">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Edad:</td>
+                        <td width="125"><span style="margin-left: 58px;">Edad:</span></td>
                         <td width="351">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="edad" name="edad" value="" maxlength="5"/>
@@ -190,7 +195,7 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                                 <input type="radio" name="sexo" value="Femenino" id="sexo" />Femenino
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modlidad:</td>
+                        <td><span style="margin-left: 58px;">Modlidad:</span></td>
                         <td>
                             <div class="form-group">
                                 <select name="modalidad" class="form-control" id="modalidad">
@@ -223,7 +228,7 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                                 </select>
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Regi&oacute;n :</td>
+                        <td><span style="margin-left: 58px;">Regi&oacute;n:</span></td>
                         <td>
                             <div class="form-group">
                                 <select name="region" class="form-control" id="region">
@@ -255,7 +260,7 @@ $resultec  = $obj_conexion->RetornarRegistros($tecnica);
                                 </select>
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Estatus:</td>
+                        <td><span style="margin-left: 58px;">Estatus:</span></td>
                         <td>
                             <div class="form-group">
                                 <input type="radio" name="estatus" value="activo"   id="activo" checked="checked" />Activo

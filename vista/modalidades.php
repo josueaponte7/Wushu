@@ -1,6 +1,10 @@
 <?php
+session_start();
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
+$archivo_actual = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] =  $archivo_actual;
+$_SESSION['titulo'] = 'Agregar Registros de MODALIDADES';
 ?>
 <!DOCTYPE html>
 <html>
@@ -117,7 +121,7 @@ $obj_conexion = new Conexion();
                     $('#descripcion').prop('disabled', false);
                     $('input:text').val('');
                     $('textarea').val('');
-                    $('#ingresar').text('Guardar');
+                    $('#ingresar').text('Registrar');
                 });
             });
         </script>        
@@ -127,7 +131,7 @@ $obj_conexion = new Conexion();
             <form id="frmmodalidades">
                 <table width="912" border="0" align="center">
                     <tr>
-                        <td height="49"> Descripci&oacute;n </td>
+                        <td height="49"> Descripci&oacute;n: </td>
                         <td>
                             <div id="div_desc" class="form-group">
                                 <textarea style="width:605px !important; resize: none !important; background-color: #ffffff;"  name="descripcion" rows="2"  class="form-control input-sm"  id="descripcion"></textarea>
@@ -135,7 +139,7 @@ $obj_conexion = new Conexion();
                         </td>
                     </tr>
                     <tr>  
-                        <td width="107">Estatus :</td>
+                        <td width="107">Estatus:</td>
                         <td>
 
                             <div class="form-group">

@@ -1,9 +1,14 @@
 <?php
+session_start();
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
 $sql       = "SELECT id_estatus, estatus_evento FROM estatus_evento";
 $resultado = $obj_conexion->RetornarRegistros($sql);
+
+$archivo_actual = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] =  $archivo_actual;
+$_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
 ?>
 <!DOCTYPE html>
 <html>
@@ -154,7 +159,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                 <textarea style="height: 50px; resize: none !important; background-color: #ffffff;"  name="descripcion" rows="2"  class="form-control input-sm"  id="descripcion"></textarea>
                             </div>
                         </td>
-                        <td width="125">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lugar:</td>
+                        <td width="125"><span style="margin-left: 50px;">Lugar:</span></td>
                         <td width="351">
                             <div id="div_desc" class="form-group">
                                 <textarea style="height: 50px; resize: none !important; background-color: #ffffff;"  name="lugar" rows="2"  class="form-control input-sm"  id="lugar"></textarea>
@@ -168,7 +173,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                 <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fecha_inicio" name="fecha_inicio" value="" />
                             </div>
                         </td>
-                        <td width="119">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fecha Fin:</td>
+                        <td width="119"><span style="margin-left: 50px;">Fecha Fin:</span></td>
                         <td>
                             <div class="form-group">
                                 <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fecha_fin" name="fecha_fin" value="" />
@@ -182,7 +187,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                 <textarea style="height: 50px; resize: none !important; background-color: #ffffff;"  name="organizadores" rows="2"  class="form-control input-sm"  id="organizadores"></textarea>
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Estatus:</td>
+                        <td><span style="margin-left: 50px;">Estatus:</span></td>
                         <td>
                             <select name="estatus" class="form-control" id="estatus">
                                 <option value="0">Seleccione</option>

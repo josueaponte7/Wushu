@@ -1,6 +1,16 @@
-<?php 
+<?php
 session_start();
 $usuario = $_SESSION['usuario'];
+$_SESSION['pagina'] = 'vista/menu_admin.php';
+
+$archivo = '';
+$titulo = "SIFEVE-WUSHU";
+if (isset($_SESSION['archivo'])) {
+    $archivo = $_SESSION['archivo'];
+}
+if(isset($_SESSION['titulo'])){
+    $titulo = $_SESSION['titulo'];
+}
 ?>
 <!doctype html>
 <html>
@@ -11,7 +21,7 @@ $usuario = $_SESSION['usuario'];
         <link href="../css/maquetacion.css" rel="stylesheet" media="screen"/>
         <script type="text/javascript" src="../js/menu.js"></script>
         <style type="text/css">
-             iframe {
+            iframe {
                 width: 100%;
                 height: 4800px;
                 overflow: hidden;
@@ -23,12 +33,14 @@ $usuario = $_SESSION['usuario'];
         </style>
         <script>
             $(document).ready(function() {
-                $('ul.nav li ul li a').click(function (e){
+                var archivo = '<?php echo $archivo; ?>';
+                $('#ifrmcuerpo').attr('src', archivo);
+                $('ul.nav li ul li a').click(function(e) {
                     var archivo = $(this).attr('href');
                     var titulo = $(this).text();
-                    $('#divTituloContenido').text('Agregar Registros de '+titulo);
+                    $('#divTituloContenido').text('Agregar Registros de ' + titulo);
                     e.preventDefault();
-                    $('#ifrmcuerpo').attr('src',archivo);
+                    $('#ifrmcuerpo').attr('src', archivo);
                     //$('#cuerpo').css({'height': height});
                     //$( "#cuerpo" ).load( archivo );
                 });
@@ -60,7 +72,7 @@ $usuario = $_SESSION['usuario'];
                     <li>
                         <a href="#">REPORTES</a>
                         <ul>
-                            <li><a href="#">PUNTOS ATLETAS</a></li>
+                            <li><a href="eventos.php">PUNTOS ATLETAS</a></li>
                             <li><a href="#">MEDALLAS ATLETAS</a></li>
                             <li><a href="#">PUNTOS ASOCIACION</a></li>
                             <li><a href="#">MEDALLAS ASOCIACION</a></li>
@@ -89,10 +101,10 @@ $usuario = $_SESSION['usuario'];
                     <div style="font-size: 27px;font-weight: bold;margin-top: 25px;padding: 15px; text-align: center">
                         Federaci&oacute;n Venezolana de WUSHU
                     </div>
-                    <div id="divTitMiniBloque1" class="divTitMiniBloque" style="margin-top: 613px;margin-left: 5px;">Usuario:<?php echo $usuario;?></div>
+                    <div id="divTitMiniBloque1" class="divTitMiniBloque" style="margin-top: 613px;margin-left: 5px;">Usuario:<?php echo $usuario; ?></div>
                 </div>
                 <div id="cuerpo">
-                    <div id="divTituloContenido" class="divTituloContenido">SIFEVE-WUSHU</div>
+                    <div id="divTituloContenido" class="divTituloContenido"><?php echo $titulo; ?></div>
                     <iframe  align="middle" id="ifrmcuerpo" name="ifrmcuerpo"  frameborder="0" scrolling="no"></iframe>
 
                 </div>

@@ -1,9 +1,13 @@
 <?php
+session_start();
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
 $sql       = "SELECT  id_asociacion, nombre FROM asociaciones";
 $resultado = $obj_conexion->RetornarRegistros($sql);
+$archivo_actual = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] =  $archivo_actual;
+$_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
 ?>
 <!DOCTYPE html>
 <html>
@@ -153,7 +157,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                     $('input:text').val('');
                     $('textarea').val('');
                     $('select').val('0');
-                    $('#ingresar').text('Guardar');
+                    $('#ingresar').text('Registrar');
                 });
 
             });
@@ -173,7 +177,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                 <option value="E">EXTRAJERO</option>
                             </select>
                         </td>
-                        <td width="88">&nbsp;&nbsp;&nbsp;C&eacute;dula:</td>
+                        <td width="88"><span style="margin-left: 10px;">C&eacute;dula:</span></td>
                         <td width="376">
                             <div class="form-group">
                                 <input type="text" style="background-color: #ffffff"  class="form-control" id="cedula" name="cedula" value="" maxlength="8" />
@@ -188,7 +192,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                 <input type="text" class="form-control" id="rif" name="rif" value="" maxlength="12"/>
                             </div>
                         </td>
-                        <td width="79">&nbsp;&nbsp;&nbsp;Nombres:</td>
+                        <td width="79"><span style="margin-left: 10px;">Nombres:</span></td>
                         <td width="351">
                             <div  class="form-group">
                                 <input type="text" class="form-control" id="nombre" name="nombre" value="" />
@@ -203,7 +207,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                 <input type="radio" name="sexo" value="Femenino" id="sexo" />Femenino
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;Email:</td>
+                        <td><span style="margin-left: 10px;">Email:</span></td>
                         <td>
                             <div class="form-group">
                                 <input type="text" class="form-control" id="email" name="email" value="" />
@@ -218,7 +222,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                 <input type="text" class="form-control" id="telefono" name="telefono" value="" maxlength="12"/>
                             </div>
                         </td>
-                        <td>&nbsp;&nbsp;&nbsp;Asociaci&oacute;n:</td>
+                        <td><span style="margin-left: 10px;">Asociaci&oacute;n:</span></td>
                         <td>
                             <select name="asociacion" class="form-control" id="asociacion">
                                 <option value="0">Seleccione</option>
@@ -240,7 +244,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                                 <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fecha" name="fecha" value="" />
                             </div>
                         </td>
-                        <td height="45">&nbsp;&nbsp;&nbsp;Estatus:</td>
+                        <td height="45"><span style="margin-left: 10px;">Estatus:</span></td>
                         <td>
                             <div class="form-group">
                                 <input type="radio" name="estatus" value="activo"   id="estatus" checked="checked" />Activo
@@ -249,7 +253,7 @@ $resultado = $obj_conexion->RetornarRegistros($sql);
                         </td>                     
                     </tr>
                     <tr height="60">
-                        <td>Direcci&oacute;n</td>
+                        <td>Direcci&oacute;n:</td>
                         <td colspan="4">
                             <div class="form-group">
                                 <textarea style="resize: none !important;" name="direccion" rows="2"  class="form-control"  id="direccion"></textarea>
