@@ -2,19 +2,22 @@
     margin: 0px;
     padding: 0px;
     list-style: none;
-    width: 1200px;
+    background: #EFEFEF;
+/*    width: 1200px;*/
+width: 1200px;
 
 }
 
 .nav li {
     float: left;
-    width: 300px;
+    width: 240px;
     position: relative;
 }
 
 .nav li a {
     /*background: #333;*/
-    background: #EFEFEF;
+   background: #EFEFEF;
+
     color: #000000;
     display: block;
     padding: 7px 8px;
@@ -34,7 +37,7 @@
 }
 
 .nav ul li {
-    width: 300px;
+    width: 240px;
     float: left;
 }
 

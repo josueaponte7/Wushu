@@ -15,10 +15,6 @@ if (isset($_POST['cedula'])) {
     $cedula = $_POST['cedula'];
 }
 
-if (isset($_POST['rif'])) {
-    $rif = $_POST['rif'];
-}
-
 if (isset($_POST['nombre'])) {
     $nombre = $_POST['nombre'];
 }
@@ -51,9 +47,9 @@ if (isset($_POST['direccion'])) {
     $direccion = $_POST['direccion'];
 }
 
-$dat_cedula   = explode('-', $cedula);
-$cedula       = $dat_cedula[1];
-$nacionalidad = $dat_cedula[0];
+//$dat_cedula   = explode('-', $cedula);
+//$cedula       = $dat_cedula[1];
+//$nacionalidad = $dat_cedula[0];
 
 
 switch ($accion) {
@@ -62,8 +58,8 @@ switch ($accion) {
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
             $fecha = $obj_conexion->formateaBD($fecha);
-            $sql   = "INSERT INTO entrenadores (nacionalidad,cedula, rif, nombre, sexo, telefono, email, direccion, id_asociacion, fecha, estatus)
-                                            VALUES ('$nacionalidad','$cedula','$rif', '$nombre', '$sexo', '$telefono', '$email', '$direccion', '$id_asociacion', '$fecha', '$estatus');";
+             $sql   = "INSERT INTO entrenadores (nacionalidad, cedula, nombre, sexo, telefono, email, direccion, id_asociacion, fecha, estatus)
+                                            VALUES ('$nacionalidad', '$cedula', '$nombre', '$sexo', '$telefono', '$email', '$direccion', '$id_asociacion', '$fecha', '$estatus');";
 
             $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {

@@ -44,10 +44,33 @@ if(isset($_SESSION['titulo'])){
                     //$('#cuerpo').css({'height': height});
                     //$( "#cuerpo" ).load( archivo );
                 });
+                
+//                 $('#salir').click(function() {
+//
+//                    window.parent.bootbox.confirm({
+//                        message: '&iquest;Desea Sali?',
+//                        buttons: {
+//                            'cancel': {
+//                                label: 'Cancelar',
+//                                className: 'btn-default'
+//                            },
+//                            'confirm': {
+//                                label: 'Aceptar',
+//                                className: 'btn-primary'
+//                            }
+//                        },
+//                        callback: function(result) {
+//                            if (result) {
+//                                window.location = 'controlador/Usuario.php';
+//                            }
+//                        }
+//                    });
+//                });
+                
             });
         </script>
     <body>
-        <div id="container">
+        <div id="container">            
             <div id="header"></div>
             <div class="navigation">
                 <ul class="nav">
@@ -88,10 +111,14 @@ if(isset($_SESSION['titulo'])){
                             <li><a href="#">USUARIOS</a></li>
                             <li><a href="#">AUDITORIA</a></li>
                             <li><a href="#">CAMBIAR CLAVE</a></li>
-                            <li><a href="#">AYUDA</a></li>
-                        </ul>
+                            <li><a href="#">AYUDA</a></li>                            
+                        </ul>                         
                     </li>
-                </ul>
+                    <li style="background: #EFEFEF;">
+                        <a href="salir.php" style="float: right">SALIR</a>
+                    </li>
+                    
+                </ul>                
             </div>
 
             <div id="conten">

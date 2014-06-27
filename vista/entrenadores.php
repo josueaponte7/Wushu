@@ -5,6 +5,10 @@ $obj_conexion = new Conexion();
 
 $sql       = "SELECT  id_asociacion, nombre FROM asociaciones";
 $resultado = $obj_conexion->RetornarRegistros($sql);
+
+$codigo = "SELECT  id,  codigo FROM codigo_telefono";
+$resulcod = $obj_conexion->RetornarRegistros($codigo);
+
 $archivo_actual = basename($_SERVER['PHP_SELF']);
 $_SESSION['archivo'] =  $archivo_actual;
 $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
@@ -177,7 +181,7 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                                 <option value="E">EXTRAJERO</option>
                             </select>
                         </td>
-                        <td width="88"><span style="margin-left: 10px;">C&eacute;dula:</span></td>
+                        <td width="88"><span style="margin-left: 35px;">C&eacute;dula:</span></td>
                         <td width="376">
                             <div class="form-group">
                                 <input type="text" style="background-color: #ffffff"  class="form-control" id="cedula" name="cedula" value="" maxlength="8" />
@@ -186,43 +190,51 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                     </tr>
 
                     <tr>
-                        <td>Rif:</td>
+                        <td>Nombres:</td>
                         <td width="376">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="rif" name="rif" value="" maxlength="12"/>
-                            </div>
-                        </td>
-                        <td width="79"><span style="margin-left: 10px;">Nombres:</span></td>
-                        <td width="351">
-                            <div  class="form-group">
                                 <input type="text" class="form-control" id="nombre" name="nombre" value="" />
                             </div>
-                        </td>                        
-                    </tr>
-                    <tr>
-                        <td>Sexo:</td>
+                        </td>
+                        <td width="79"><span style="margin-left: 35px;">Sexo:</span></td>
                         <td width="351">
                             <div class="form-group">
                                 <input type="radio" name="sexo" value="Masculino"   id="sexo" checked="checked" />Masculino
                                 <input type="radio" name="sexo" value="Femenino" id="sexo" />Femenino
                             </div>
-                        </td>
-                        <td><span style="margin-left: 10px;">Email:</span></td>
-                        <td>
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>Email:</td>
+                        <td width="351">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="email" name="email" value="" />
                             </div>
                         </td>
+                        <td width="115"><span style="margin-left: 35px;">Tel&eacute;fono:</span></td>
+                        <td>
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <select name="cod_telefono" class="form-control" id="cod_telefono" style="float: left; width: 85px;">
+                                        <option value="0">Cod</option>
+                                        <?php
+                                        for ($i = 0; $i < count($resulcod); $i++) {
+                                            ?>
+                                            <option value="<?php echo $resulcod[$i]['id']; ?>"><?php echo $resulcod[$i]['codigo']; ?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" style="width: 275px;" class="form-control" id="telefono" name="telefono" value="" maxlength="7" />
+                                </div>
+                            </div>
+                        </td> 
                     </tr>
 
                     <tr>
-                        <td>Tel&eacute;fonos:</td>
-                        <td>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="telefono" name="telefono" value="" maxlength="12"/>
-                            </div>
-                        </td>
-                        <td><span style="margin-left: 10px;">Asociaci&oacute;n:</span></td>
+                        <td>Asociaci&oacute;n:</td>
                         <td>
                             <select name="asociacion" class="form-control" id="asociacion">
                                 <option value="0">Seleccione</option>
@@ -234,23 +246,23 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                                 }
                                 ?>
                             </select>
+                        </td> 
+                        <td><span style="margin-left: 35px;">Fecha Nac:</span></td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fecha" name="fecha" value="" />
+                            </div>
                         </td>                        
                     </tr>
 
                     <tr>
-                        <td>Fecha:</td>
+                        <td>Estatus:</td>
                         <td width="337">
-                            <div class="form-group">
-                                <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fecha" name="fecha" value="" />
-                            </div>
-                        </td>
-                        <td height="45"><span style="margin-left: 10px;">Estatus:</span></td>
-                        <td>
                             <div class="form-group">
                                 <input type="radio" name="estatus" value="activo"   id="estatus" checked="checked" />Activo
                                 <input type="radio" name="estatus" value="inactivo" id="estatus" />Inactivo
                             </div>
-                        </td>                     
+                        </td>                                           
                     </tr>
                     <tr height="60">
                         <td>Direcci&oacute;n:</td>

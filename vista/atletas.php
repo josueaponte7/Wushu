@@ -166,26 +166,25 @@ $_SESSION['titulo'] = 'Agregar Registros de ATLETAS';
 
                     $.post("../controlador/atletas.php", {cedula: cedula, accion: 'BuscarDatos'}, function(resultado) {
                         var datos = resultado.split(";");
-                        $('#rif').val(datos[0]);
-                        $('#pasaporte').val(datos[1]);
-                        $('#telefono').val(datos[2]);
-                        $('#email').val(datos[3]);
-                        $('#direccion').val(datos[4]);
-                        $('#nivel_academico').val(datos[5]);
-                        $('#ocupacion').val(datos[6]);
-                        $('#asociacion').val(datos[7]);
-                        $('input:radio[name="estatus"][value="' + datos[8] + '"]').prop('checked', true);
-                        $('#patologias').val(datos[9]);
-                        $('#alergias').val(datos[10]);
-                        $('#tipo_sangre').val(datos[11]);
-                        $('#tal_zap').val(datos[12]);
-                        $('#tal_pan').val(datos[13]);
-                        $('#tal_cam').val(datos[14]);
-                        $('#tal_pet').val(datos[15]);
-                        $('#padre').val(datos[16]);
-                        $('#tel_padre').val(datos[17]);
-                        $('#madre').val(datos[18]);
-                        $('#tel_madre').val(datos[19]);
+                        $('#pasaporte').val(datos[0]);
+                        $('#telefono').val(datos[1]);
+                        $('#email').val(datos[2]);
+                        $('#direccion').val(datos[3]);
+                        $('#nivel_academico').val(datos[4]);
+                        $('#ocupacion').val(datos[5]);
+                        $('#asociacion').val(datos[6]);
+                        $('input:radio[name="estatus"][value="' + datos[7] + '"]').prop('checked', true);
+                        $('#patologias').val(datos[8]);
+                        $('#alergias').val(datos[9]);
+                        $('#tipo_sangre').val(datos[10]);
+                        $('#tal_zap').val(datos[11]);
+                        $('#tal_pan').val(datos[12]);
+                        $('#tal_cam').val(datos[13]);
+                        $('#tal_pet').val(datos[14]);
+                        $('#padre').val(datos[15]);
+                        $('#tel_padre').val(datos[16]);
+                        $('#madre').val(datos[17]);
+                        $('#tel_madre').val(datos[18]);
                         
                     });
                 });
@@ -225,43 +224,37 @@ $_SESSION['titulo'] = 'Agregar Registros de ATLETAS';
                                 <input type="text" class="form-control" id="cedula" name="cedula" value="" maxlength="10"/>
                             </div>
                         </td>
-                        <td width="119"><span style="margin-left: 50px;">Rif :</span></td>
+                        <td width="119"><span style="margin-left: 40px;">Pasaporte :</span></td>
                         <td width="332">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="rif" name="rif" value="" maxlength="12"/>
+                                <input type="text" class="form-control" id="pasaporte" name="pasaporte" value="" maxlength="10"/>
                             </div>
                         </td>
                     </tr>
 
                     <tr>                        
-                        <td width="106">Pasaporte:</td>
+                        <td width="106">Nombres:</td>
                         <td width="337">
-                            <div  class="form-group">
-                                <input type="text" class="form-control" id="pasaporte" name="pasaporte" value="" maxlength="10"/>
-                            </div>
-                        </td>
-                        <td width="119"><span style="margin-left: 50px;">Nombres:</span></td>
-                        <td width="332">
                             <div  class="form-group">
                                 <input type="text" class="form-control" id="nombre" name="nombre" value="" />
                             </div>
                         </td>
-                    </tr>
-
-                    <tr>                        
-                        <td width="106">FechaNac :</td>
-                        <td width="337">
-                            <div class="form-group">
+                        <td width="119"><span style="margin-left: 40px;">Fecha Nac:</span></td>
+                        <td width="332">
+                            <div  class="form-group">
                                 <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fechnac" name="fechnac" value="" />
                             </div>
                         </td>
-                        <td width="119"><span style="margin-left: 50px;">Sexo :</span></td>
-                        <td>
+                    </tr>
+
+                    <tr>                        
+                        <td width="106">Sexo:</td>
+                        <td width="337">
                             <div class="form-group">
                                 <input type="radio" name="sexo" value="Masculino"   id="sexo" checked="checked" />Masculino
                                 <input type="radio" name="sexo" value="Femenino" id="sexo" />Femenino
                             </div>
-                        </td>
+                        </td>                        
                     </tr> 
 
                     <tr>
