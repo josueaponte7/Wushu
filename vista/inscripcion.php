@@ -44,7 +44,7 @@ $_SESSION['titulo'] = 'Agregar Registros de INSCRIPCION';
         <script type="text/javascript">
             $(document).ready(function() {
 
-                var TAcategorias = $('#tbl_categoria').dataTable({
+                var TInscripcion = $('#tbl_inscripcion').dataTable({
                     "iDisplayLength": 5,
                     "iDisplayStart": 0,
                     "aLengthMenu": [5, 10, 20, 30, 40, 50],
@@ -101,7 +101,7 @@ $_SESSION['titulo'] = 'Agregar Registros de INSCRIPCION';
                                 var modificar = '<span class="accion modificar">Modificar</span>';
                                 var eliminar = '<span class="accion eliminar">Eliminar</span>';
                                 var accion = modificar + '&nbsp;' + eliminar
-                                TAcategorias.fnAddData([$('#descripcion').val(), $('#edad').val(), sexo, estilo, region, accion]);
+                                TInscripcion.fnAddData([$('#descripcion').val(), $('#edad').val(), sexo, estilo, region, accion]);
                                 $('input:text').val('');
                                 $('textarea').val('');
                                 $('select').val('0');
@@ -140,7 +140,7 @@ $_SESSION['titulo'] = 'Agregar Registros de INSCRIPCION';
                     }
                 });
 
-                $('table#tbl_categoria').on('click', '.modificar', function() {
+                $('table#tbl_inscripcion').on('click', '.modificar', function() {
 
                     $('#fila').remove();
                     var padre = $(this).closest('tr');
@@ -375,7 +375,7 @@ $_SESSION['titulo'] = 'Agregar Registros de INSCRIPCION';
                 
                 <tr>
                     <td colspan="4" align="center">
-                        <table border="0" id="tbl_categoria" class="dataTable">
+                        <table border="0" id="tbl_inscripcion" class="dataTable">
                             <thead>
                                 <tr>
                                     <th>Descripci&oacute;n</th>

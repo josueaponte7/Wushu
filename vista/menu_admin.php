@@ -94,8 +94,8 @@ if(isset($_SESSION['titulo'])){
                     </li>
                     <li>
                         <a href="#">REPORTES</a>
-                        <ul>
-                            <li><a href="eventos.php">PUNTOS ATLETAS</a></li>
+                        <ul>                           
+                        <li><a href="eventos.php">PUNTOS ATLETAS</a></li>
                             <li><a href="#">MEDALLAS ATLETAS</a></li>
                             <li><a href="#">PUNTOS ASOCIACION</a></li>
                             <li><a href="#">MEDALLAS ASOCIACION</a></li>

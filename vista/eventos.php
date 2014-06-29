@@ -140,8 +140,10 @@ $_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
                 });
 
                 $('#limpiar').click(function() {
+                    $('#descripcion').prop('disabled', false);
                     $('input:text').val('');
                     $('textarea').val('');
+                    $('select').val('0');
                     $('#ingresar').text('Guardar');
                 });
 

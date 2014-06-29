@@ -41,9 +41,9 @@ switch ($accion) {
         $sql_b       = "SELECT 1 FROM categorias WHERE descripcion = '$descripcion';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-            $sql = "INSERT INTO categorias (descripcion, edad, sexo,  modalidad,  id_estilo, id_region, id_tecnica,  estatus)
+  echo          $sql = "INSERT INTO categorias (descripcion, edad, sexo,  modalidad,  id_estilo, id_region, id_tecnica,  estatus)
                                           VALUES ('$descripcion', '$edad',  '$sexo', '$modalidad', '$id_estilo',  '$id_region', '$id_tecnica', '$estatus');";
-
+exit;
             $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {
                 echo 'exito';

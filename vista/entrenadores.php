@@ -6,12 +6,12 @@ $obj_conexion = new Conexion();
 $sql       = "SELECT  id_asociacion, nombre FROM asociaciones";
 $resultado = $obj_conexion->RetornarRegistros($sql);
 
-$codigo = "SELECT  id,  codigo FROM codigo_telefono";
+$codigo   = "SELECT  id,  codigo FROM codigo_telefono";
 $resulcod = $obj_conexion->RetornarRegistros($codigo);
 
-$archivo_actual = basename($_SERVER['PHP_SELF']);
-$_SESSION['archivo'] =  $archivo_actual;
-$_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
+$archivo_actual      = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] = $archivo_actual;
+$_SESSION['titulo']  = 'Agregar Registros de ENTRENADORES';
 ?>
 <!DOCTYPE html>
 <html>
@@ -47,7 +47,8 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                         {"sClass": "center", "sWidth": "30%"},
                         {"sWidth": "15%"},
                         {"sWidth": "15%"},
-                        {"sClass": "center", "sWidth": "12%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
+                        {"sWidth": "8%"},
+                        {"sClass": "center", "sWidth": "15%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
                     ]
                 });
 
@@ -57,14 +58,14 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                 var numero = '0123456789';
                 $('#cedula').validar(numero);
 
-                var numero = '0123456789-ve';
-                $('#rif').validar(numero);
-
                 var numero = '0123456789-';
                 $('#telefono').validar(numero);
 
+                var correo = '0123456789abcdefghijklmnopqrstuvwxyz_-.#$&*@';
+                $('#email').validar(correo);
+
                 /****Calendario*****/
-                $('#fecha').datepicker({
+                $('#fechnac').datepicker({
                     language: "es",
                     format: 'dd/mm/yyyy',
                     startDate: "-75y",
@@ -84,11 +85,19 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                                 $('input:text').val();
                                 $('input:radio').prop('ckecked', true);
 
+                                var nacionalidad = $('#nacionalidad').find(' option').filter(":selected").val();
+                                var cedula = nacionalidad + '-' + $('#cedula').val();
+
+                                var cod_telefono = $('#cod_telefono').find(' option').filter(":selected").text();
+                                var telefono = cod_telefono + '-' + $('#telefono').val();
+
+
                                 var sexo = $('input:radio[name="sexo"]:checked').val();
+                                var estatus = $('input:radio[name="estatus"]:checked').val();
                                 var modificar = '<span class="accion modificar">Modificar</span>';
                                 var eliminar = '<span class="accion eliminar">Eliminar</span>';
                                 var accion = modificar + '&nbsp;' + eliminar
-                                TAentrenadores.fnAddData([$('#cedula').val(), $('#nombre').val(), $('#telefono').val(), sexo, accion]);
+                                TAentrenadores.fnAddData([cedula, $('#nombre').val(), telefono, sexo, estatus, accion]);
                                 $('input:text').val('');
                                 $('textarea').val('');
                                 $('select').val('0');
@@ -104,14 +113,16 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                         var fila = $("#fila").val();
                         if (r == true) {
                             var sexo = $('input:radio[name="sexo"]:checked').val();
+                            var estatus = $('input:radio[name="estatus"]:checked').val();
                             $.post("../controlador/entrenadores.php", $("#frmentrenadores").serialize(), function(resultado) {
                                 if (resultado == 'exito') {
                                     alert('Modificaci\u00f3n  con exito');
 
-                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#cedula').val());
+//                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#cedula').val());
                                     $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#nombre').val());
-                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#telefono').val());
+//                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#telefono').val());
                                     $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
+                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(4).html(estatus);
                                     $('input:text').val('');
                                     $('textarea').val('');
                                     $('select').val('0');
@@ -125,14 +136,17 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
 
                     $('#fila').remove();
                     var padre = $(this).closest('tr');
-                    var cedula = padre.find('td').eq(0).text();
-                    var nombre = padre.find('td').eq(1).text();
-                    var telefono = padre.find('td').eq(2).text();
-                    var sexo = padre.find('td').eq(3).text();
+                    var cedula_c = padre.find('td').eq(0).text();
+                    var dat_cedula = cedula_c.split('-');
+                    var cedula = dat_cedula[1];
+
+//                    var nombre = padre.find('td').eq(1).text();
+//                    var telefono = padre.find('td').eq(2).text();
+//                    var sexo = padre.find('td').eq(3).text();
 
                     // obtener la fila a modificar
                     var fila = padre.index();
-                    
+
                     // crear el campo fila y añadir la fila
                     var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
                     $($fila).prependTo($('#frmentrenadores'));
@@ -140,19 +154,22 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                     $('#ingresar').text('Modificar');
 
                     $('#cedula').val(cedula).prop('disabled', true);
-                    $('#nombre').val(nombre);
-                    $('#telefono').val(telefono);
-                    $('input:radio[name="sexo"][value="' + sexo + '"]').prop('checked', true);
+//                    $('#nombre').val(nombre);
+//                    $('#telefono').val(telefono);
+//                    $('input:radio[name="sexo"][value="' + sexo + '"]').prop('checked', true);
 
                     $.post("../controlador/entrenadores.php", {cedula: cedula, accion: 'BuscarDatos'}, function(resultado) {
                         var datos = resultado.split(";");
                         $('#nacionalidad').val(datos[0]);
-                        $('#rif').val(datos[1]);
-                        $('#email').val(datos[2]);
-                        $('#asociacion').val(datos[3]);
-                        $('#fecha').val(datos[4]);
-                        $('input:radio[name="estatus"][value="' + datos[5] + '"]').prop('checked', true);
-                        $('#direccion').val(datos[6]);
+                        $('#nombre').val(datos[1]);
+                        $('input:radio[name="sexo"][value="' + datos[2] + '"]').prop('checked', true);
+                        $('#email').val(datos[3]);
+                        $('#cod_telefono').val(datos[4]);
+                        $('#telefono').val(datos[5]);
+                        $('#asociacion').val(datos[6]);
+                        $('#fechnac').val(datos[7]);
+                        $('input:radio[name="estatus"][value="' + datos[8] + '"]').prop('checked', true);
+                        $('#direccion').val(datos[9]);
                     });
                 });
 
@@ -250,7 +267,7 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                         <td><span style="margin-left: 35px;">Fecha Nac:</span></td>
                         <td>
                             <div class="form-group">
-                                <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fecha" name="fecha" value="" />
+                                <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fechnac" name="fechnac" value="" />
                             </div>
                         </td>                        
                     </tr>
@@ -259,8 +276,8 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                         <td>Estatus:</td>
                         <td width="337">
                             <div class="form-group">
-                                <input type="radio" name="estatus" value="activo"   id="estatus" checked="checked" />Activo
-                                <input type="radio" name="estatus" value="inactivo" id="estatus" />Inactivo
+                                <input type="radio" name="estatus" value="Activo"   id="estatus" checked="checked" />Activo
+                                <input type="radio" name="estatus" value="Inactivo" id="estatus" />Inactivo
                             </div>
                         </td>                                           
                     </tr>
@@ -291,16 +308,18 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                                         <th>Nombre</th>
                                         <th>Tel&eacute;fono</th>
                                         <th>Sexo</th>
+                                        <th>Estatus</th>
                                         <th>Acci&oacute;n</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $sql        = "SELECT CONCAT_WS('-', nacionalidad, cedula) AS cedula, 
-                                                                          nombre, 
-                                                                          telefono,
-                                                                          sexo
-                                                                 FROM entrenadores;";
+                                    $sql        = "SELECT CONCAT_WS('-', e.nacionalidad, e.cedula) AS cedula, 
+                                                            e.nombre, 
+                                                            CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = e.cod_telefono), e.telefono) AS telefono,
+                                                            e.sexo,
+                                                            e.estatus
+                                                            FROM entrenadores e";
                                     $resgistros = $obj_conexion->RetornarRegistros($sql);
 
                                     $es_array = is_array($resgistros) ? TRUE : FALSE;
@@ -312,6 +331,7 @@ $_SESSION['titulo'] = 'Agregar Registros de ENTRENADORES';
                                                 <td><?php echo $resgistros[$i]['nombre'] ?></td>
                                                 <td><?php echo $resgistros[$i]['telefono'] ?></td>
                                                 <td><?php echo $resgistros[$i]['sexo'] ?></td>
+                                                <td><?php echo $resgistros[$i]['estatus'] ?></td>
                                                 <td>
                                                     <span class="accion modificar">Modificar</span>
                                                     <span class="accion eliminar">Eliminar</span>

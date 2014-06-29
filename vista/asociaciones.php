@@ -3,7 +3,7 @@ session_start();
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
-$codigo = "SELECT  id,  codigo FROM codigo_telefono";
+$codigo   = "SELECT  id,  codigo FROM codigo_telefono";
 $resulcod = $obj_conexion->RetornarRegistros($codigo);
 
 $archivo_actual      = basename($_SERVER['PHP_SELF']);
@@ -98,11 +98,22 @@ $_SESSION['titulo']  = 'Agregar Registros de ASOCIACIONES';
                         var r = confirm("\u00BFDesea Modificar el Registro?");
                         var fila = $("#fila").val();
                         if (r == true) {
+                            var cod_telefono = $('#cod_telefono').find(' option').filter(":selected").text();
+                            var tel = cod_telefono + '-' + $('#telefono').val();
+
+                            var cod_telrep = $('#cod_telrep').find(' option').filter(":selected").text();
+                            var telp = cod_telrep + '-' + $('#tel_rep').val();
+
+                            var estatus = $('input:radio[name="estatus"]:checked').val();
                             $.post("../controlador/asociaciones.php", $("#frmasociaciones").serialize(), function(resultado) {
                                 if (resultado == 'exito') {
                                     alert('Modificaci\u00f3n  con exito');
 
                                     $("#tbl_asociacion tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#nombre').val());
+                                    $("#tbl_asociacion tbody tr:eq(" + fila + ")").find("td").eq(1).html(tel);
+                                    $("#tbl_asociacion tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#representante').val());
+                                    $("#tbl_asociacion tbody tr:eq(" + fila + ")").find("td").eq(3).html(telp);
+                                    $("#tbl_asociacion tbody tr:eq(" + fila + ")").find("td").eq(4).html(estatus);
                                     $('input:text').val('');
                                     $('textarea').val('');
                                     $('#ingresar').text('Registrar');
@@ -167,6 +178,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ASOCIACIONES';
                 });
 
                 $('#limpiar').click(function() {
+                    $('#nombre').prop('disabled',false);
                     $('input:text').val('');
                     $('textarea').val('');
                     $('#cod_telefono, #cod_telrep').val(0);
