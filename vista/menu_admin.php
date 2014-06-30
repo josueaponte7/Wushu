@@ -38,11 +38,18 @@ if(isset($_SESSION['titulo'])){
                 $('ul.nav li ul li a').click(function(e) {
                     var archivo = $(this).attr('href');
                     var titulo = $(this).text();
-                    $('#divTituloContenido').text('Agregar Registros de ' + titulo);
+                    var id = $(this).attr('id');
                     e.preventDefault();
-                    $('#ifrmcuerpo').attr('src', archivo);
-                    //$('#cuerpo').css({'height': height});
-                    //$( "#cuerpo" ).load( archivo );
+                    if(id == 'ra'){
+                        var url = archivo;
+                        window.open(url);
+                    }else{
+                        $('#divTituloContenido').text('Agregar Registros de ' + titulo);
+                        
+                        $('#ifrmcuerpo').attr('src', archivo);
+                        //$('#cuerpo').css({'height': height});
+                        //$( "#cuerpo" ).load( archivo );
+                    }
                 });
                 
 //                 $('#salir').click(function() {
@@ -95,7 +102,7 @@ if(isset($_SESSION['titulo'])){
                     <li>
                         <a href="#">REPORTES</a>
                         <ul>
-                            <li><a href="reportes/reporte_asociaciones.php">ASOCIACIONES</a></li>
+                            <li><a id="ra" href="reportes/reporte_asociaciones.php">ASOCIACIONES</a></li>
                             <li><a href="#">ENTRENADORES</a></li>
                             <li><a href="#">MODALIDADES</a></li>
                             <li><a href="#">CATEGORIAS</a></li>

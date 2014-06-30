@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set('America/Caracas');
 require_once '../../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
@@ -9,14 +10,12 @@ require_once './tcpdf/MyClass.php';
 
 
 $sql = "SELECT 
-                    a.nombre,  
-                    CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = a.cod_telefono), a.telefono) AS telefono,
-                    a.representante,  
-                    CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = a.cod_telrep), a.tel_rep) AS tel_rep, 
-                    a.estatus 
-                    FROM asociaciones a
-                    WHERE " . $campos['condicion'] . "
-                  ORDER BY a.nombre;";
+            a.nombre,  
+            CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = a.cod_telefono), a.telefono) AS telefono,
+            a.representante,  
+            CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = a.cod_telrep), a.tel_rep) AS tel_rep, 
+            a.estatus 
+        FROM asociaciones a   ORDER BY a.nombre;";
 
 $resultado     = $obj_conexion->RetornarRegistros($sql);
 
@@ -76,7 +75,7 @@ $pdf->SetX(18);
 $pdf->SetFillColor(39, 129, 213);
 
 // Titulos de la Cabecera
-$pdf->Cell($w_nombre, $row_height, 'Nombres', 1, 0, 'C', 1);
+$pdf->Cell($w_nombre, $row_height, 'Nombres', 1, 1, 'C', 1);
 //$pdf->Cell($w_nombres, $row_height, 'Nombres', 1, 0, 'L', 1);
 //$pdf->Cell($w_telefonos, $row_height, 'Teléfonos', 1, 1, 'L', 1);
 
@@ -131,13 +130,13 @@ for ($i = 0; $i < count($resultado); $i++) {
     // crear los registros a mostrar
     $pdf->SetFont('FreeSerif', '', 12);
     $pdf->SetX(18);
-    $pdf->Cell($w_nombre, $row_height, $nombre, 1, 0, 'C', 1);
+    $pdf->Cell($w_nombre, $row_height, $nombre, 1, 1, 'C', 1);
 //    $pdf->Cell($w_nombres, $row_height, $nombres, 1, 0, 'L', 1);
 //    $pdf->Cell($w_telefonos, $row_height, $telefonos, 1, 1, 'L', 1);
     $j++;
 }
 /* * *************Linea de fin de hoja con la cantidad total de registros********************* */
-$pdf->setCellMargins(0, 0, 0, 0);
+/*$pdf->setCellMargins(0, 0, 0, 0);
 $linea     = '------------------------------------------------------------------------------------------------------------------------------';
 $pdf->Ln();
 $pdf->SetFillColor(255, 255, 255);
@@ -145,7 +144,7 @@ $pdf->Cell(0, 0, $linea, 0, 0, 'L', 1);
 $pdf->Ln(6);
 //$pdf->Write(14, 'Registros:' . '' . $h);
 $pdf->SetFont('FreeSerif', '', 10);
-$registros = 'Total de Registros:<span style="color:#FF0000;">' . $total . '</span>';
-$pdf->writeHTML($registros, true, false, true, false, 'R');
+//$registros = 'Total de Registros:<span style="color:#FF0000;">' . $total . '</span>';
+//$pdf->writeHTML($registros, true, false, true, false, 'R');*/
 $pdf->Output('listado_choferes.pdf', 'I');
 
