@@ -94,14 +94,19 @@ if(isset($_SESSION['titulo'])){
                     </li>
                     <li>
                         <a href="#">REPORTES</a>
-                        <ul>                           
-                        <li><a href="eventos.php">PUNTOS ATLETAS</a></li>
+                        <ul>
+                            <li><a href="reportes/reporte_asociaciones.php">ASOCIACIONES</a></li>
+                            <li><a href="#">ENTRENADORES</a></li>
+                            <li><a href="#">MODALIDADES</a></li>
+                            <li><a href="#">CATEGORIAS</a></li>
+                            <li><a href="#">ATLETAS</a></li>
+<!--                        <li><a href="eventos.php">PUNTOS ATLETAS</a></li>
                             <li><a href="#">MEDALLAS ATLETAS</a></li>
                             <li><a href="#">PUNTOS ASOCIACION</a></li>
                             <li><a href="#">MEDALLAS ASOCIACION</a></li>
                             <li><a href="#">PREMACION CATEGORIAS</a></li>
                             <li><a href="#">PREMACION ASOCIACION</a></li>
-                            <li><a href="#">HISTORICO EVENTOS</a></li>
+                            <li><a href="#">HISTORICO EVENTOS</a></li>-->
                         </ul>
                     </li>
                     <li>
