@@ -6,15 +6,9 @@ $obj_conexion = new Conexion();
 require_once './tcpdf/spa.php';
 require_once './tcpdf/MyClass.php';
 
-$campos['condicion'] = 1;
-$nombre_condicion    = 'nombre';
-if (isset($_GET['nombre'])) {
 
-    $id                  = $_GET['nombre'];
-    $campos['condicion'] = " $nombre_condicion IN($id)";
-}
 
-$campos['sql'] = "SELECT 
+$sql = "SELECT 
                     a.nombre,  
                     CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = a.cod_telefono), a.telefono) AS telefono,
                     a.representante,  
@@ -23,7 +17,8 @@ $campos['sql'] = "SELECT
                     FROM asociaciones a
                     WHERE " . $campos['condicion'] . "
                   ORDER BY a.nombre;";
-$resultado     = $obj_conexion->RetornarRegistros($campos);
+
+$resultado     = $obj_conexion->RetornarRegistros($sql);
 
 //$total     = $obj->totalFilas('sociaciones AS a', 'a.nombre',$campos['condicion']);
 
