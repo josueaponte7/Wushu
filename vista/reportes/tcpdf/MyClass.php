@@ -7,7 +7,7 @@ class MyClass extends TCPDF
     public function Header()
     {
         $this->setJPEGQuality(90);
-        $this->Image('imagenes/top.png', 12, 5, 185, 12, 'PNG', FALSE);
+        //$this->Image('imagenes/top.png', 12, 5, 185, 12, 'PNG', FALSE);
     }
 
     public function Footer()

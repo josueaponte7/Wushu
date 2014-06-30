@@ -47,8 +47,8 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                     "aLengthMenu": [5, 10, 20, 30, 40, 50],
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
-                        {"sClass": "center", "sWidth": "4%"},
-                        {"sClass": "center", "sWidth": "30%"},
+                        {"sClass": "center", "sWidth": "25%"},
+                        {"sClass": "center", "sWidth": "10%"},
                         {"sWidth": "15%"},
                         {"sWidth": "15%"},
                         {"sWidth": "15%"},
@@ -173,7 +173,7 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
             <form id="frmcategorias">
                 <table width="912" border="0" align="center">
                     <tr>
-                        <td width="86">Descripci&oacute;n :</td>
+                        <td width="86">Categorias :</td>
                         <td width="332">
                             <div id="div_desc" class="form-group">
                                 <textarea style="height: 50px; resize: none !important; background-color: #ffffff;"  name="descripcion" rows="2"  class="form-control input-sm"  id="descripcion"></textarea>
@@ -286,7 +286,7 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                             <table border="0" id="tbl_categoria" class="dataTable">
                                 <thead>
                                     <tr>
-                                        <th>Descripci&oacute;n</th>
+                                        <th>Categorias</th>
                                         <th>Edad</th>
                                         <th>Genero</th>
                                         <th>Estilo</th>

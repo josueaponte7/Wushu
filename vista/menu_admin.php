@@ -96,24 +96,17 @@ if(isset($_SESSION['titulo'])){
                         <ul>
                             <li><a href="eventos.php">EVENTOS</a></li>
                             <li><a href="inscripcion.php">INSCRIPCIONES</a></li>
-                            <li><a href="#">PREMIACION</a></li>
+                            <li><a href="#">PREMIACI&Oacute;N</a></li>
                         </ul>
                     </li>
                     <li>
                         <a href="#">REPORTES</a>
                         <ul>
                             <li><a id="ra" href="reportes/reporte_asociaciones.php">ASOCIACIONES</a></li>
-                            <li><a href="#">ENTRENADORES</a></li>
-                            <li><a href="#">MODALIDADES</a></li>
-                            <li><a href="#">CATEGORIAS</a></li>
-                            <li><a href="#">ATLETAS</a></li>
-<!--                        <li><a href="eventos.php">PUNTOS ATLETAS</a></li>
-                            <li><a href="#">MEDALLAS ATLETAS</a></li>
-                            <li><a href="#">PUNTOS ASOCIACION</a></li>
-                            <li><a href="#">MEDALLAS ASOCIACION</a></li>
-                            <li><a href="#">PREMACION CATEGORIAS</a></li>
-                            <li><a href="#">PREMACION ASOCIACION</a></li>
-                            <li><a href="#">HISTORICO EVENTOS</a></li>-->
+                            <li><a id="ra" href="reportes/reporte_entrenadores.php">ENTRENADORES</a></li>
+                            <li><a id="ra" href="reportes/reporte_modalidades.php">MODALIDADES</a></li>
+                            <li><a id="ra" href="reportes/reporte_categorias.php">CATEGORIAS</a></li>
+                            <li><a id="ra" href="reportes/reporte_atletas.php">ATLETAS</a></li>
                         </ul>
                     </li>
                     <li>

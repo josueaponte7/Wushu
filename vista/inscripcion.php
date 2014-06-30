@@ -285,7 +285,7 @@ $_SESSION['titulo'] = 'Agregar Registros de INSCRIPCION';
                                 </select>
                             </div>
                         </td>
-                        <td><span style="margin-left: 100px;">Modalidades:</span></td>
+                        <td><span style="margin-left: 100px;">Disciplina:</span></td>
                         <td>
                             <div class="form-group">
                                 <select name="modalidad" class="form-control" id="modalidad">

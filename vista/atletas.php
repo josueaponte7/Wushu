@@ -49,12 +49,12 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                     "bLengthChange": false,
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
-                        {"sClass": "right", "sWidth": "4%"},
-                        {"sClass": "center", "sWidth": "30%"},
+                        {"sClass": "right", "sWidth": "10%"},
+                        {"sClass": "center", "sWidth": "25%"},
                         {"sWidth": "10%"},
-                        {"sWidth": "8%"},
-                        {"sWidth": "15%"},
-                        {"sWidth": "8%"},
+                        {"sWidth": "10%"},
+                        {"sWidth": "10%"},
+                        {"sWidth": "10%"},
                         {"sClass": "center", "sWidth": "18%", "bSortable": false, "bSearchable": false}
                     ]
                 });
@@ -596,10 +596,10 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                                     <tr>
                                         <th>Cedula</th>
                                         <th>Nombre</th>
-                                        <th>FecNac</th>
-                                        <th>Sexo</th>
-                                        <th>Asociacion</th>
+                                        <th>Fech.Nac</th>
+                                        <th>Sexo</th>                                        
                                         <th>Peso</th>
+                                        <th>Asociacion</th>
                                         <th>Acci&oacute;n</th>
                                     </tr>
                                 </thead>
@@ -608,9 +608,9 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                                     $sql        = "SELECT CONCAT_WS('-', atl.nacionalidad, atl.cedula) AS cedula, 
                                                                     atl.nombre, 
                                                                     DATE_FORMAT(atl.fechnac,'%d/%m/%Y') AS fecha,
-                                                                    atl.sexo,
-                                                                    aso.nombre AS asociacion,
-                                                                    atl.peso 
+                                                                    atl.sexo,                                                                    
+                                                                    atl.peso,
+                                                                    aso.nombre AS asociacion
                                                             FROM atletas atl
                                                             INNER JOIN asociaciones  aso ON atl.id_asociacion = aso.id_asociacion;";
                                     $resgistros = $obj_conexion->RetornarRegistros($sql);
@@ -623,9 +623,9 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                                                 <td align="right"><?php echo $resgistros[$i]['cedula'] ?></td>
                                                 <td><?php echo $resgistros[$i]['nombre'] ?></td>
                                                 <td><?php echo $resgistros[$i]['fecha'] ?></td>
-                                                <td><?php echo $resgistros[$i]['sexo'] ?></td>
-                                                <td><?php echo $resgistros[$i]['asociacion'] ?></td>
+                                                <td><?php echo $resgistros[$i]['sexo'] ?></td>                                                
                                                 <td><?php echo $resgistros[$i]['peso'] ?></td>
+                                                <td><?php echo $resgistros[$i]['asociacion'] ?></td>
                                                 <td>
                                                     <span class="accion modificar">Modificar</span>
                                                     <span class="accion eliminar">Eliminar</span>
