@@ -7,6 +7,10 @@ require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 $accion       = $_POST['accion'];
 
+if (isset($_POST['id_asociacion'])) {
+    $id_asociacion = $_POST['id_asociacion'];
+}
+
 if (isset($_POST['nombre'])) {
     $nombre = $_POST['nombre'];
 }
@@ -42,11 +46,11 @@ switch ($accion) {
     case 'Registrar':
 //        $condicion = "nombre = '$nombre'";
 //        $total     = $this->totalFilas('asociaciones', 'nombre', $condicion);
-        $sql_b       = "SELECT 1 FROM asociaciones WHERE nombre = '$nombre';";
+        $sql_b       = "SELECT 1 FROM asociaciones WHERE id_asociacion = '$id_asociacion';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-         $sql = "INSERT INTO asociaciones (nombre, cod_telefono, telefono, email, direccion, representante, cod_telrep, tel_rep, email_rep, estatus)
-                                            VALUES ('$nombre', '$cod_telefono', '$telefono','$email', '$direccion','$representante', '$cod_telrep', '$tel_rep', '$email_rep', '$estatus');";
+            $sql = "INSERT INTO asociaciones (id_asociacion, nombre, cod_telefono, telefono, email, direccion, representante, cod_telrep, tel_rep, email_rep, estatus)
+                                            VALUES ('$id_asociacion','$nombre', '$cod_telefono', '$telefono','$email', '$direccion','$representante', '$cod_telrep', '$tel_rep', '$email_rep', '$estatus');";
 
             $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {
@@ -72,7 +76,7 @@ switch ($accion) {
                   tel_rep = '$tel_rep',
                   email_rep = '$email_rep',
                   estatus = '$estatus'
-                WHERE nombre = '$nombre';";
+                WHERE id_asociacion= '$id_asociacion';";
 
         $resultado = $obj_conexion->_query($sql);
         if ($resultado == TRUE) {
@@ -81,7 +85,7 @@ switch ($accion) {
             echo 'error';
         }
         break;
-        
+
 //    case 'Eliminar':
 //        
 //         $sql = "UPDATE asociaciones SET  condicion = 0 WHERE nombre = $nombre;";
@@ -91,10 +95,10 @@ switch ($accion) {
 //        break;
 
     case 'BuscarDatos':
-        $sql       = "SELECT * FROM asociaciones WHERE nombre='$nombre'";
+        $sql       = "SELECT * FROM asociaciones WHERE id_asociacion='$id_asociacion'";
         $registros = $obj_conexion->RetornarRegistros($sql);
-        echo $registros[0]['cod_telefono'].';'. $registros[0]['telefono'].';'. $registros[0]['email'].';'. $registros[0]['direccion'].';'. 
-             $registros[0]['representante'].';'. $registros[0]['cod_telrep'].';'. $registros[0]['tel_rep'].';'. $registros[0]['email_rep'].';'. $registros[0]['estatus'];
+        echo $registros[0]['nombre'] . ';' . $registros[0]['cod_telefono'] . ';' . $registros[0]['telefono'] . ';' . $registros[0]['email'] . ';' . $registros[0]['direccion'] . ';' .
+        $registros[0]['representante'] . ';' . $registros[0]['cod_telrep'] . ';' . $registros[0]['tel_rep'] . ';' . $registros[0]['email_rep'] . ';' . $registros[0]['estatus'];
         break;
 }
 

@@ -3,7 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp/www/Wushu/modelo/Conexion.php</file>
+            <file>file:/C:/wamp/www/Wushu/vista/categorias.php</file>
+            <file>file:/C:/wamp/www/Wushu/vista/modalidades.php</file>
+            <file>file:/C:/wamp/www/Wushu/vista/asociaciones.php</file>
+            <file>file:/C:/wamp/www/Wushu/controlador/modalidades.php</file>
+            <file>file:/C:/wamp/www/Wushu/controlador/asociaciones.php</file>
+            <file>file:/C:/wamp/www/Wushu/controlador/categorias.php</file>
         </group>
     </open-files>
 </project-private>

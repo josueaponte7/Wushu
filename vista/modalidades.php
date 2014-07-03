@@ -1,10 +1,10 @@
 <?php
 session_start();
 require_once '../modelo/Conexion.php';
-$obj_conexion = new Conexion();
-$archivo_actual = basename($_SERVER['PHP_SELF']);
-$_SESSION['archivo'] =  $archivo_actual;
-$_SESSION['titulo'] = 'Agregar Registros de MODALIDADES';
+$obj_conexion        = new Conexion();
+$archivo_actual      = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] = $archivo_actual;
+$_SESSION['titulo']  = 'Agregar Registros de MODALIDADES';
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,6 +33,7 @@ $_SESSION['titulo'] = 'Agregar Registros de MODALIDADES';
                     "aLengthMenu": [5, 10, 20, 30, 40, 50],
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
+                        {"sClass": "center", "sWidth": "4%", "bSortable": false, "bSearchable": false},
                         {"sClass": "center", "sWidth": "15%"},
                         {"sWidth": "12%"},
                         {"sClass": "center", "sWidth": "4%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
@@ -43,11 +44,23 @@ $_SESSION['titulo'] = 'Agregar Registros de MODALIDADES';
                 $('#descripcion').validar(letra);
 
                 $('#ingresar').click(function() {
-
+                    $('#num_registro').remove();
                     var accion = $(this).text();
                     $('#accion').val(accion)
                     $('#descripcion').prop('disabled', false);
+
                     if (accion == 'Registrar') {
+                        // obtener el ultimo codigo del status 
+                        var codigo = 1;
+                        var TotalRow = TAmodalidades.fnGetData().length;
+                        if (TotalRow > 0) {
+                            var lastRow = TAmodalidades.fnGetData(TotalRow - 1);
+                            var codigo = parseInt(lastRow[0]) + 1;
+                        }
+
+                        var $num_registro = '<input type="hidden" id="num_registro"  value="' + codigo + '" name="num_registro">';
+                        $($num_registro).prependTo($('#frmmodalidades'));
+
                         $.post("../controlador/modalidades.php", $("#frmmodalidades").serialize(), function(resultado) {
                             if (resultado == 'exito') {
                                 alert('Registro con exito');
@@ -58,12 +71,12 @@ $_SESSION['titulo'] = 'Agregar Registros de MODALIDADES';
                                 var modificar = '<span class="accion modificar">Modificar</span>';
                                 var eliminar = '<span class="accion eliminar">Eliminar</span>';
                                 var accion = modificar + '&nbsp;' + eliminar
-                                TAmodalidades.fnAddData([$('#descripcion').val(), estatus, accion]);
+                                TAmodalidades.fnAddData([codigo, $('#descripcion').val(), estatus, accion]);
                                 $('input:text').val('');
                                 $('textarea').val('');
 
                             } else if (resultado == 'existe') {
-                                alert('El Nombre de la Modalidad ya esta registrado');
+                                alert('La Modalidad ya esta registrada');
                                 $('#d_descripcion').addClass('has-error');
                                 $('#descripcion').focus();
                             }
@@ -79,8 +92,8 @@ $_SESSION['titulo'] = 'Agregar Registros de MODALIDADES';
                                 if (resultado == 'exito') {
                                     alert('Modificaci\u00f3n  con exito');
 
-                                    $("#tbl_modalidades tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#descripcion').val());
-                                    $("#tbl_modalidades tbody tr:eq(" + fila + ")").find("td").eq(1).html(estatus);
+                                    $("#tbl_modalidades tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#descripcion').val());
+                                    $("#tbl_modalidades tbody tr:eq(" + fila + ")").find("td").eq(2).html(estatus);
                                     $('input:text').val('');
                                     $('textarea').val('');
                                     $('#ingresar').text('Registrar');
@@ -91,29 +104,42 @@ $_SESSION['titulo'] = 'Agregar Registros de MODALIDADES';
                 });
 
                 $('table#tbl_modalidades').on('click', '.modificar', function() {
+                    $('#num_registro').remove();
 
                     var padre = $(this).closest('tr');
-                    var descripcion = padre.find('td').eq(0).text();
-                    var estatus = padre.find('td').eq(1).text();
+                    var num_registro = padre.find('td').eq(0).text();
+//                    var descripcion = padre.find('td').eq(0).text();
+//                    var estatus = padre.find('td').eq(1).text();
 
                     // obtener la fila a modificar
                     var fila = padre.index();
-
-                    // crear el campo fila y añadir la fila
+                    
+                         // crear el campo fila y añadir la fila
                     var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
                     $($fila).prependTo($('#frmmodalidades'));
+
+                    var $num_registro = '<input type="hidden" id="num_registro"  value="' + num_registro + '" name="num_registro">';
+                    $($num_registro).appendTo($('#frmmodalidades'));
 
                     $('#ingresar').text('Modificar');
 
                     //$('#descripcion').val(descripcion);
-                    $('#descripcion').val(descripcion).prop('disabled', true);
-                    $('input:radio[name="estatus"][value="' + estatus + '"]').prop('checked', true);
+//                    $('#descripcion').val(descripcion).prop('disabled', true);
+                    //$('input:radio[name="estatus"][value="' + estatus + '"]').prop('checked', true);
 
-                    $.post("../controlador/modalidades.php", {descripcion: descripcion, accion: 'BuscarDatos'}, function(resultado) {
+                    $.post("../controlador/modalidades.php", {num_registro: num_registro, accion: 'BuscarDatos'}, function(resultado) {
 
                         var datos = resultado.split(";");
                         $('#descripcion').val(datos[0]);
                         $('input:radio[name="estatus"][value="' + datos[1] + '"]').prop('checked', true);
+                        
+                         // crear el campo fila y añadir la fila
+                    var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
+                    $($fila).prependTo($('#frmmodalidades'));
+
+                    var $num_registro = '<input type="hidden" id="num_registro"  value="' + num_registro + '" name="num_registro">';
+                    $($num_registro).appendTo($('#frmmodalidades'));
+                        
                     });
                 });
 
@@ -166,6 +192,7 @@ $_SESSION['titulo'] = 'Agregar Registros de MODALIDADES';
                             <table border="0" id="tbl_modalidades" class="dataTable">
                                 <thead>
                                     <tr>
+                                        <th>C&oacute;digo</th>
                                         <th>Descripcion</th>
                                         <th>Estatus</th>
                                         <th>Acci&oacute;n</th>
@@ -174,14 +201,15 @@ $_SESSION['titulo'] = 'Agregar Registros de MODALIDADES';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $sql          = "SELECT descripcion,estatus FROM modalidades";
-                                    $resgistros   = $obj_conexion->RetornarRegistros($sql);
+                                    $sql                 = "SELECT num_registro, descripcion,estatus FROM modalidades";
+                                    $resgistros          = $obj_conexion->RetornarRegistros($sql);
 
                                     $es_array = is_array($resgistros) ? TRUE : FALSE;
                                     if ($es_array == TRUE) {
                                         for ($i = 0; $i < count($resgistros); $i++) {
                                             ?>
                                             <tr>
+                                                <td><?php echo $resgistros[$i]['num_registro'] ?></td>
                                                 <td><?php echo $resgistros[$i]['descripcion'] ?></td>
                                                 <td><?php echo $resgistros[$i]['estatus'] ?></td>
                                                 <td>

@@ -14,9 +14,9 @@ $result    = $obj_conexion->RetornarRegistros($estilo);
 $resul     = $obj_conexion->RetornarRegistros($region);
 $resultec  = $obj_conexion->RetornarRegistros($tecnica);
 
-$archivo_actual = basename($_SERVER['PHP_SELF']);
-$_SESSION['archivo'] =  $archivo_actual;
-$_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
+$archivo_actual      = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] = $archivo_actual;
+$_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
 ?>
 <!DOCTYPE html>
 <html>
@@ -47,6 +47,7 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                     "aLengthMenu": [5, 10, 20, 30, 40, 50],
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
+                        {"sClass": "center", "sWidth": "4%", "bSortable": false, "bSearchable": false},
                         {"sClass": "center", "sWidth": "25%"},
                         {"sClass": "center", "sWidth": "10%"},
                         {"sWidth": "15%"},
@@ -63,11 +64,23 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                 $('#edad').validar(numero);
 
                 $('#ingresar').click(function() {
-
+                    $('#num_registro').remove();
                     var accion = $(this).text();
                     $('#accion').val(accion)
                     $('#descripcion').prop('disabled', false);
+
                     if (accion == 'Registrar') {
+                        // obtener el ultimo codigo del status 
+                        var codigo = 1;
+                        var TotalRow = TAcategorias.fnGetData().length;
+                        if (TotalRow > 0) {
+                            var lastRow = TAcategorias.fnGetData(TotalRow - 1);
+                            var codigo = parseInt(lastRow[0]) + 1;
+                        }
+
+                        var $num_registro = '<input type="hidden" id="num_registro"  value="' + codigo + '" name="num_registro">';
+                        $($num_registro).prependTo($('#frmcategorias'));
+
                         $.post("../controlador/categorias.php", $("#frmcategorias").serialize(), function(resultado) {
                             if (resultado == 'exito') {
                                 alert('Registro con exito');
@@ -81,13 +94,13 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                                 var modificar = '<span class="accion modificar">Modificar</span>';
                                 var eliminar = '<span class="accion eliminar">Eliminar</span>';
                                 var accion = modificar + '&nbsp;' + eliminar
-                                TAcategorias.fnAddData([$('#descripcion').val(), $('#edad').val(), sexo, estilo, region, accion]);
+                                TAcategorias.fnAddData([codigo, $('#descripcion').val(), $('#edad').val(), sexo, estilo, region, accion]);
                                 $('input:text').val('');
                                 $('textarea').val('');
                                 $('select').val('0');
 
                             } else if (resultado == 'existe') {
-                                alert('El Nombre de la Categoria ya esta registrado');
+                                alert('La Categoria ya esta registrada');
                                 $('#d_descripcion').addClass('has-error');
                                 $('#descripcion').focus();
                             }
@@ -104,11 +117,11 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                                 if (resultado == 'exito') {
                                     alert('Modificaci\u00f3n  con exito');
 
-                                    $("#tbl_categoria tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#descripcion').val());
-                                    $("#tbl_categoria tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#edad').val());
-                                    $("#tbl_categoria tbody tr:eq(" + fila + ")").find("td").eq(2).html(sexo);
-                                    $("#tbl_categoria tbody tr:eq(" + fila + ")").find("td").eq(3).html(estilo);
-                                    $("#tbl_categoria tbody tr:eq(" + fila + ")").find("td").eq(4).html(region);
+                                    $("#tbl_categoria tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#descripcion').val());
+                                    $("#tbl_categoria tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#edad').val());
+                                    $("#tbl_categoria tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
+                                    $("#tbl_categoria tbody tr:eq(" + fila + ")").find("td").eq(4).html(estilo);
+                                    $("#tbl_categoria tbody tr:eq(" + fila + ")").find("td").eq(5).html(region);
 
                                     $('input:text').val('');
                                     $('textarea').val('');
@@ -121,38 +134,46 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                 });
 
                 $('table#tbl_categoria').on('click', '.modificar', function() {
+                    $('#num_registro').remove();
 
                     $('#fila').remove();
                     var padre = $(this).closest('tr');
-                    var descripcion = padre.find('td').eq(0).text();
-                    var edad = padre.find('td').eq(1).text();
-                    var sexo = padre.find('td').eq(2).text();
-                    var estilo = padre.find('td').eq(3).text();
-                    var region = padre.find('td').eq(4).text();
+                    var num_registro = padre.find('td').eq(0).text();
+//                    var edad = padre.find('td').eq(1).text();
+//                    var sexo = padre.find('td').eq(2).text();
+//                    var estilo = padre.find('td').eq(3).text();
+//                    var region = padre.find('td').eq(4).text();
 
                     // obtener la fila a modificar
                     var fila = padre.index();
+
                     // crear el campo fila y añadir la fila
                     var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
                     $($fila).prependTo($('#frmcategorias'));
 
+                    var $num_registro = '<input type="hidden" id="num_registro"  value="' + num_registro + '" name="num_registro">';
+                    $($num_registro).appendTo($('#frmcategorias'));
+
                     $('#ingresar').text('Modificar');
 
-                    $('#descripcion').val(descripcion).prop('disabled', true);
-                    $('#edad').val(edad);
-                    $('input:radio[name="sexo"][value="' + sexo + '"]').prop('checked', true);
-                    $('#estilo').val(estilo);
-                    $('#region').val(region);
-
-
-                    $.post("../controlador/categorias.php", {descripcion: descripcion, accion: 'BuscarDatos'}, function(resultado) {
+                    $.post("../controlador/categorias.php", {num_registro: num_registro, accion: 'BuscarDatos'}, function(resultado) {
                         var datos = resultado.split(";");
-                        $('#edad').val(datos[0]);
-                        $('#modalidad').val(datos[1]);
-                        $('#estilo').val(datos[2]);
-                        $('#region').val(datos[3]);
-                        $('#tecnica').val(datos[4]);
-                        $('input:radio[name="estatus"][value="' + datos[5] + '"]').prop('checked', true);
+                        $('#descripcion').val(datos[0]);
+                        $('#edad').val(datos[1]);
+                        $('input:radio[name="sexo"][value="' + datos[2] + '"]').prop('checked', true);
+                        $('#modalidad').val(datos[3]);
+                        $('#estilo').val(datos[4]);
+                        $('#region').val(datos[5]);
+                        $('#tecnica').val(datos[6]);
+                        $('input:radio[name="estatus"][value="' + datos[7] + '"]').prop('checked', true);
+                        
+                        // crear el campo fila y añadir la fila
+                    var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
+                    $($fila).prependTo($('#frmcategorias'));
+
+                    var $num_registro = '<input type="hidden" id="num_registro"  value="' + num_registro + '" name="num_registro">';
+                    $($num_registro).appendTo($('#frmcategorias'));
+                    
                     });
                 });
 
@@ -263,8 +284,8 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                         <td><span style="margin-left: 58px;">Estatus:</span></td>
                         <td>
                             <div class="form-group">
-                                <input type="radio" name="estatus" value="activo"   id="activo" checked="checked" />Activo
-                                <input type="radio" name="estatus" value="inactivo" id="inactivo" />Inactivo
+                                <input type="radio" name="estatus" value="Activo"   id="activo" checked="checked" />Activo
+                                <input type="radio" name="estatus" value="Inactivo" id="inactivo" />Inactivo
                             </div>
                         </td>
                     </tr>
@@ -286,6 +307,7 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                             <table border="0" id="tbl_categoria" class="dataTable">
                                 <thead>
                                     <tr>
+                                        <th>C&oacute;digo</th>
                                         <th>Categorias</th>
                                         <th>Edad</th>
                                         <th>Genero</th>
@@ -297,6 +319,7 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                                 <tbody>
                                     <?php
                                     $sql        = "SELECT  
+                                                    ca.num_registro,
                                                     ca.descripcion,  
                                                     ca.edad,  
                                                     ca.sexo,
@@ -312,6 +335,7 @@ $_SESSION['titulo'] = 'Agregar Registros de CATEGORIAS';
                                         for ($i = 0; $i < count($resgistros); $i++) {
                                             ?>
                                             <tr>
+                                                <td><?php echo $resgistros[$i]['num_registro'] ?></td>
                                                 <td><?php echo $resgistros[$i]['descripcion'] ?></td>
                                                 <td><?php echo $resgistros[$i]['edad'] ?></td>
                                                 <td><?php echo $resgistros[$i]['sexo'] ?></td>

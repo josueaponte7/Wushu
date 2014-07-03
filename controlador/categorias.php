@@ -7,6 +7,9 @@ require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 $accion       = $_POST['accion'];
 
+if (isset($_POST['num_registro'])) {
+    $num_registro = $_POST['num_registro'];
+}
 if (isset($_POST['descripcion'])) {
     $descripcion = $_POST['descripcion'];
 }
@@ -34,11 +37,12 @@ if (isset($_POST['estatus'])) {
 
 switch ($accion) {
     case 'Registrar':
-        $sql_b       = "SELECT 1 FROM categorias WHERE descripcion = '$descripcion';";
+//        $sql_b       = "SELECT 1 FROM categorias WHERE descripcion = '$descripcion';";
+        $sql_b       = "SELECT 1 FROM categorias WHERE num_registro = '$num_registro';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-            $sql = "INSERT INTO categorias (descripcion, edad, sexo,  modalidad,  id_estilo, id_region, id_tecnica,  estatus)
-                                          VALUES ('$descripcion', '$edad',  '$sexo', '$modalidad', '$id_estilo',  '$id_region', '$id_tecnica', '$estatus');";
+            $sql = "INSERT INTO categorias (num_registro, descripcion, edad, sexo,  modalidad,  id_estilo, id_region, id_tecnica,  estatus)
+                                          VALUES ('$num_registro','$descripcion', '$edad',  '$sexo', '$modalidad', '$id_estilo',  '$id_region', '$id_tecnica', '$estatus');";
 
             $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {
@@ -62,7 +66,7 @@ switch ($accion) {
                           id_region = '$id_region',
                           id_tecnica = '$id_tecnica',
                           estatus = '$estatus'
-                        WHERE descripcion = '$descripcion';";
+                        WHERE num_registro = '$num_registro';";
 
         $resultado = $obj_conexion->_query($sql);
         if ($resultado == TRUE) {
@@ -73,10 +77,12 @@ switch ($accion) {
         break;
 
     case 'BuscarDatos':
-        $sql        = "SELECT * FROM categorias WHERE descripcion='$descripcion'";
+        $sql        = "SELECT * FROM categorias WHERE num_registro='$num_registro'";
         $resgistros = $obj_conexion->RetornarRegistros($sql);
 
-        echo $resgistros[0]['edad'] . ';' .
+        echo $resgistros[0]['descripcion'] . ';' .
+        $resgistros[0]['edad'] . ';' .
+        $resgistros[0]['sexo'] . ';' .
         $resgistros[0]['modalidad'] . ';' .
         $resgistros[0]['id_estilo'] . ';' .
         $resgistros[0]['id_region'] . ';' .

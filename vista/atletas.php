@@ -49,7 +49,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                     "bLengthChange": false,
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
-                        {"sClass": "right", "sWidth": "10%"},
+                        {"sClass": "center", "sWidth": "10%"},
                         {"sClass": "center", "sWidth": "25%"},
                         {"sWidth": "10%"},
                         {"sWidth": "10%"},
@@ -90,60 +90,67 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                 });
 
                 $('#ingresar').click(function() {
+//                    var val_correo = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
+//                    if ($('#email').val().length > 0 && !val_correo.test($('#email').val())) {
+//                        $('#div_email').addClass('has-error');
+//                        $('#email').focus();
+//                    } else {                    
 
-                    var accion = $(this).text();
-                    $('#accion').val(accion)
-                    $('#cedula').prop('disabled', false);
-                    if (accion == 'Registrar') {
-                        $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
-                            if (resultado == 'exito') {
-                                alert('Registro con exito');
-                                $('input:text').val();
-                                $('input:radio').prop('ckecked', true);
-
-                                var nacionalidad = $('#nacionalidad').find(' option').filter(":selected").val();
-                                var cedula = nacionalidad + '-' + $('#cedula').val();
-
-                                var sexo = $('input:radio[name="sexo"]:checked').val();
-                                var aso = $('#asociacion').find('option:selected').text();
-
-                                var modificar = '<span class="accion modificar">Modificar</span>';
-                                var eliminar = '<span class="accion eliminar">Eliminar</span>';
-                                var accion = modificar + '&nbsp;' + eliminar
-                                TAatletas.fnAddData([cedula, $('#nombre').val(), $('#fechnac').val(), sexo, aso, $('#peso').val(), accion]);
-                                $('input:text').val('');
-                                $('textarea').val('');
-                                $('select').val('0');
-
-                            } else if (resultado == 'existe') {
-                                alert('El Atleta ya esta registrado');
-                                $('#d_cedula').addClass('has-error');
-                                $('#cedula').focus();
-                            }
-                        });
-                    } else {
-                        var r = confirm("\u00BFDesea Modificar el Registro?");
-                        var fila = $("#fila").val();
-                        if (r == true) {
-                            var sexo = $('input:radio[name="sexo"]:checked').val();
-                            var aso = $('#asociacion').find('option:selected').text();
+                        var accion = $(this).text();
+                        $('#accion').val(accion)
+                        $('#cedula').prop('disabled', false);
+                        if (accion == 'Registrar') {
                             $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
                                 if (resultado == 'exito') {
-                                    alert('Modificaci\u00f3n  con exito');
+                                    alert('Registro con exito');
+                                    $('input:text').val();
+                                    $('input:radio').prop('ckecked', true);
 
-                                    $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#nombre').val());
-//                                    $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fechnac').val());
-                                    $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
-                                    $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(4).html(aso);
-                                    $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(5).html($('#peso').val());
+                                    var nacionalidad = $('#nacionalidad').find(' option').filter(":selected").val();
+                                    var cedula = nacionalidad + '-' + $('#cedula').val();
+
+                                    var sexo = $('input:radio[name="sexo"]:checked').val();
+                                    var aso = $('#asociacion').find('option:selected').text();
+
+                                    var modificar = '<span class="accion modificar">Modificar</span>';
+                                    var eliminar = '<span class="accion eliminar">Eliminar</span>';
+                                    var accion = modificar + '&nbsp;' + eliminar
+                                    TAatletas.fnAddData([cedula, $('#nombre').val(), $('#fechnac').val(), sexo, $('#peso').val(), aso, accion]);
                                     $('input:text').val('');
                                     $('textarea').val('');
                                     $('select').val('0');
-                                    $('#ingresar').text('Registrar');
+
+                                } else if (resultado == 'existe') {
+                                    alert('El Atleta ya esta registrado');
+                                    $('#d_cedula').addClass('has-error');
+                                    $('#cedula').focus();
                                 }
                             });
+                        } else {
+                            var r = confirm("\u00BFDesea Modificar el Registro?");
+                            var fila = $("#fila").val();
+                            if (r == true) {
+                                var sexo = $('input:radio[name="sexo"]:checked').val();
+                                var aso = $('#asociacion').find('option:selected').text();
+                                $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
+                                    if (resultado == 'exito') {
+                                        alert('Modificaci\u00f3n  con exito');
+
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#nombre').val());
+//                                    $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fechnac').val());
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);                                        
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(4).html($('#peso').val());
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(5).html(aso);
+                                        $('input:text').val('');
+                                        $('textarea').val('');
+                                        $('select').val('0');
+                                        $('#ingresar').text('Registrar');
+                                    }
+                                });
+                            }
                         }
-                    }
+
+//}
                 });
 
                 $('table#tbl_atletas').on('click', '.modificar', function() {
@@ -247,7 +254,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                         <td width="106"><span style="margin-left: 40px;">C&eacute;dula :</span></td>
                         <td width="337">
                             <div  id="d_cedula" class="form-group">
-                                <input type="text" style="background-color: #ffffff" class="form-control" id="cedula" name="cedula" value="" maxlength="10"/>
+                                <input type="text" style="background-color: #ffffff" class="form-control" id="cedula" name="cedula" value="" maxlength="8"/>
                             </div>
                         </td>                        
                     </tr>
@@ -346,7 +353,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                                             </td> 
                                             <td width="119"><span style="margin-left: 50px;">Email:</span></td>
                                             <td>
-                                                <div class="form-group">
+                                                <div id="div_email" class="form-group">
                                                     <input type="text" class="form-control" id="email" name="email" value="" />
                                                 </div>
                                             </td>

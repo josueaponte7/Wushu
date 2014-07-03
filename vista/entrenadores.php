@@ -74,64 +74,75 @@ $_SESSION['titulo']  = 'Agregar Registros de ENTRENADORES';
                 });
 
                 $('#ingresar').click(function() {
-
-                    var accion = $(this).text();
-                    $('#accion').val(accion)
-                    $('#cedula').prop('disabled', false);
-                    if (accion == 'Registrar') {
-                        $.post("../controlador/entrenadores.php", $("#frmentrenadores").serialize(), function(resultado) {
-                            if (resultado == 'exito') {
-                                alert('Registro con exito');
-                                $('input:text').val();
-                                $('input:radio').prop('ckecked', true);
-
-                                var nacionalidad = $('#nacionalidad').find(' option').filter(":selected").val();
-                                var cedula = nacionalidad + '-' + $('#cedula').val();
-
-                                var cod_telefono = $('#cod_telefono').find(' option').filter(":selected").text();
-                                var telefono = cod_telefono + '-' + $('#telefono').val();
-
-
-                                var sexo = $('input:radio[name="sexo"]:checked').val();
-                                var estatus = $('input:radio[name="estatus"]:checked').val();
-                                var modificar = '<span class="accion modificar">Modificar</span>';
-                                var eliminar = '<span class="accion eliminar">Eliminar</span>';
-                                var accion = modificar + '&nbsp;' + eliminar
-                                TAentrenadores.fnAddData([cedula, $('#nombre').val(), telefono, sexo, estatus, accion]);
-                                $('input:text').val('');
-                                $('textarea').val('');
-                                $('select').val('0');
-
-                            } else if (resultado == 'existe') {
-                                alert('El Entrenador ya esta registrado');
-                                $('#d_cedula').addClass('has-error');
-                                $('#cedula').focus();
-                            }
-                        });
+                    var val_correo = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
+                    if ($('#email').val().length > 0 && !val_correo.test($('#email').val())) {
+                        $('#div_email').addClass('has-error');
+                        $('#email').focus();
                     } else {
-                        var r = confirm("\u00BFDesea Modificar el Registro?");
-                        var fila = $("#fila").val();
-                        if (r == true) {
-                            var sexo = $('input:radio[name="sexo"]:checked').val();
-                            var estatus = $('input:radio[name="estatus"]:checked').val();
+
+                        var accion = $(this).text();
+                        $('#accion').val(accion)
+                        $('#cedula').prop('disabled', false);
+                        if (accion == 'Registrar') {
+                            var cod_telefono = $('#cod_telefono').find(' option').filter(":selected").text();
+                            var tel = cod_telefono + '-' + $('#telefono').val();
+
+
                             $.post("../controlador/entrenadores.php", $("#frmentrenadores").serialize(), function(resultado) {
                                 if (resultado == 'exito') {
-                                    alert('Modificaci\u00f3n  con exito');
+                                    alert('Registro con exito');
+                                    $('input:text').val();
+                                    $('input:radio').prop('ckecked', true);
 
-//                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#cedula').val());
-                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#nombre').val());
-//                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#telefono').val());
-                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
-                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(4).html(estatus);
+                                    var nacionalidad = $('#nacionalidad').find(' option').filter(":selected").val();
+                                    var cedula = nacionalidad + '-' + $('#cedula').val();
+
+                                    var sexo = $('input:radio[name="sexo"]:checked').val();
+                                    var estatus = $('input:radio[name="estatus"]:checked').val();
+                                    var modificar = '<span class="accion modificar">Modificar</span>';
+                                    var eliminar = '<span class="accion eliminar">Eliminar</span>';
+                                    var accion = modificar + '&nbsp;' + eliminar
+                                    TAentrenadores.fnAddData([cedula, $('#nombre').val(), tel, sexo, estatus, accion]);
                                     $('input:text').val('');
                                     $('textarea').val('');
                                     $('select').val('0');
-                                    $('#ingresar').text('Registrar');
+
+                                } else if (resultado == 'existe') {
+                                    alert('El Entrenador ya esta registrado');
+                                    $('#d_cedula').addClass('has-error');
+                                    $('#cedula').focus();
                                 }
                             });
+                        } else {
+                            var r = confirm("\u00BFDesea Modificar el Registro?");
+                            var fila = $("#fila").val();
+                            if (r == true) {
+                                var cod_telefono = $('#cod_telefono').find(' option').filter(":selected").text();
+                                var tel = cod_telefono + '-' + $('#telefono').val();
+
+                                var sexo = $('input:radio[name="sexo"]:checked').val();
+                                var estatus = $('input:radio[name="estatus"]:checked').val();
+                                $.post("../controlador/entrenadores.php", $("#frmentrenadores").serialize(), function(resultado) {
+                                    if (resultado == 'exito') {
+                                        alert('Modificaci\u00f3n  con exito');
+
+//                                    $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#cedula').val());
+                                        $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#nombre').val());
+                                        $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(2).html(tel);
+                                        $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
+                                        $("#tbl_entrenadores tbody tr:eq(" + fila + ")").find("td").eq(4).html(estatus);
+                                        $('input:text').val('');
+                                        $('textarea').val('');
+                                        $('select').val('0');
+                                        $('#ingresar').text('Registrar');
+                                    }
+                                });
+                            }
                         }
+
                     }
                 });
+                
                 $('table#tbl_entrenadores').on('click', '.modificar', function() {
 
                     $('#fila').remove();
@@ -224,7 +235,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ENTRENADORES';
                     <tr>
                         <td>Email:</td>
                         <td width="351">
-                            <div class="form-group">
+                            <div id="div_email" class="form-group">
                                 <input type="text" class="form-control" id="email" name="email" value="" />
                             </div>
                         </td>

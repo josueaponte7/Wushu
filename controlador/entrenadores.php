@@ -78,7 +78,7 @@ switch ($accion) {
 
     case 'Modificar':
         $fechnac = $obj_conexion->formateaBD($fechnac);
-        $sql   = " UPDATE entrenadores
+       $sql   = " UPDATE entrenadores
                     SET 
                       nacionalidad = '$nacionalidad',
                       nombre = '$nombre',

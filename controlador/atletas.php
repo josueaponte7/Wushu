@@ -128,7 +128,8 @@ switch ($accion) {
         $sql_b       = "SELECT 1 FROM atletas WHERE cedula = '$cedula';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-            $fechnac   = $obj_conexion->formateaBD($fechnac);
+            $fechnac = $obj_conexion->formateaBD($fechnac);
+
              $sql       = "INSERT INTO atletas (nacionalidad, cedula, pasaporte, nombre, fechnac, sexo, cod_telefono,telefono, email, direccion, id_nivel,  ocupacion, id_asociacion, patologias,
                                          alergias, id_tipo, peso, tal_zap, tal_pan, tal_cam, tal_pet,  padre, cod_telpadre, tel_padre, madre, cod_telmadre, tel_madre, estatus)
                                  VALUES ('$nacionalidad', '$cedula', '$pasaporte', '$nombre', '$fechnac', '$sexo', '$cod_telefono', '$telefono', '$email', '$direccion', '$id_nivel', '$ocupacion', '$id_asociacion',
@@ -188,7 +189,7 @@ switch ($accion) {
         break;
 
     case 'BuscarDatos':
-        $sql       = "SELECT
+        $sql = "SELECT
                             nacionalidad,
                             pasaporte,
                             nombre,
@@ -217,17 +218,17 @@ switch ($accion) {
                             tel_madre,
                             estatus
                           FROM atletas WHERE cedula=$cedula";
-        
+
         $registros = $obj_conexion->RetornarRegistros($sql);
-        echo $registros[0]['nacionalidad']. ';' .
-        $registros[0]['pasaporte'].';'.
-        $registros[0]['nombre'].';'.
+        echo $registros[0]['nacionalidad'] . ';' .
+        $registros[0]['pasaporte'] . ';' .
+        $registros[0]['nombre'] . ';' .
         $registros[0]['fechnac'] . ';' .
         $registros[0]['sexo'] . ';' .
         $registros[0]['cod_telefono'] . ';' .
         $registros[0]['telefono'] . ';' .
-        $registros[0]['email']. ';' .                
-        $registros[0]['direccion']. ';' .  
+        $registros[0]['email'] . ';' .
+        $registros[0]['direccion'] . ';' .
         $registros[0]['id_nivel'] . ';' .
         $registros[0]['ocupacion'] . ';' .
         $registros[0]['id_asociacion'] . ';' .
@@ -238,13 +239,13 @@ switch ($accion) {
         $registros[0]['tal_zap'] . ';' .
         $registros[0]['tal_pan'] . ';' .
         $registros[0]['tal_cam'] . ';' .
-        $registros[0]['tal_pet']. ';' .
+        $registros[0]['tal_pet'] . ';' .
         $registros[0]['padre'] . ';' .
         $registros[0]['cod_telpadre'] . ';' .
         $registros[0]['tel_padre'] . ';' .
         $registros[0]['madre'] . ';' .
-        $registros[0]['cod_telmadre']. ';' .
-        $registros[0]['tel_madre']. ';' .
+        $registros[0]['cod_telmadre'] . ';' .
+        $registros[0]['tel_madre'] . ';' .
         $registros[0]['estatus'];
         break;
 }
