@@ -41,7 +41,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
         </style>
         <script type="text/javascript">
             $(document).ready(function() {
-
+				
                 var TAatletas = $('#tbl_atletas').dataTable({
                     "iDisplayLength": 5,
                     "iDisplayStart": 0,
@@ -59,7 +59,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                     ]
                 });
 
-                var numero = '0123456789-ve';
+                var numero = '0123456789S';
                 $('#cedula, #pasaporte').validar(numero);
 
                 var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
@@ -85,7 +85,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                     language: "es",
                     format: 'dd/mm/yyyy',
                     startDate: "-75y",
-                    endDate: "-15y",
+                    endDate: "-5y",
                     autoclose: true
                 });
 
@@ -94,8 +94,14 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
 //                    if ($('#email').val().length > 0 && !val_correo.test($('#email').val())) {
 //                        $('#div_email').addClass('has-error');
 //                        $('#email').focus();
-//                    } else {                    
-
+//                    } else {  
+						var $nacionalidad = $('#nacionalidad').find('option').filter(':selected')
+						
+						if($nacionalidad.val()== 0){
+							alert('Debe Ingresar la nacionalidad');
+						}else if($('#cedula').val() == ''){
+							alert('Debe Ingresar la Cedula');
+						}else{
                         var accion = $(this).text();
                         $('#accion').val(accion)
                         $('#cedula').prop('disabled', false);
@@ -149,7 +155,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                                 });
                             }
                         }
-
+					}
 //}
                 });
 

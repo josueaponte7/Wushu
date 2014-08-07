@@ -52,7 +52,6 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                         {"sClass": "center", "sWidth": "10%"},
                         {"sWidth": "15%"},
                         {"sWidth": "15%"},
-                        {"sWidth": "15%"},
                         {"sClass": "center", "sWidth": "18%", "bSortable": false, "bSearchable": false}
                     ]
                 });
@@ -249,24 +248,7 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                                 </select>
                             </div>
                         </td>
-                        <td><span style="margin-left: 58px;">Regi&oacute;n:</span></td>
-                        <td>
-                            <div class="form-group">
-                                <select name="region" class="form-control" id="region">
-                                    <option value="0">Seleccione</option>
-                                    <?php
-                                    for ($i = 0; $i < count($resul); $i++) {
-                                        ?>
-                                        <option value="<?php echo $resul[$i]['id_region']; ?>"><?php echo $resul[$i]['nombre_region']; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>T&eacute;cnica :</td>
+                        <td><span style="margin-left: 58px;">T&eacute;cnica:</span></td>
                         <td>
                             <div class="form-group">
                                 <select name="tecnica" class="form-control" id="tecnica">
@@ -281,7 +263,9 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                                 </select>
                             </div>
                         </td>
-                        <td><span style="margin-left: 58px;">Estatus:</span></td>
+                    </tr>
+                    <tr>
+                        <td>Estatus:</td>
                         <td>
                             <div class="form-group">
                                 <input type="radio" name="estatus" value="Activo"   id="activo" checked="checked" />Activo
@@ -312,7 +296,6 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                                         <th>Edad</th>
                                         <th>Genero</th>
                                         <th>Estilo</th>
-                                        <th>Regi&oacute;n</th>
                                         <th>Acci&oacute;n</th>
                                     </tr>
                                 </thead>
@@ -323,8 +306,7 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                                                     ca.descripcion,  
                                                     ca.edad,  
                                                     ca.sexo,
-                                                    es.nombre_estilo AS estilo,
-                                                    re.nombre_region AS region
+                                                    es.nombre_estilo AS estilo
                                                     FROM categorias ca
                                                     INNER JOIN estilo AS es ON ca.id_estilo = es.id_estilo
                                                     INNER JOIN region AS re ON ca.id_region = re.id_region";
@@ -340,7 +322,6 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                                                 <td><?php echo $resgistros[$i]['edad'] ?></td>
                                                 <td><?php echo $resgistros[$i]['sexo'] ?></td>
                                                 <td><?php echo $resgistros[$i]['estilo'] ?></td>
-                                                <td><?php echo $resgistros[$i]['region'] ?></td>
                                                 <td>
                                                     <span class="accion modificar">Modificar</span>
                                                     <span class="accion eliminar">Eliminar</span>

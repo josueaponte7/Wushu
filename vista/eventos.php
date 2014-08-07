@@ -6,9 +6,9 @@ $obj_conexion = new Conexion();
 $sql       = "SELECT id_estatus, estatus_evento FROM estatus_evento";
 $resultado = $obj_conexion->RetornarRegistros($sql);
 
-$archivo_actual = basename($_SERVER['PHP_SELF']);
-$_SESSION['archivo'] =  $archivo_actual;
-$_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
+$archivo_actual      = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] = $archivo_actual;
+$_SESSION['titulo']  = 'Agregar Registros de EVENTOS';
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,9 +39,10 @@ $_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
                     "aLengthMenu": [5, 10, 20, 30, 40, 50],
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
+                        {"sClass": "center", "sWidth": "4%", "bSortable": false, "bSearchable": false},
                         {"sClass": "center", "sWidth": "15%"},
-                        {"sClass": "center", "sWidth": "10%"},
-                        {"sWidth": "10%"},
+                        {"sClass": "center", "sWidth": "12%"},
+                        {"sWidth": "12%"},
                         {"sWidth": "30%"},
                         {"sClass": "center", "sWidth": "15%", "bSortable": false, "bSearchable": false}
                     ]
@@ -66,12 +67,23 @@ $_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
 
 
                 $('#ingresar').click(function() {
-//                    var usuario = $('#usuario').val();
-//                    var clave = $('#clave').val();
+                    $('#num_registro').remove();
                     var accion = $(this).text();
                     $('#accion').val(accion);
                     $('#descripcion').prop('disabled', false);
+
                     if (accion == 'Registrar') {
+                        // obtener el ultimo codigo del status 
+                        var codigo = 1;
+                        var TotalRow = TEvento.fnGetData().length;
+                        if (TotalRow > 0) {
+                            var lastRow = TEvento.fnGetData(TotalRow - 1);
+                            var codigo = parseInt(lastRow[0]) + 1;
+                        }
+
+                        var $num_registro = '<input type="hidden" id="num_registro"  value="' + codigo + '" name="num_registro">';
+                        $($num_registro).prependTo($('#frmeventos'));
+
                         $.post("../controlador/eventos.php", $("#frmeventos").serialize(), function(resultado) {
                             if (resultado == 'exito') {
                                 alert('Registro con exito');
@@ -80,7 +92,7 @@ $_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
                                 var modificar = '<span class="accion modificar">Modificar</span>';
                                 var eliminar = '<span class="accion eliminar">Eliminar</span>';
                                 var accion = modificar + '&nbsp;' + eliminar
-                                TEvento.fnAddData([$('#descripcion').val(), $('#fecha_inicio').val(), $('#fecha_fin').val(), $('#organizadores').val(), accion]);
+                                TEvento.fnAddData([codigo, $('#descripcion').val(), $('#fecha_inicio').val(), $('#fecha_fin').val(), $('#organizadores').val(), accion]);
                                 $('input:text').val('');
                                 $('textarea').val('');
 
@@ -98,10 +110,10 @@ $_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
                                 if (resultado == 'exito') {
                                     alert('Modificaci\u00f3n  con exito');
 
-                                    $("#tbl_evento tbody tr:eq(" + fila + ")").find("td").eq(0).html($('#descripcion').val());
-                                    $("#tbl_evento tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#fecha_inicio').val());
-                                    $("#tbl_evento tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fecha_fin').val());
-                                    $("#tbl_evento tbody tr:eq(" + fila + ")").find("td").eq(3).html($('#organizadores').val());
+                                    $("#tbl_evento tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#descripcion').val());
+                                    $("#tbl_evento tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fecha_inicio').val());
+                                    $("#tbl_evento tbody tr:eq(" + fila + ")").find("td").eq(3).html($('#fecha_fin').val());
+                                    $("#tbl_evento tbody tr:eq(" + fila + ")").find("td").eq(4).html($('#organizadores').val());
                                     $('input:text').val('');
                                     $('textarea').val('');
                                     $('#ingresar').text('Registrar');
@@ -113,28 +125,38 @@ $_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
                 });
 
                 $('table#tbl_evento').on('click', '.modificar', function() {
+                    $('#num_registro').remove();
+
                     var padre = $(this).closest('tr');
-                    var descripcion = padre.find('td').eq(0).text();
-                    var fecha_inicio = padre.find('td').eq(1).text();
-                    var fecha_fin = padre.find('td').eq(2).text();
-                    var organizadores = padre.find('td').eq(3).text();
+                    var num_registro = padre.find('td').eq(0).text();
 
                     // obtener la fila a modificar
                     var fila = padre.index();
+
                     // crear el campo fila y añadir la fila
                     var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
                     $($fila).prependTo($('#frmeventos'));
 
-                    $('#ingresar').text('Modificar');
-                    $('#descripcion').val(descripcion).prop('disabled', true);
-                    $('#fecha_inicio').val(fecha_inicio);
-                    $('#fecha_fin').val(fecha_fin);
-                    $('#organizadores').val(organizadores);
+                    var $num_registro = '<input type="hidden" id="num_registro"  value="' + num_registro + '" name="num_registro">';
+                    $($num_registro).appendTo($('#frmeventos'));
 
-                    $.post("../controlador/eventos.php", {descripcion: descripcion, accion: 'BuscarDatos'}, function(resultado) {
+                    $('#ingresar').text('Modificar');
+
+                    $.post("../controlador/eventos.php", {num_registro: num_registro, accion: 'BuscarDatos'}, function(resultado) {
                         var datos = resultado.split(";");
-                        $('#lugar').val(datos[0]);
-                        $('#estatus').val(datos[1]);
+                        $('#descripcion').val(datos[0]);
+                        $('#lugar').val(datos[1]);
+                        $('#fecha_inicio').val(datos[2]);
+                        $('#fecha_fin').val(datos[3]);
+                        $('#organizadores').val(datos[4]);
+                        $('#estatus').val(datos[5]);
+
+                        // crear el campo fila y añadir la fila
+                        var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
+                        $($fila).prependTo($('#frmeventos'));
+
+                        var $num_registro = '<input type="hidden" id="num_registro"  value="' + num_registro + '" name="num_registro">';
+                        $($num_registro).appendTo($('#frmeventos'));
 
                     });
                 });
@@ -221,6 +243,7 @@ $_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
                             <table border="0" id="tbl_evento" class="dataTable">
                                 <thead>
                                     <tr>
+                                        <th>C&oacute;digo</th>
                                         <th>Descripci&oacute;n</th>
                                         <th>Fecha Inicio</th>
                                         <th>Fecha Fin</th>
@@ -231,6 +254,7 @@ $_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
                                 <tbody>
                                     <?php
                                     $sql        = "SELECT
+                                                        e.num_registro,
                                                         e.descripcion,
                                                         DATE_FORMAT(e.fecha_inicio,'%d/%m/%Y') AS fecha_inicio,
                                                         DATE_FORMAT(e.fecha_fin, '%d/%m/%Y') AS fecha_fin,
@@ -245,6 +269,7 @@ $_SESSION['titulo'] = 'Agregar Registros de EVENTOS';
                                         for ($i = 0; $i < count($resgistros); $i++) {
                                             ?>
                                             <tr>
+                                                <td><?php echo $resgistros[$i]['num_registro'] ?></td>
                                                 <td><?php echo $resgistros[$i]['descripcion'] ?></td>
                                                 <td><?php echo $resgistros[$i]['fecha_inicio'] ?></td>
                                                 <td><?php echo $resgistros[$i]['fecha_fin'] ?></td>

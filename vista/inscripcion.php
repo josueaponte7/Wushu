@@ -17,9 +17,9 @@ $result    = $obj_conexion->RetornarRegistros($estilo);
 $resul     = $obj_conexion->RetornarRegistros($region);
 $res       = $obj_conexion->RetornarRegistros($evento);
 
-$archivo_actual = basename($_SERVER['PHP_SELF']);
-$_SESSION['archivo'] =  $archivo_actual;
-$_SESSION['titulo'] = 'Agregar Registros de INSCRIPCION';
+$archivo_actual      = basename($_SERVER['PHP_SELF']);
+$_SESSION['archivo'] = $archivo_actual;
+$_SESSION['titulo']  = 'Agregar Registros de INSCRIPCION';
 ?>
 <!DOCTYPE html>
 <html>
@@ -303,22 +303,7 @@ $_SESSION['titulo'] = 'Agregar Registros de INSCRIPCION';
                     </tr>
 
                     <tr>
-                        <td>Estilo :</td>
-                        <td>
-                            <div class="form-group">
-                                <select name="estilo" class="form-control" id="estilo">
-                                    <option value="0">Seleccione</option>
-                                    <?php
-                                    for ($i = 0; $i < count($result); $i++) {
-                                        ?>
-                                        <option value="<?php echo $result[$i]['id_estilo']; ?>"><?php echo $result[$i]['nombre_estilo']; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </td>
-                        <td><span style="margin-left: 100px;">Regi&oacute;n:</span></td>
+                        <td>Regi&oacute;n :</td>
                         <td>
                             <div class="form-group">
                                 <select name="region" class="form-control" id="region">
@@ -333,29 +318,14 @@ $_SESSION['titulo'] = 'Agregar Registros de INSCRIPCION';
                                 </select>
                             </div>
                         </td>
-                    </tr>
-                    
-                    <tr>
-                        <td>Estatus :</td>
+                        <td><span style="margin-left: 100px;">Estatus:</span></td>
                         <td>
                             <div class="form-group">
-                                <select name="estatus" class="form-control" id="estatus">
-                                    <option value="0">Seleccione</option>
-                                    <?php
-                                    for ($i = 0; $i < count($res); $i++) {
-                                        ?>
-                                        <option value="<?php echo $res[$i]['id_estatus']; ?>"><?php echo $res[$i]['estatus_evento']; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
+                                <input type="radio" name="estatus" value="Activo"   id="activo" checked="checked" />Activo
+                                <input type="radio" name="estatus" value="Inactivo" id="inactivo" />Inactivo
                             </div>
                         </td>
-                        <td>
-                            &nbsp;
-                        </td>
                     </tr>
-
                     <tr>
                         <td colspan="4">&nbsp;</td>
                     </tr>               
@@ -372,7 +342,7 @@ $_SESSION['titulo'] = 'Agregar Registros de INSCRIPCION';
                 <tr>
                     <td colspan="4">&nbsp;</td>
                 </tr> 
-                
+
                 <tr>
                     <td colspan="4" align="center">
                         <table border="0" id="tbl_inscripcion" class="dataTable">

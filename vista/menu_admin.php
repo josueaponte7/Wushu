@@ -113,7 +113,8 @@ if(isset($_SESSION['titulo'])){
                         <a href="#">CONFIGURACI&Oacute;N</a>
                         <ul>
                             <li><a href="#">ACCESO</a></li>
-                            <li><a href="#">USUARIOS</a></li>
+                            <li><a href="usuario.php">USUARIOS</a></li>
+                            <li><a href="tipo_usuario.php">TIPO USUARIOS</a></li>
                             <li><a href="#">AUDITORIA</a></li>
                             <li><a href="#">CAMBIAR CLAVE</a></li>
                             <li><a href="#">AYUDA</a></li>                            
