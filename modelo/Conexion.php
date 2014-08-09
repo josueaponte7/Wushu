@@ -4,7 +4,7 @@ class Conexion
 {
     private static $_server   = 'localhost';
     private static $_user     = 'root';
-    private static $_password = '123456';
+    private static $_password = '';
     protected $bd             = 'wushu';
     public function __construct() {
         

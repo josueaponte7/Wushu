@@ -41,11 +41,12 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
         </style>
         <script type="text/javascript">
             $(document).ready(function() {
-				
+
+                // Configuracion de la tabla donde se muestran los registros
                 var TAatletas = $('#tbl_atletas').dataTable({
                     "iDisplayLength": 5,
                     "iDisplayStart": 0,
-                    // "aLengthMenu": [5, 10, 20, 30, 40, 50],00
+                    //"aLengthMenu": [2, 3, 4, 30, 40, 50],
                     "bLengthChange": false,
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
@@ -59,16 +60,15 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                     ]
                 });
 
-                var numero = '0123456789S';
-                $('#cedula, #pasaporte').validar(numero);
+                /**** Fin de la configuracion de la tabla donde se muestran los registros ***/
+
+                // Comienzo de validaciones en campos 
+                var numero = '0123456789';
+                $('#cedula, #pasaporte,#telefono,#tel_madre, #tel_padre').validar(numero);
 
                 var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
                 $('#nombre, #padre, #madre').validar(letra);
 
-                var numero = '0123456789-';
-                $('#telefono,#tel_madre, #tel_padre').validar(numero);
-
-                var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
                 $('#ocupacion, #patologias, #alergias').validar(letra);
 
                 var numero = '0123456789kg';
@@ -80,28 +80,43 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                 var correo = '0123456789abcdefghijklmnopqrstuvwxyz_-.#$&*@';
                 $('#email').validar(correo);
 
+                /** Finde validaciones de campos ***/
+
                 /****Calendario*****/
+
                 $('#fechnac').datepicker({
                     language: "es",
                     format: 'dd/mm/yyyy',
                     startDate: "-75y",
-                    endDate: "-5y",
+                    endDate: "-4y",
                     autoclose: true
                 });
 
                 $('#ingresar').click(function() {
-//                    var val_correo = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
-//                    if ($('#email').val().length > 0 && !val_correo.test($('#email').val())) {
-//                        $('#div_email').addClass('has-error');
-//                        $('#email').focus();
-//                    } else {  
-						var $nacionalidad = $('#nacionalidad').find('option').filter(':selected')
-						
-						if($nacionalidad.val()== 0){
-							alert('Debe Ingresar la nacionalidad');
-						}else if($('#cedula').val() == ''){
-							alert('Debe Ingresar la Cedula');
-						}else{
+
+                    var nacionalidad = $('#nacionalidad');
+                    var asociacion   = $('#asociacion');
+                    
+                    if (nacionalidad.find('option').filter(':selected').val() == 0) {
+                        alert('Debe Seleccionar la nacionalidad');
+                        nacionalidad.focus();
+                    } else if ($('#cedula').val() == '') {
+                        alert('Debe Ingresar la Cedula');
+                        $('#cedula').focus();
+                   } else if ($('#nombre').val() == '') {
+                        alert('Debe Ingresar el Nombre');
+                        $('#nombre').focus();
+                    } else if ($('#fechnac').val() == '') {
+                        alert('Debe Ingresar la Fecha de Nacimiento ');
+                        $('#fechnac').focus();
+                    } else if (asociacion.find('option').filter(':selected').val() == 0) {
+                        alert('Debe Seleccionar la Asociacion ');
+                        asociacion.focus();
+                     } else if ($('#peso').val() == '') {
+                        alert('Debe Ingresar el Peso ');
+                        $('#peso').focus();
+                    } else {
+                        return  false;
                         var accion = $(this).text();
                         $('#accion').val(accion)
                         $('#cedula').prop('disabled', false);
@@ -144,7 +159,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
 
                                         $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#nombre').val());
 //                                    $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#fechnac').val());
-                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);                                        
+                                        $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(3).html(sexo);
                                         $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(4).html($('#peso').val());
                                         $("#tbl_atletas tbody tr:eq(" + fila + ")").find("td").eq(5).html(aso);
                                         $('input:text').val('');
@@ -155,7 +170,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                                 });
                             }
                         }
-					}
+                    }
 //}
                 });
 
@@ -260,41 +275,68 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                         <td width="106"><span style="margin-left: 40px;">C&eacute;dula :</span></td>
                         <td width="337">
                             <div  id="d_cedula" class="form-group">
-                                <input type="text" style="background-color: #ffffff" class="form-control" id="cedula" name="cedula" value="" maxlength="8"/>
+                                <input type="text" style="background-color: #ffffff" class="form-control has-error" id="cedula" name="cedula" value="" maxlength="8"/>
                             </div>
                         </td>                        
                     </tr>
 
                     <tr>
-                        <td width="106">Pasaporte:</td>
-                        <td width="337">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="pasaporte" name="pasaporte" value="" maxlength="10"/>
-                            </div>
-                        </td>
-
-                        <td width="119"><span style="margin-left: 40px;">Nombres:</span></td>
+                        <td ><span >Nombres:</span></td>
                         <td width="337">
                             <div  class="form-group">
                                 <input type="text" class="form-control" id="nombre" name="nombre" value="" />
                             </div>
-                        </td>                        
-                    </tr>
-
-                    <tr>  
-                        <td width="106">Fecha Nac:</td>                        
+                        </td> 
+                        <td width="106" ><span style="margin-left: 25px;">Fecha Nac:</span></td>                        
                         <td width="337">
                             <div  class="form-group">
                                 <input type="text" style="background-color: #ffffff" readonly class="form-control" id="fechnac" name="fechnac" value="" />
                             </div>
                         </td>
+                    </tr>
+
+                    
+                    <tr>
+                        <td width="106">Asociaci&oacute;n :</td>
+                        <td>
+                            <div class="form-group">
+                                <select name="asociacion" class="form-control" id="asociacion">
+                                    <option value="0">Seleccione</option>
+                                    <?php
+                                    for ($i = 0; $i < count($resultado); $i++) {
+                                        ?>
+                                        <option value="<?php echo $resultado[$i]['id_asociacion'] ?>"><?php echo $resultado[$i]['nombre'] ?></option>
+                                        <?php
+                                    }
+                                    ?>
+
+                                </select>
+                            </div>
+                        </td> 
+                        <td width="106"><span style="margin-left: 40px;">Peso Kgr:</span></td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="peso" name="peso" value="" maxlength="5"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>  
+
                         <td width="119"><span style="margin-left: 40px;">Sexo:</span></td>
                         <td width="337">
                             <div class="form-group">
                                 <input type="radio" name="sexo" value="Masculino"   id="sexo" checked="checked" />Masculino
                                 <input type="radio" name="sexo" value="Femenino" id="sexo" />Femenino
                             </div>
-                        </td>                        
+                        </td> 
+                        <td height="45"><sapan style="margin-left: 40px;">Estatus:</sapan></td>
+                    <td>
+                        <div class="form-group">
+                            <input type="radio" name="estatus" value="activo"   id="estatus" checked="checked" />Activo
+                            <input type="radio" name="estatus" value="inactivo" id="estatus" />Inactivo
+                        </div>
+                    </td>
+                </tr>
                     </tr> 
 
                     <tr>
@@ -336,6 +378,15 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                             <div class="tab-content">
                                 <div class="tab-pane active" id="div_direccion" style="margin-top: 30px;">
                                     <table width="912" border="0" align="center">
+                                        <tr>
+                                            <td width="106">Pasaporte:</td>
+                                            <td width="337">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="pasaporte" name="pasaporte" value="" maxlength="10"/>
+                                                </div>
+                                            </td>
+
+                                        </tr>
                                         <tr>
                                             <td width="106">Tel&eacute;fono:</td>
                                             <td>
@@ -412,31 +463,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <td width="106">Asociaci&oacute;n :</td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <select name="asociacion" class="form-control" id="asociacion">
-                                                        <option value="0">Seleccione</option>
-                                                        <?php
-                                                        for ($i = 0; $i < count($resultado); $i++) {
-                                                            ?>
-                                                            <option value="<?php echo $resultado[$i]['id_asociacion'] ?>"><?php echo $resultado[$i]['nombre'] ?></option>
-                                                            <?php
-                                                        }
-                                                        ?>
 
-                                                    </select>
-                                                </div>
-                                            </td>   
-                                            <td height="45"><sapan style="margin-left: 40px;">Estatus:</sapan></td>
-                                        <td>
-                                            <div class="form-group">
-                                                <input type="radio" name="estatus" value="activo"   id="estatus" checked="checked" />Activo
-                                                <input type="radio" name="estatus" value="inactivo" id="estatus" />Inactivo
-                                            </div>
-                                        </td>
-                                        </tr>
                                         <tr>
                                             <td>&nbsp;</td>
                                         </tr>
@@ -476,12 +503,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                                                     </select>
                                                 </div>
                                             </td>
-                                            <td width="106"><span style="margin-left: 40px;">Peso:</span></td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" id="peso" name="peso" value="" maxlength="5"/>
-                                                </div>
-                                            </td>
+                                            
                                         </tr>
                                         <tr>
                                             <td>&nbsp;</td>
