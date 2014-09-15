@@ -3,7 +3,7 @@ session_start();
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
-$sql       = "SELECT  id_asociacion, nombre FROM asociaciones";
+$sql       = "SELECT a.id_asociacion,CONCAT('Asciacion de Wushu del Estado ',(SELECT estado FROM estado WHERE id_estado=a.id_estado)) AS nombre FROM asociaciones AS a";
 $resultado = $obj_conexion->RetornarRegistros($sql);
 
 $codigo   = "SELECT  id,  codigo FROM codigo_telefono";
@@ -72,13 +72,68 @@ $_SESSION['titulo']  = 'Agregar Registros de ENTRENADORES';
                     endDate: "-15y",
                     autoclose: true
                 });
-
+                $('#cedula').change(function(){
+                    var cedula = $(this).val();
+                    $('input:text').not($(this)).val('');
+                    $('select').val();
+                    $('#sexo').prop('checked',true);
+                    $('#activo').prop('checked',true);
+                    $.post("../controlador/entrenadores.php", {cedula: cedula, accion: 'BuscarDatos'}, function(resultado) {
+                        if(resultado != 0){
+                            var datos = resultado.split(";");
+                            $('#nacionalidad').val(datos[0]);
+                            $('#nombre').val(datos[1]);
+                            $('input:radio[name="sexo"][value="' + datos[2] + '"]').prop('checked', true);
+                            $('#email').val(datos[3]);
+                            $('#cod_telefono').val(datos[4]);
+                            $('#telefono').val(datos[5]);
+                            $('#asociacion').val(datos[6]);
+                            $('#fechnac').val(datos[7]);
+                            $('input:radio[name="estatus"][value="' + datos[8] + '"]').prop('checked', true);
+                            $('#direccion').val(datos[9]);
+                            $('#ingresar').text('Modificar');
+                        }
+                    });
+                });
+                
                 $('#ingresar').click(function() {
-                    var val_correo = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
-                    if ($('#email').val().length > 0 && !val_correo.test($('#email').val())) {
+                   var nacionalidad = $('#nacionalidad');
+                    var asociacion   = $('#asociacion');
+                    var val_correo   = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
+                    var direccion    = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
+                    if (nacionalidad.find('option').filter(':selected').val() == 0) {
+                        alert('Debe Seleccionar la nacionalidad');
+                        nacionalidad.focus();
+                   } else if ($('#cedula').val() == '') {
+                        alert('Debe Ingresar la Cedula');
+                        $('#cedula').focus();
+                   } else if ($('#nombre').val() == '') {
+                        alert('Debe Ingresar el Nombre');
+                        $('#nombre').focus();
+                   } else if ($('#email').val().length > 0 && !val_correo.test($('#email').val())) {
                         $('#div_email').addClass('has-error');
+                        alert('Debe Ingresar Un Email Valido');
                         $('#email').focus();
-                    } else {
+                       
+                    } else if ($('#cod_telefono').val() == 0) {
+                        alert('Debe Ingresar un número telefónico válido');
+                        $('#cod_telefono').focus();
+					
+					 } else if ($('#cod_telefono').val() > 0 && $('#telefono').val() == '') {
+                        alert('Debe Ingresar el Telefono');
+                        $('#telefono').focus();					
+                    } else if (asociacion.find('option').filter(':selected').val() == 0) {
+                        alert('Debe Seleccionar la Asociacion ');
+                        asociacion.focus();    
+                    } else if ($('#fechnac').val() == '') {
+                        alert('Debe Ingresar la Fecha de Nacimiento ');
+                        $('#fechnac').focus();
+                    } else if ($('#direccion').val() == "") {
+                        $('#div_direccion').addClass('has-error');
+                        alert('Debe Ingresar Una direccion');
+                        $('#direccion').focus();    
+                    }  else {
+
 
                         var accion = $(this).text();
                         $('#accion').val(accion)
@@ -218,7 +273,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ENTRENADORES';
                     </tr>
 
                     <tr>
-                        <td>Nombres:</td>
+                        <td>Nombre:</td>
                         <td width="376">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="nombre" name="nombre" value="" />
@@ -287,8 +342,9 @@ $_SESSION['titulo']  = 'Agregar Registros de ENTRENADORES';
                         <td>Estatus:</td>
                         <td width="337">
                             <div class="form-group">
-                                <input type="radio" name="estatus" value="Activo"   id="estatus" checked="checked" />Activo
-                                <input type="radio" name="estatus" value="Inactivo" id="estatus" />Inactivo
+                                <input type="radio" name="estatus" value="Activo"   id="activo" checked="checked" />Activo
+                                <input type="radio" name="estatus" value="Inactivo" id="inactivo" />Inactivo
+                                <input type="radio" name="estatus" value="Suspendido" id="suspendido" />Suspendido
                             </div>
                         </td>                                           
                     </tr>

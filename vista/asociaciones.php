@@ -6,6 +6,10 @@ $obj_conexion = new Conexion();
 $codigo   = "SELECT  id,  codigo FROM codigo_telefono";
 $resulcod = $obj_conexion->RetornarRegistros($codigo);
 
+
+$re_estado    = "SELECT  id_estado,  estado FROM estado";
+$resul_estado = $obj_conexion->RetornarRegistros($re_estado);
+
 $archivo_actual      = basename($_SERVER['PHP_SELF']);
 $_SESSION['archivo'] = $archivo_actual;
 $_SESSION['titulo']  = 'Agregar Registros de ASOCIACIONES';
@@ -41,13 +45,12 @@ $_SESSION['titulo']  = 'Agregar Registros de ASOCIACIONES';
                     "aLengthMenu": [5, 10, 20, 30, 40, 50],
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
-                        {"sClass": "center", "sWidth": "4%", "bSortable": false, "bSearchable": false},
-                        {"sClass": "center", "sWidth": "15%"},
-                        {"sClass": "center", "sWidth": "10%"},
-                        {"sWidth": "16%"},
-                        {"sClass": "center", "sWidth": "10%"},
-                        {"sWidth": "8%"},
-                        {"sClass": "center", "sWidth": "12%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
+                        {"sClass": "center", "sWidth": "3%", "bSortable": false, "bSearchable": false},
+                        {"sClass": "center", "sWidth": "28%"},
+                        {"sWidth": "4%"},
+                        {"sClass": "center", "sWidth": "18%"},
+                        {"sWidth": "5%"},
+                        {"sWidth": "12%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
                     ]
                 });
 
@@ -61,17 +64,33 @@ $_SESSION['titulo']  = 'Agregar Registros de ASOCIACIONES';
 
                 var correo = '0123456789abcdefghijklmnopqrstuvwxyz_-.#$&*@';
                 $('#email, #email_rep').validar(correo);
-
+                
+                $('#representante').select2();
+                
                 $('#ingresar').click(function() {
-
-                    var val_correo = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
-                    if ($('#email').val().length > 0 && !val_correo.test($('#email').val())) {
+                    var asociacion    = $('#asociacion').find('option').filter(':selected');
+                    var cod_telf      = $('#cod_telefono').find('option').filter(':selected');
+                    var representante = $('#representante').find('option').filter(':selected');
+                    var val_correo    = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
+                    if (asociacion.val() == 0) {
+                        alert('Debe Seleccionar la Asociacion');
+                        $('#asociacion').focus();
+                    } else if (cod_telf.val() == 0) {
+                        alert('Debe Seleccionar el codigo de telefono');
+                        $('#cod_telefono').focus();
+                    } else if ($('#telefono').val() == '') {
+                        alert('Debe Ingresar Telefono');
+                        $('#telefono').focus();
+                    } else if ($('#email').val().length > 0 && !val_correo.test($('#email').val())) {
+                        alert('Debe Ingresar un Correo valido.');
                         $('#div_email').addClass('has-error');
                         $('#email').focus();
-                    }
-                    if ($('#email_rep').val().length > 0 && !val_correo.test($('#email_rep').val())) {
-                        $('#div_email_rep').addClass('has-error');
-                        $('#email_rep').focus();
+                    } else if ($('#direccion').val() == '') {
+                        alert('Debe Ingresar la Direccion.');
+                        $('#direccion').focus();
+                    } else if ($('#direccion').val() == '') {
+                        alert('Debe ingresar la dirección');
+                        $('#direccion').focus();
                     } else {
 
                         $('#id_asociacion').remove();
@@ -94,21 +113,18 @@ $_SESSION['titulo']  = 'Agregar Registros de ASOCIACIONES';
                             var cod_telefono = $('#cod_telefono').find(' option').filter(":selected").text();
                             var tel = cod_telefono + '-' + $('#telefono').val();
 
-                            var cod_telrep = $('#cod_telrep').find(' option').filter(":selected").text();
-                            var telp = cod_telrep + '-' + $('#tel_rep').val();
-
-
+                            var nombre_asoc = 'Asociaci&oacute;n de Wushu del Estado '+asociacion.text();
                             $.post("../controlador/asociaciones.php", $("#frmasociaciones").serialize(), function(resultado) {
 
                                 if (resultado == 'exito') {
                                     alert('Registro con exito');
                                     $('input:text').val();
                                     $('#cod_telefono,#cod_telrep').val(0);
-                                    var estatus = $('input:radio[name="estatus"]:checked').val();
+                                    var estatus   = $('input:radio[name="estatus"]:checked').val();
                                     var modificar = '<span class="accion modificar">Modificar</span>';
-                                    var eliminar = '<span class="accion eliminar">Eliminar</span>';
-                                    var accion = modificar + '&nbsp;' + eliminar
-                                    TAsociacion.fnAddData([codigo, $('#nombre').val(), tel, $('#representante').val(), telp, estatus, accion]);
+                                    var eliminar  = '<span class="accion eliminar">Eliminar</span>';
+                                    var accion    = modificar + '&nbsp;' + eliminar
+                                    TAsociacion.fnAddData([codigo, nombre_asoc, tel,representante.text(),estatus, accion]);
                                     $('input:text').val('');
                                     $('textarea').val('');
 
@@ -238,7 +254,17 @@ $_SESSION['titulo']  = 'Agregar Registros de ASOCIACIONES';
                         <td width="107">Nom Asociaci&oacute;n:</td>
                         <td width="323">
                             <div id="d_nombre" class="form-group">
-                                <input type="text" style="background-color: #ffffff" class="form-control" id="nombre" name="nombre" value="" />
+                                <select name="asociacion" class="form-control" id="asociacion" style="float: left;">
+                                        <option value="0">Seleccione</option>
+                                        <?php
+                                        for ($i = 0; $i < count($resul_estado); $i++) {
+                                            ?>
+                                            <option value="<?php echo $resul_estado[$i]['id_estado']; ?>"><?php echo $resul_estado[$i]['estado']; ?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                <!--<input type="text" style="background-color: #ffffff" class="form-control" id="nombre" name="nombre" value="" />-->
                             </div>
                         </td>
                         <td width="115"><span style="margin-left: 30px;">Tel&eacute;fono:</span></td>
@@ -277,46 +303,42 @@ $_SESSION['titulo']  = 'Agregar Registros de ASOCIACIONES';
                         </td>
                     </tr>
                     <tr>
-                        <td>Representante:</td>
+                        <td>
+                            Estatus
+                        </td>
                         <td>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="representante" name="representante" value="" />
+                                <input type="radio" name="estatus" value="Activo"     id="activo" checked="checked" />Activo
+                                <input type="radio" name="estatus" value="Inactivo"   id="inactivo" />Inactivo
+                                <input type="radio" name="estatus" value="Suspendido" id="suspendido" />Suspendido
                             </div>
                         </td>
-                        <td width="115"><span style="margin-left: 30px;">Tel Represe:</span></td>
-                        <td>
-                            <div class="form-inline">
-                                <div class="form-group">
-                                    <select name="cod_telrep" class="form-control" id="cod_telrep" style="float: left; width: 85px;">
-                                        <option value="0">Cod</option>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div class="form-group">
+                                <span for="inputEmail3" class="col-sm-3 control-label">Representante de Asociación:</span>
+                                <div class="col-sm-8">
+                                    <select name="representante" class="form-control" id="representante" style="margin-left: -25px;">
+                                        <?php 
+                                        $re_repre    = "SELECT  CONCAT_WS('-', nacionalidad, cedula) AS cedula_nac,cedula,nombre FROM representante";
+                                        $resul_repre = $obj_conexion->RetornarRegistros($re_repre);
+                                        ?>
+                                        <option value="0">Seleccione</option>
                                         <?php
-                                        for ($i = 0; $i < count($resulcod); $i++) {
+                                        for ($i = 0; $i < count($resul_repre); $i++) {
                                             ?>
-                                            <option value="<?php echo $resulcod[$i]['id']; ?>"><?php echo $resulcod[$i]['codigo']; ?></option>
+                                            <option value="<?php echo $resul_repre[$i]['cedula']; ?>"><?php echo $resul_repre[$i]['cedula_nac'].' '.$resul_repre[$i]['nombre']; ?></option>
                                             <?php
                                         }
                                         ?>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <input type="text" style="width: 275px;" class="form-control" id="tel_rep" name="tel_rep" value="" maxlength="7" />
-                                </div>
                             </div>
-                        </td> 
-                    </tr>
-                    <tr>
-                        <td>Email Rep:</td>
-                        <td>
-                            <div id="div_email_rep" class="form-group">
-                                <input type="text" class="form-control" id="email_rep" name="email_rep" value="" />
-                            </div>
+
                         </td>
-                        <td><span style="margin-left: 30px;">Estatus:</span></td>
                         <td>
-                            <div class="form-group">
-                                <input type="radio" name="estatus" value="Activo"   id="activo" checked="checked" />Activo
-                                <input type="radio" name="estatus" value="Inactivo" id="inactivo" />Inactivo
-                            </div>
+                            
                         </td>
                     </tr>
                     <tr>
@@ -341,21 +363,19 @@ $_SESSION['titulo']  = 'Agregar Registros de ASOCIACIONES';
                                         <th>Nombre Asociaci&oacute;n</th>
                                         <th>Tel&eacute;fono</th>
                                         <th>Representante</th>
-                                        <th>Tel Representante</th>
                                         <th>Estatus</th>
                                         <th>Acci&oacute;n</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $sql        = "SELECT 
-                                                    a.id_asociacion,
-                                                    a.nombre,  
-                                                    CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = a.cod_telefono), a.telefono) AS telefono,
-                                                    a.representante,  
-                                                    CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = a.cod_telrep), a.tel_rep) AS tel_rep, 
-                                                    a.estatus 
-                                                    FROM asociaciones a";
+                                    $sql = "SELECT 
+                                                a.id_asociacion,
+                                                CONCAT('Asciacion de Wushu del Estado ',(SELECT estado FROM estado WHERE id_estado=a.id_estado)) AS nombre,  
+                                                CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = a.cod_telefono), a.telefono) AS telefono,
+                                                (SELECT CONCAT(nacionalidad,'-',cedula,' ',nombre) FROM representante WHERE cedula=a.representante) AS representante, 
+                                                a.estatus 
+                                            FROM asociaciones a";
                                     $resgistros = $obj_conexion->RetornarRegistros($sql);
 
                                     $es_array = is_array($resgistros) ? TRUE : FALSE;
@@ -367,7 +387,6 @@ $_SESSION['titulo']  = 'Agregar Registros de ASOCIACIONES';
                                                 <td><?php echo $resgistros[$i]['nombre'] ?></td>
                                                 <td><?php echo $resgistros[$i]['telefono'] ?></td>
                                                 <td><?php echo $resgistros[$i]['representante'] ?></td>
-                                                <td><?php echo $resgistros[$i]['tel_rep'] ?></td>
                                                 <td><?php echo $resgistros[$i]['estatus'] ?></td>
                                                 <td>
                                                     <span class="accion modificar">Modificar</span>

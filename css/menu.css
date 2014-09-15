@@ -10,14 +10,13 @@ width: 1200px;
 
 .nav li {
     float: left;
-    width: 240px;
+    width: 200px;
     position: relative;
 }
 
 .nav li a {
     /*background: #333;*/
    background: #EFEFEF;
-
     color: #000000;
     display: block;
     padding: 7px 8px;
@@ -37,7 +36,7 @@ width: 1200px;
 }
 
 .nav ul li {
-    width: 240px;
+    width: 200px;
     float: left;
 }
 

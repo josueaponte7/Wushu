@@ -51,29 +51,7 @@ if(isset($_SESSION['titulo'])){
                         //$( "#cuerpo" ).load( archivo );
                     }
                 });
-                
-//                 $('#salir').click(function() {
-//
-//                    window.parent.bootbox.confirm({
-//                        message: '&iquest;Desea Sali?',
-//                        buttons: {
-//                            'cancel': {
-//                                label: 'Cancelar',
-//                                className: 'btn-default'
-//                            },
-//                            'confirm': {
-//                                label: 'Aceptar',
-//                                className: 'btn-primary'
-//                            }
-//                        },
-//                        callback: function(result) {
-//                            if (result) {
-//                                window.location = 'controlador/Usuario.php';
-//                            }
-//                        }
-//                    });
-//                });
-                
+                                
             });
         </script>
     <body>
@@ -89,6 +67,8 @@ if(isset($_SESSION['titulo'])){
                             <li><a href="modalidades.php">MODALIDADES</a></li>
                             <li><a href="categorias.php">CATEGORIAS</a></li>
                             <li><a href="atletas.php">ATLETAS</a></li>
+                            <li><a style="height:32px" href="representante.php">REPRESENTANTE ASOCIACI&Oacute;N</a></li>
+
                         </ul>
                     </li>
                     <li>
@@ -112,12 +92,25 @@ if(isset($_SESSION['titulo'])){
                     <li>
                         <a href="#">CONFIGURACI&Oacute;N</a>
                         <ul>
-                            <li><a href="#">ACCESO</a></li>
+                            <li><a href="menu.php">MEN&Uacute;</a></li>
+                            <li><a href="sub_menu.php">SUB_MEN&Uacute;</a></li>
                             <li><a href="usuario.php">USUARIOS</a></li>
                             <li><a href="tipo_usuario.php">TIPO USUARIOS</a></li>
                             <li><a href="#">AUDITORIA</a></li>
                             <li><a href="#">CAMBIAR CLAVE</a></li>
                             <li><a href="#">AYUDA</a></li>                            
+                        </ul>                         
+                    </li>
+                    <li>
+                        <a href="#">MANTENIMIENTO</a>
+                        <ul>
+                            <li><a href="nivel.php">NIVEL</a></li>
+                            <li><a href="estilo.php">ESTILO</a></li>
+                            <li><a href="tecnica.php">T&Eacute;CNICA</a></li>
+                            <li><a href="region.php">REGI&Oacute;N</a></li>  
+                            <li><a href="estado.php">ESTADO</a></li> 
+                            <li><a href="kilogramo.php">KILOGRAMO</a></li> 
+                            <li><a href="codigo_area.php">C&Oacute;DIGO DE AREA</a></li> 
                         </ul>                         
                     </li>
                     <li style="background: #EFEFEF;">

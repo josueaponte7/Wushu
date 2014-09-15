@@ -17,6 +17,7 @@ $_SESSION['titulo']  = 'Agregar Registros de EVENTOS';
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="../css/bootstrap.css" rel="stylesheet" media="screen"/>
+        <link href="../css/bootstrap.css" rel="stylesheet" media="screen"/>
         <link href="../css/estilos.css" rel="stylesheet" media="screen"/>
         <link href="../css/jquery.dataTables.css" rel="stylesheet" media="screen"/>
         <link href="../css/datepicker.css" rel="stylesheet" media="screen"/>  
@@ -65,7 +66,9 @@ $_SESSION['titulo']  = 'Agregar Registros de EVENTOS';
                     autoclose: true
                 });
 
-
+                $('#add_cat').click(function(){
+                    alert('sfsdf');
+                })
                 $('#ingresar').click(function() {
                     $('#num_registro').remove();
                     var accion = $(this).text();
@@ -231,6 +234,7 @@ $_SESSION['titulo']  = 'Agregar Registros de EVENTOS';
                     <tr>
                         <td colspan="4" align="center">
                             <input type="hidden" id="accion" name="accion" value=""/>
+                            <button type="button" id="add_cat" class="btn btn-danger">Añadir Categorias</button>
                             <button type="button" id="ingresar" class="btn btn-info">Registrar</button>
                             <button type="button" id="limpiar" class="btn btn-info">Limpiar</button>
                         </td>

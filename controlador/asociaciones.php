@@ -29,15 +29,7 @@ if (isset($_POST['email'])) {
 if (isset($_POST['representante'])) {
     $representante = $_POST['representante'];
 }
-if (isset($_POST['cod_telrep'])) {
-    $cod_telrep = $_POST['cod_telrep'];
-}
-if (isset($_POST['tel_rep'])) {
-    $tel_rep = $_POST['tel_rep'];
-}
-if (isset($_POST['email_rep'])) {
-    $email_rep = $_POST['email_rep'];
-}
+
 if (isset($_POST['estatus'])) {
     $estatus = $_POST['estatus'];
 }
@@ -49,9 +41,9 @@ switch ($accion) {
         $sql_b       = "SELECT 1 FROM asociaciones WHERE id_asociacion = '$id_asociacion';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-            $sql = "INSERT INTO asociaciones (id_asociacion, nombre, cod_telefono, telefono, email, direccion, representante, cod_telrep, tel_rep, email_rep, estatus)
-                                            VALUES ('$id_asociacion','$nombre', '$cod_telefono', '$telefono','$email', '$direccion','$representante', '$cod_telrep', '$tel_rep', '$email_rep', '$estatus');";
-
+            $sql = "INSERT INTO asociaciones (id_asociacion, nombre, cod_telefono, telefono, email, direccion, representante, estatus)
+                                            VALUES ('$id_asociacion','$nombre', '$cod_telefono', '$telefono','$email', '$direccion','$representante','$estatus');";
+            
             $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {
                 echo 'exito';

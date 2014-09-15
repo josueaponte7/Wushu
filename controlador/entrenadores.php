@@ -114,15 +114,22 @@ switch ($accion) {
                         estatus
                       FROM entrenadores WHERE cedula = '$cedula'";
         $registros = $obj_conexion->RetornarRegistros($sql);
-        echo $registros[0]['nacionalidad']. ';' .
-        $registros[0]['nombre']. ';' .
-        $registros[0]['sexo']. ';' .
-        $registros[0]['email'] . ';' .
-        $registros[0]['cod_telefono'] . ';' .       
-        $registros[0]['telefono'] . ';' .   
-        $registros[0]['id_asociacion'] . ';' .  
-        $registros[0]['fechnac'] .';'.
-        $registros[0]['estatus'].';'.
-        $registros[0]['direccion'];       
+        $es_array = is_array($registros) ? TRUE : FALSE;
+        if($es_array){
+            echo $registros[0]['nacionalidad']. ';' .
+            $registros[0]['nombre']. ';' .
+            $registros[0]['sexo']. ';' .
+            $registros[0]['email'] . ';' .
+            $registros[0]['cod_telefono'] . ';' .       
+            $registros[0]['telefono'] . ';' .   
+            $registros[0]['id_asociacion'] . ';' .  
+            $registros[0]['fechnac'] .';'.
+            $registros[0]['estatus'].';'.
+            $registros[0]['direccion']; 
+        }else{
+            echo 0;
+        }
+                    
+
         break;
 }

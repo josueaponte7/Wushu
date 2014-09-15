@@ -31,10 +31,14 @@ $_SESSION['titulo']  = 'Agregar Registros de INSCRIPCION';
         <link href="../css/estilos.css" rel="stylesheet" media="screen"/>
         <link href="../css/jquery.dataTables.css" rel="stylesheet" media="screen"/>
         <link href="../css/maquetacion.css" rel="stylesheet" media="screen"/>
+        <link href="../css/select2.css" rel="stylesheet" media="screen"/>
+        <link href="../css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
 
         <script type="text/javascript" src="../js/jquery-1.11.0.js"></script>
         <script type="text/javascript" src="../js/validarcampos.js"></script>               
         <script type="text/javascript" src="../js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="../js/select2.js"></script>
+        <script type="text/javascript" src="../js/select2_locale_es.js"></script>
 
         <style type="text/css">
             body{
@@ -65,20 +69,58 @@ $_SESSION['titulo']  = 'Agregar Registros de INSCRIPCION';
                 var numero = '0123456789-';
                 $('#edad').validar(numero);
 
+                $("#cedula").select2({
+                    formatNoMatches: function(term) {
+                        return "<em>No se encontro: " + term + "</em><br/> <a href='#' id='nuevo'>¿Desea Registralo?</a>";
+
+                    }
+                }).parent().find('.select2-with-searchbox')
+                        .on('click', '#nuevo', function() {
+                            alert('Agregar');
+                        });
+
+
+                $('#new_contact').on('click', function() {
+                    alert('sffsfsf');
+                });
+
+                $('#categorias').change(function() {
+                    var valor = $(this).val();
+                    $.post("../controlador/inscripcion.php", {id: valor, accion: 'BuscarCategoria'}, function(respuesta) {
+                        if (respuesta != 0) {
+                            var datos = respuesta.split(';');
+                            $('#edadc').val(datos[0]);
+                            $('#sexoc').val(datos[1]);
+                            $('#modalidad').val(datos[2]);
+                            $('#tecnica').val(datos[3]);
+                            $('#estilo').val(datos[4]);
+                            $('#region').val(datos[5]);
+                        } else {
+
+                        }
+                    });
+                });
+
+
+
                 $('#cedula').change(function() {
                     var cedula = $(this).val();
                     if (cedula != 0) {
-                        $.post("../controlador/inscripcion.php", {cedula: cedula, accion: 'Buscar'}, function(respuesta) {
-                            if (respuesta != 0) {
-                                var datos = respuesta.split(';');
-                                $('#nombre').val(datos[0]);
-                                $('#edad').val(datos[1]);
-                                $('#sexo').val(datos[2]);
-                                $('#peso').val(datos[3]);
-                            } else {
+                        if (cedula == 'add') {
+                            alert('Agregar Nuevo');
+                        } else {
+                            $.post("../controlador/inscripcion.php", {cedula: cedula, accion: 'Buscar'}, function(respuesta) {
+                                if (respuesta != 0) {
+                                    var datos = respuesta.split(';');
+                                    $('#nombre').val(datos[0]);
+                                    $('#edad').val(datos[1]);
+                                    $('#sexo').val(datos[2]);
+                                    $('#peso').val(datos[3]);
+                                } else {
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
                 });
 
@@ -87,8 +129,8 @@ $_SESSION['titulo']  = 'Agregar Registros de INSCRIPCION';
                     var accion = $(this).text();
                     $('#accion').val(accion)
                     $('#descripcion').prop('disabled', false);
-                    if (accion == 'Registrar') {
-                        $.post("../controlador/categorias.php", $("#frmcategorias").serialize(), function(resultado) {
+                    if (accion == 'Inscribir') {
+                        $.post("../controlador/inscripcion.php", $("#frminscripcion").serialize(), function(resultado) {
                             if (resultado == 'exito') {
                                 alert('Registro con exito');
                                 $('input:text').val();
@@ -204,9 +246,10 @@ $_SESSION['titulo']  = 'Agregar Registros de INSCRIPCION';
                                     <?php
                                 }
                                 ?>
+                                <option value="add">Agregar Nuevo</option>
                             </select>
                         </td>                       
-                        <td width="351">
+                        <td width="351" >
                             &nbsp;
                         </td>
                     </tr>
@@ -285,44 +328,47 @@ $_SESSION['titulo']  = 'Agregar Registros de INSCRIPCION';
                                 </select>
                             </div>
                         </td>
-                        <td><span style="margin-left: 100px;">Disciplina:</span></td>
+                        <td><span style="margin-left: 100px;">Edad:</span></td>
                         <td>
                             <div class="form-group">
-                                <select name="modalidad" class="form-control" id="modalidad">
-                                    <option value="0">Seleccione</option>
-                                    <?php
-                                    for ($i = 0; $i < count($resultado); $i++) {
-                                        ?>
-                                        <option value="<?php echo $resultado[$i]['num_registro']; ?>"><?php echo $resultado[$i]['descripcion']; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
+                                <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="edadc" name="edadc" value="" />
                             </div>
                         </td>
                     </tr>
 
                     <tr>
-                        <td>Regi&oacute;n :</td>
+                        <td>Sexo</td>
                         <td>
                             <div class="form-group">
-                                <select name="region" class="form-control" id="region">
-                                    <option value="0">Seleccione</option>
-                                    <?php
-                                    for ($i = 0; $i < count($resul); $i++) {
-                                        ?>
-                                        <option value="<?php echo $resul[$i]['id_region']; ?>"><?php echo $resul[$i]['nombre_region']; ?></option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
+                                <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="sexoc" name="sexoc" value="" />
                             </div>
                         </td>
-                        <td><span style="margin-left: 100px;">Estatus:</span></td>
+                        <td><span style="margin-left: 100px;">Modalidad:</span></td>
                         <td>
                             <div class="form-group">
-                                <input type="radio" name="estatus" value="Activo"   id="activo" checked="checked" />Activo
-                                <input type="radio" name="estatus" value="Inactivo" id="inactivo" />Inactivo
+                                <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="modalidad" name="modalidad" value="" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Tecnica</td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="tecnica" name="tecnica" value="" />
+                            </div>
+                        </td>
+                        <td><span style="margin-left: 100px;">Estilo:</span></td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="estilo" name="estilo" value="" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Regi&oacute;n:</td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" disabled="disabled" style="background-color: #ffffff" id="region" name="region" value="" />
                             </div>
                         </td>
                     </tr>
@@ -333,7 +379,7 @@ $_SESSION['titulo']  = 'Agregar Registros de INSCRIPCION';
                     <tr>
                         <td colspan="4" align="center">
                             <input type="hidden" id="accion" name="accion" value=""/>
-                            <button type="button" id="ingresar" class="btn btn-info">Registrar</button>
+                            <button type="button" id="ingresar" class="btn btn-info">Inscribir</button>
                             <button type="button" id="limpiar" class="btn btn-info">Limpiar</button>
                         </td>
                     </tr>

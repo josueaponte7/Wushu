@@ -3,8 +3,8 @@ session_start();
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 
-$codigo   = "SELECT  id,  codigo FROM codigo_telefono";
-$resulcod = $obj_conexion->RetornarRegistros($codigo);
+$sql       = "SELECT  id_tipousuario,  tipo_usuario FROM tipo_usuario";
+$resultado = $obj_conexion->RetornarRegistros($sql);
 
 $archivo_actual      = basename($_SERVER['PHP_SELF']);
 $_SESSION['archivo'] = $archivo_actual;
@@ -35,101 +35,111 @@ $_SESSION['titulo']  = 'Agregar Registros de USUARIOS';
         <script type="text/javascript">
             $(document).ready(function() {
 
-                var TAsociacion = $('#tbl_usuario').dataTable({
+                var TUsuario = $('#tbl_usuario').dataTable({
                     "iDisplayLength": 5,
                     "iDisplayStart": 0,
                     "aLengthMenu": [5, 10, 20, 30, 40, 50],
                     "oLanguage": {"sUrl": "../js/es.txt"},
                     "aoColumns": [
-                        {"sClass": "center", "sWidth": "4%", "bSortable": false, "bSearchable": false},
+                        {"sClass": "center", "sWidth": "12%", "bSortable": false, "bSearchable": false},
+                        {"sClass": "center", "sWidth": "10%"},
+                        {"sClass": "center", "sWidth": "10%"},
+                        {"sWidth": "10%"},
                         {"sClass": "center", "sWidth": "15%"},
-                        {"sClass": "center", "sWidth": "10%"},
-                        {"sWidth": "16%"},
-                        {"sClass": "center", "sWidth": "10%"},
-                        {"sWidth": "8%"},
+                        {"sWidth": "10%"},
                         {"sClass": "center", "sWidth": "12%", "bSortable": false, "sClass": "center sorting_false", "bSearchable": false}
                     ]
                 });
 
+                var usuario = 'abcdefghijklmnopqrstuvwxyz0123456789';
                 var letra = ' abcdefghijklmnñopqrstuvwxyzáéíóú';
+                var clave = '1234567890abcdefghijklmnopqrstuvwxyz';
+                $('#usuario').validar(usuario);
                 $('#nombre').validar(letra);
-                $('#representante').validar(letra);
-
-                var numero = '0123456789-';
-                $('#telefono').validar(numero);
-                $('#tel_rep').validar(numero);
-
-                var correo = '0123456789abcdefghijklmnopqrstuvwxyz_-.#$&*@';
-                $('#email, #email_rep').validar(correo);
+                $('#apellido').validar(letra);
+                $('#clave').validar(clave);
 
                 $('#ingresar').click(function() {
-                    
-                        $('#id_asociacion').remove();
+                    var tipo_usuario = $('#tipo_usuario');
+
+                    if ($('#usuario').val() == '') {
+                        alert('Debe Ingresar el Usuario');
+                        $('#usuario').focus();
+                    } else if ($('#nombre').val() == '') {
+                        alert('Debe Ingresar el Nombre');
+                        $('#nombre').focus();
+                    } else if ($('#apellido').val() == '') {
+                        alert('Debe Ingresar el Apellido');
+                        $('#apellido').focus();
+                    } else if (tipo_usuario.find('option').filter(':selected').val() == 0) {
+                        alert('Debe Seleccionar el Tipo Usuario');
+                        tipo_usuario.focus();
+                    }  else if ($(this).text() == 'Guardar' && $('#clave').val().length < 6 || $('#clave').val().length > 20) {
+                        $('#div_clave').addClass('has-error');
+                        $('#clave').focus();
+                    } else if ($(this).text() == 'Guardar' && $('#clave').val() != $('#confir_clave').val()) {
+                        $('#div_confirmar').addClass('has-error');
+                        $('#confir_clave').focus();
+                    } else {
+
+                        $('#id_usuario').remove();
                         var accion = $(this).text();
                         $('#accion').val(accion);
-                        $('#nombre').prop('disabled', false);
+                        $('#usuario').prop('disabled', false);
 
                         if (accion == 'Registrar') {
                             // obtener el ultimo codigo del status 
                             var codigo = 1;
-                            var TotalRow = TAsociacion.fnGetData().length;
+                            var TotalRow = TUsuario.fnGetData().length;
                             if (TotalRow > 0) {
-                                var lastRow = TAsociacion.fnGetData(TotalRow - 1);
+                                var lastRow = TUsuario.fnGetData(TotalRow - 1);
                                 var codigo = parseInt(lastRow[0]) + 1;
                             }
 
-                            var $id_asociacion = '<input type="hidden" id="id_asociacion"  value="' + codigo + '" name="id_asociacion">';
-                            $($id_asociacion).prependTo($('#frmasociaciones'));
+                            var $id_usuario = '<input type="hidden" id="id_usuario"  value="' + codigo + '" name="id_usuario">';
+                            $($id_usuario).prependTo($('#frmusuario'));
 
-                            var cod_telefono = $('#cod_telefono').find(' option').filter(":selected").text();
-                            var tel = cod_telefono + '-' + $('#telefono').val();
-
-                            var cod_telrep = $('#cod_telrep').find(' option').filter(":selected").text();
-                            var telp = cod_telrep + '-' + $('#tel_rep').val();
-
-
-                            $.post("../controlador/asociaciones.php", $("#frmasociaciones").serialize(), function(resultado) {
+                            $.post("../controlador/usuario.php", $("#frmusuario").serialize(), function(resultado) {
 
                                 if (resultado == 'exito') {
                                     alert('Registro con exito');
-                                    $('input:text').val();
-                                    $('#cod_telefono,#cod_telrep').val(0);
+                                    
+                                    $('input:radio').prop('ckecked', true);
+
+                                    var tipo = $('#tipo_usuario').find('option:selected').text();
                                     var estatus = $('input:radio[name="estatus"]:checked').val();
+
                                     var modificar = '<span class="accion modificar">Modificar</span>';
                                     var eliminar = '<span class="accion eliminar">Eliminar</span>';
-                                    var accion = modificar + '&nbsp;' + eliminar
-                                    TAsociacion.fnAddData([codigo, $('#nombre').val(), tel, $('#representante').val(), telp, estatus, accion]);
-                                    $('input:text').val('');
-                                    $('textarea').val('');
+                                    var accion = modificar + '&nbsp;' + eliminar;
+                                    TUsuario.fnAddData([codigo, $('#usuario').val(), $('#nombre').val(), $('#apellido').val(), tipo, estatus, accion]);
+                                    $('input[type="text"],input[type="password"]').val('');
+                                    $('select').val('0');
 
                                 } else if (resultado == 'existe') {
-                                    alert('La Asociacion ya esta registrada');
-                                    $('#d_nombre').addClass('has-error');
-                                    $('#nombre').focus();
+                                    alert('El Usuario ya esta registrada');
+                                    $('#d_usuario').addClass('has-error');
+                                    $('#usuario').focus();
                                 }
                             });
                         } else {
                             var r = confirm("\u00BFDesea Modificar el Registro?");
                             var fila = $("#fila").val();
                             if (r == true) {
-                                var cod_telefono = $('#cod_telefono').find(' option').filter(":selected").text();
-                                var tel = cod_telefono + '-' + $('#telefono').val();
-
-                                var cod_telrep = $('#cod_telrep').find(' option').filter(":selected").text();
-                                var telp = cod_telrep + '-' + $('#tel_rep').val();
-
+                            
+                                var tipo = $('#tipo_usuario').find('option:selected').text();
                                 var estatus = $('input:radio[name="estatus"]:checked').val();
-                                $.post("../controlador/asociaciones.php", $("#frmasociaciones").serialize(), function(resultado) {
+
+                                $.post("../controlador/usuario.php", $("#frmusuario").serialize(), function(resultado) {
                                     if (resultado == 'exito') {
                                         alert('Modificaci\u00f3n  con exito');
 
-                                        $("#tbl_asociacion tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#nombre').val());
-                                        $("#tbl_asociacion tbody tr:eq(" + fila + ")").find("td").eq(2).html(tel);
-                                        $("#tbl_asociacion tbody tr:eq(" + fila + ")").find("td").eq(3).html($('#representante').val());
-                                        $("#tbl_asociacion tbody tr:eq(" + fila + ")").find("td").eq(4).html(telp);
-                                        $("#tbl_asociacion tbody tr:eq(" + fila + ")").find("td").eq(5).html(estatus);
-                                        $('input:text').val('');
-                                        $('textarea').val('');
+                                        $("#tbl_usuario tbody tr:eq(" + fila + ")").find("td").eq(1).html($('#usuario').val());
+                                        $("#tbl_usuario tbody tr:eq(" + fila + ")").find("td").eq(2).html($('#nombre').val());
+                                        $("#tbl_usuario tbody tr:eq(" + fila + ")").find("td").eq(3).html($('#apellido').val());
+                                        $("#tbl_usuario tbody tr:eq(" + fila + ")").find("td").eq(4).html(tipo);
+                                        $("#tbl_usuario tbody tr:eq(" + fila + ")").find("td").eq(5).html(estatus);
+                                        $('input[type="text"],input[type="password"]').val('');
                                         $('select').val('0');
                                         $('#ingresar').text('Registrar');
                                     }
@@ -137,13 +147,14 @@ $_SESSION['titulo']  = 'Agregar Registros de USUARIOS';
                             }
 
                         }
+                    }
                 });
 
-                $('table#tbl_asociacion').on('click', '.modificar', function() {
-                    $('#id_asociacion').remove();
+                $('table#tbl_usuario').on('click', '.modificar', function() {
+                    $('#id_usuario').remove();
 
                     var padre = $(this).closest('tr');
-                    var id_asociacion = padre.find('td').eq(0).text();
+                    var id_usuario = padre.find('td').eq(0).text();
 //                    var nombre = padre.find('td').eq(1).html();
 
                     // obtener la fila a modificar
@@ -151,57 +162,50 @@ $_SESSION['titulo']  = 'Agregar Registros de USUARIOS';
 
                     // crear el campo fila y añadir la fila
                     var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
-                    $($fila).prependTo($('#frmasociaciones'));
+                    $($fila).prependTo($('#frmusuario'));
 
-                    var $id_asociacion = '<input type="hidden" id="id_asociacion"  value="' + id_asociacion + '" name="id_asociacion">';
-                    $($id_asociacion).appendTo($('#frmasociaciones'));
+                    var $id_usuario = '<input type="hidden" id="id_usuario"  value="' + id_usuario + '" name="id_usuario">';
+                    $($id_usuario).appendTo($('#frmusuario'));
 
                     $('#ingresar').text('Modificar');
 
-//                    $('#nombre').val(nombre);
-
-                    $.post("../controlador/asociaciones.php", {id_asociacion: id_asociacion, accion: 'BuscarDatos'}, function(resultado) {
+                    $.post("../controlador/usuario.php", {id_usuario: id_usuario, accion: 'BuscarDatos'}, function(resultado) {
                         var datos = resultado.split(";");
-                        $('#nombre').val(datos[0]);
-                        $('#cod_telefono').val(datos[1]);
-                        $('#telefono').val(datos[2]);
-                        $('#email').val(datos[3]);
-                        $('#direccion').val(datos[4]);
-                        $('#representante').val(datos[5]);
-                        $('#cod_telrep').val(datos[6]);
-                        $('#tel_rep').val(datos[7]);
-                        $('#email_rep').val(datos[8]);
-                        $('input:radio[name="estatus"][value="' + datos[9] + '"]').prop('checked', true);
+                        $('#usuario').val(datos[0]);
+                        $('#nombre').val(datos[1]);
+                        $('#apellido').val(datos[2]);
+                        $('#tipo_usuario').val(datos[3]);
+                        $('input:radio[name="estatus"][value="' + datos[4] + '"]').prop('checked', true);
 
 
                         // crear el campo fila y añadir la fila
                         var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
                         $($fila).prependTo($('#frmasociaciones'));
 
-                        var $id_asociacion = '<input type="hidden" id="id_asociacion"  value="' + id_asociacion + '" name="id_asociacion">';
-                        $($id_asociacion).appendTo($('#frmasociaciones'));
+                        var $id_usuario = '<input type="hidden" id="id_usuario"  value="' + id_usuario + '" name="id_usuario">';
+                        $($id_usuario).appendTo($('#frmusuario'));
 
                     });
                 });
 
                 // eliminar
-                $('table#tbl_asociacion').on('click', '.eliminar', function() {
+                $('table#tbl_usuario').on('click', '.eliminar', function() {
                     var padre = $(this).closest('tr');
-                    var nombre = padre.find('td').eq(0).text();
+                    var id_usuario = padre.find('td').eq(0).text();
 
                     // obtener la fila a modificar
                     var fila = padre.index();
 
                     // crear el campo fila y añadir la fila
                     var $fila = '<input type="hidden" id="fila"  value="' + fila + '" name="fila">';
-                    $($fila).prependTo($('#frmasociaciones'));
+                    $($fila).prependTo($('#frmusuario'));
 
-                    $.post("../controlador/asociaciones.php", {'accion': 'Eliminar', 'nombre': nombre}, function(respuesta) {
+                    $.post("../controlador/usuario.php", {'accion': 'Eliminar', 'id_usuario': id_usuario}, function(respuesta) {
                         if (respuesta == 1) {
 
                             window.parent.bootbox.alert("Eliminacion con Exito", function() {
                                 //borra la fila de la tabla
-                                TAsociacion.fnDeleteData;
+                                TUsuario.fnDeleteData;
 
                                 $('input[type="text"]').val('');
                             });
@@ -210,10 +214,9 @@ $_SESSION['titulo']  = 'Agregar Registros de USUARIOS';
                 });
 
                 $('#limpiar').click(function() {
-                    $('#nombre').prop('disabled', false);
-                    $('input:text').val('');
-                    $('textarea').val('');
-                    $('#cod_telefono, #cod_telrep').val(0);
+                    $('#usuario').prop('disabled', false);
+                    $('input[type="text"],input[type="password"]').val('');
+                    $('select').val('0');
                     $('#ingresar').text('Registrar');
                 });
             });
@@ -244,25 +247,31 @@ $_SESSION['titulo']  = 'Agregar Registros de USUARIOS';
                                 <input type="text" style="background-color: #ffffff" class="form-control" id="apellido" name="apellido" value="" />
                             </div>
                         </td>
-                         <td width="157"><span style="margin-left: 10px;">Tipo Usuarios:</span></td>
+                        <td width="157"><span style="margin-left: 10px;">Tipo Usuarios:</span></td>
                         <td>
-                            <select name="asociacion" class="form-control" id="asociacion">
+                            <select name="tipo_usuario" class="form-control" id="tipo_usuario">
                                 <option value="0">Seleccione</option>
-                                <option value="1">Holaaa</option>
+                                <?php
+                                for ($i = 0; $i < count($resultado); $i++) {
+                                    ?>
+                                    <option value="<?php echo $resultado[$i]['id_tipousuario'] ?>"><?php echo $resultado[$i]['tipo_usuario'] ?></option>
+                                    <?php
+                                }
+                                ?>
                             </select>
                         </td> 
                     </tr>
                     <tr>
-                        <td>Contrase&ntilde;a:</td>
+                        <td>Clave:</td>
                         <td>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="representante" name="representante" value="" />
+                            <div id="div_clave" class="form-group">
+                                <input type="password" class="form-control" id="clave" name="clave" value="" />
                             </div>
                         </td>
-                        <td width="157"><span style="margin-left: 10px;">Confirmar Contrase&ntilde;a: </span></td>
+                        <td width="157"><span style="margin-left: 10px;">Confirmar Clave: </span></td>
                         <td>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="representante" name="representante" value="" />
+                            <div id="div_confirmar" class="form-group">
+                                <input type="password" class="form-control" id="confir_clave" name="confir_clave" value="" />
                             </div>
                         </td> 
                     </tr>
@@ -294,7 +303,7 @@ $_SESSION['titulo']  = 'Agregar Registros de USUARIOS';
                             <table border="0" id="tbl_usuario" class="dataTable">
                                 <thead>
                                     <tr>
-                                        <th>C&oacute;digo</th>
+                                        <th>C&oacute;digo Usuario</th>
                                         <th>Usuario</th>
                                         <th>Nombre</th>
                                         <th>Apellido</th>
@@ -305,26 +314,27 @@ $_SESSION['titulo']  = 'Agregar Registros de USUARIOS';
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $sql        = "SELECT 
-                                                    a.id_asociacion,
-                                                    a.nombre,  
-                                                    CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = a.cod_telefono), a.telefono) AS telefono,
-                                                    a.representante,  
-                                                    CONCAT_WS('-' ,(SELECT codigo FROM codigo_telefono WHERE id = a.cod_telrep), a.tel_rep) AS tel_rep, 
-                                                    a.estatus 
-                                                    FROM asociaciones a";
-                                    $resgistros = $obj_conexion->RetornarRegistros($sql);
+                                    $sql                 = "SELECT  
+                                                    usu.id_usuario,  
+                                                    usu.usuario,  
+                                                    usu.nombre,  
+                                                    usu.apellido, 
+                                                    tpu.tipo_usuario AS tipiusuario, 
+                                                    usu.estatus
+                                                  FROM usuarios usu 
+                                                  INNER JOIN tipo_usuario tpu ON tpu.id_tipousuario = usu.id_tipousuario;";
+                                    $resgistros          = $obj_conexion->RetornarRegistros($sql);
 
                                     $es_array = is_array($resgistros) ? TRUE : FALSE;
                                     if ($es_array == TRUE) {
                                         for ($i = 0; $i < count($resgistros); $i++) {
                                             ?>
                                             <tr>
-                                                <td><?php echo $resgistros[$i]['id_asociacion'] ?></td>
+                                                <td><?php echo $resgistros[$i]['id_usuario'] ?></td>
+                                                <td><?php echo $resgistros[$i]['usuario'] ?></td>
                                                 <td><?php echo $resgistros[$i]['nombre'] ?></td>
-                                                <td><?php echo $resgistros[$i]['telefono'] ?></td>
-                                                <td><?php echo $resgistros[$i]['representante'] ?></td>
-                                                <td><?php echo $resgistros[$i]['tel_rep'] ?></td>
+                                                <td><?php echo $resgistros[$i]['apellido'] ?></td>
+                                                <td><?php echo $resgistros[$i]['tipiusuario'] ?></td>
                                                 <td><?php echo $resgistros[$i]['estatus'] ?></td>
                                                 <td>
                                                     <span class="accion modificar">Modificar</span>

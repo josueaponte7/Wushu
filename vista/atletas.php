@@ -116,7 +116,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                         alert('Debe Ingresar el Peso ');
                         $('#peso').focus();
                     } else {
-                        return  false;
+                       // return  false;
                         var accion = $(this).text();
                         $('#accion').val(accion)
                         $('#cedula').prop('disabled', false);

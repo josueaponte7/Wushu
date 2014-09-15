@@ -3,6 +3,7 @@
 if (!isset($_POST['accion'])) {
     header('Location:../');
 }
+
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
 $accion       = $_POST['accion'];
@@ -12,6 +13,9 @@ if (isset($_POST['cedula'])) {
 }
 if (isset($_POST['nombre'])) {
     $nombre = $_POST['nombre'];
+}
+if (isset($_POST['categorias'])) {
+    $categoria = $_POST['categorias'];
 }
 if (isset($_POST['edad'])) {
     $edad = $_POST['edad'];
@@ -25,34 +29,25 @@ if (isset($_POST['peso'])) {
 if (isset($_POST['categoria'])) {
     $categoria = $_POST['categoria'];
 }
-if (isset($_POST['modalidad'])) {
-    $modalidad = $_POST['modalidad'];
+
+if(isset($_POST['id'])){
+    $id = $_POST['id'];
 }
-if (isset($_POST['estilo'])) {
-    $id_estilo = $_POST['estilo'];
-}
-if (isset($_POST['region'])) {
-    $id_region = $_POST['region'];
-}
+
 
 
 switch ($accion) {
-    case 'Registrar':
-        $sql_b       = "SELECT 1 FROM categorias WHERE descripcion = '$descripcion';";
-        $total_filas = $obj_conexion->totalFilas($sql_b);
-        if ($total_filas == 0) {
-  echo          $sql = "INSERT INTO categorias (descripcion, edad, sexo,  modalidad,  id_estilo, id_region, id_tecnica,  estatus)
-                                          VALUES ('$descripcion', '$edad',  '$sexo', '$modalidad', '$id_estilo',  '$id_region', '$id_tecnica', '$estatus');";
-exit;
-            $resultado = $obj_conexion->_query($sql);
-            if ($resultado == TRUE) {
-                echo 'exito';
-            } else {
-                echo 'error';
-            }
+    case 'Inscribir':
+
+        $sql = "INSERT INTO inscripcion(cedula_atleta,id_categoria)VALUES($cedula,$categoria);";
+        
+        $resultado = $obj_conexion->_query($sql);
+        if ($resultado == TRUE) {
+            echo 'exito';
         } else {
-            echo 'existe';
+            echo 'error';
         }
+
         break;
 
     case 'Modificar':
@@ -87,4 +82,21 @@ exit;
                 echo $resgistros[0]['nombre'].';'.$resgistros[0]['edad'].';'.$resgistros[0]['sexo'].';'.$resgistros[0]['peso'];
            
             break;
+        case 'BuscarCategoria':
+    
+                $sql   = "SELECT 
+                            c.edad,
+                            c.sexo,
+                            m.descripcion AS modalidad,
+                            IF (c.id_estilo = 0,'',(SELECT nombre_estilo FROM estilo WHERE id_estilo = c.id_estilo)) AS estilo,
+                            IF (c.id_region = 0,'',(SELECT nombre_region FROM region WHERE id_region = c.id_region)) AS region,
+                            IF (c.id_tecnica = 0,'',(SELECT nombre_tecnica FROM tecnica WHERE id_tecnica = c.id_tecnica)) AS tecnica,
+                            IF (c.id_kilos = 0,'',(SELECT kilos FROM kilogramos WHERE id_kilos = c.id_kilos)) AS kilos
+                        FROM categorias AS c
+                        INNER JOIN modalidades AS m ON c.modalidad=m.num_registro
+                        WHERE c.num_registro=$id";
+                $resgistros = $obj_conexion->RetornarRegistros($sql);
+           
+                echo $resgistros[0]['edad'].';'.$resgistros[0]['sexo'].';'.$resgistros[0]['modalidad'].';'.$resgistros[0]['estilo'].';'.$resgistros[0]['tecnica'].';'.$resgistros[0]['region'].';'.$resgistros[0]['kilos'];
+        break;
 }

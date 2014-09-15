@@ -5,6 +5,7 @@ if (!isset($_POST['accion'])) {
 }
 require_once '../modelo/Conexion.php';
 $obj_conexion = new Conexion();
+
 $accion       = $_POST['accion'];
 
 if (isset($_POST['num_registro'])) {
@@ -34,15 +35,17 @@ if (isset($_POST['tecnica'])) {
 if (isset($_POST['estatus'])) {
     $estatus = $_POST['estatus'];
 }
-
+if (isset($_POST['kilos'])) {
+    $kilos = $_POST['kilos'];
+}
 switch ($accion) {
     case 'Registrar':
 //        $sql_b       = "SELECT 1 FROM categorias WHERE descripcion = '$descripcion';";
         $sql_b       = "SELECT 1 FROM categorias WHERE num_registro = '$num_registro';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-            $sql = "INSERT INTO categorias (num_registro, descripcion, edad, sexo,  modalidad,  id_estilo, id_region, id_tecnica,  estatus)
-                                          VALUES ('$num_registro','$descripcion', '$edad',  '$sexo', '$modalidad', '$id_estilo',  '$id_region', '$id_tecnica', '$estatus');";
+            $sql = "INSERT INTO categorias (num_registro, descripcion, edad, sexo,  modalidad,  id_estilo, id_region, id_tecnica,  estatus,id_kilos)
+                                          VALUES ('$num_registro','$descripcion', '$edad',  '$sexo', '$modalidad', '$id_estilo',  '$id_region', '$id_tecnica', '$estatus','$kilos');";
 
             $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {
