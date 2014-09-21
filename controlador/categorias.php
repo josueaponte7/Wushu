@@ -38,14 +38,30 @@ if (isset($_POST['estatus'])) {
 if (isset($_POST['kilos'])) {
     $kilos = $_POST['kilos'];
 }
+
+if (isset($_POST['nivel'])) {
+    $nivel = $_POST['nivel'];
+}
+
+if (isset($_POST['desde'])) {
+    $desde= $_POST['desde'];
+}
+if (isset($_POST['hasta'])) {
+    $hasta = $_POST['hasta'];
+}
+
+$edad = '';
+if($desde > 0 && $hasta > 0){
+    $edad = $desde.'-'.$hasta;
+}
 switch ($accion) {
     case 'Registrar':
 //        $sql_b       = "SELECT 1 FROM categorias WHERE descripcion = '$descripcion';";
         $sql_b       = "SELECT 1 FROM categorias WHERE num_registro = '$num_registro';";
         $total_filas = $obj_conexion->totalFilas($sql_b);
         if ($total_filas == 0) {
-            $sql = "INSERT INTO categorias (num_registro, descripcion, edad, sexo,  modalidad,  id_estilo, id_region, id_tecnica,  estatus,id_kilos)
-                                          VALUES ('$num_registro','$descripcion', '$edad',  '$sexo', '$modalidad', '$id_estilo',  '$id_region', '$id_tecnica', '$estatus','$kilos');";
+            $sql = "INSERT INTO categorias (num_registro, descripcion,id_nivel, edad, sexo,  modalidad,  id_estilo, id_region, id_tecnica,  estatus,id_kilos)
+                                          VALUES ('$num_registro','$descripcion', $nivel,'$edad',  '$sexo', '$modalidad', '$id_estilo',  '$id_region', '$id_tecnica', '$estatus','$kilos');";
 
             $resultado = $obj_conexion->_query($sql);
             if ($resultado == TRUE) {

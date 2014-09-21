@@ -146,12 +146,27 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                                     $('input:text').val();
                                     $('input:radio').prop('ckecked', true);
 
-                                    var sexo = $('input:radio[name="sexo"]:checked').val();
-                                    var estilo = $('#estilo').find('option:selected').text();
-                                    var region = $('#region').find('option:selected').text();
-                                    var tecnica = $('#tecnica').find('option:selected').text();
+                                    var nivel     = $('#nivel').find('option:selected').text();
+                                    
+                                    
+                                    var desde_val = $('#desde').find('option:selected').val();
+                                    var desde     = $('#desde').find('option:selected').text();
+                                    
+                                    var hasta_val = $('#hasta').find('option:selected').val();
+                                    var hasta     = $('#hasta').find('option:selected').text();
+                                    
+                                    var sexo      = $('input:radio[name="sexo"]:checked').val();
+                                    var estilo    = $('#estilo').find('option:selected').text();
+                                    var region    = $('#region').find('option:selected').text();
+                                    var tecnica   = $('#tecnica').find('option:selected').text();
                                     var modalidad = $('#modalidad').find('option:selected').text();
-
+                                    
+                                    var edad = "";
+                                    if(desde_val > 0 && hasta_val > 0){
+                                        edad = desde+'-'+hasta
+                                    }
+                                    
+                                   
                                     var kg_val = $('#kilos').find('option:selected').val();
                                     var kilos = '';
                                     if (kg_val > 0) {
@@ -166,7 +181,8 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                                     var modificar = '<span class="accion modificar">Modificar</span>';
                                     var eliminar = '<span class="accion eliminar">Eliminar</span>';
                                     var accion = modificar + '&nbsp;' + eliminar
-                                    TAcategorias.fnAddData([codigo, $('#descripcion').val(), $('#edad').val(), estilo, region, sexo, tecnica, modalidad, kilos, accion]);
+                                    TAcategorias.fnAddData([codigo,nivel, edad, estilo, region, sexo, tecnica, modalidad, kilos, accion]);
+                                    
                                     $('input:text').val('');
                                     $('textarea').val('');
                                     $('select').val('0');
@@ -212,10 +228,6 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                     $('#fila').remove();
                     var padre = $(this).closest('tr');
                     var num_registro = padre.find('td').eq(0).text();
-//                    var edad = padre.find('td').eq(1).text();
-//                    var sexo = padre.find('td').eq(2).text();
-//                    var estilo = padre.find('td').eq(3).text();
-//                    var region = padre.find('td').eq(4).text();
 
                     // obtener la fila a modificar
                     var fila = padre.index();
@@ -267,7 +279,7 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
             <form id="frmcategorias">
                 <table width="912" border="0" align="center">
                     <tr>
-                        <td width="86">Categorias :</td>
+                        <td width="86">Nivel:</td>
                         <td width="332">
                             <div id="div_desc" class="form-group">
                                 <select name="nivel" class="form-control" id="nivel">
@@ -462,7 +474,7 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                                     <?php
                                     $sql = "SELECT  
                                                 ca.num_registro,
-                                                ca.descripcion,  
+                                                ni.nivel,  
                                                 ca.edad,
                                                 IF (ca.id_estilo = 0,'',(SELECT nombre_estilo FROM estilo WHERE id_estilo = ca.id_estilo)) AS estilo,
                                                 IF (ca.id_region = 0,'',(SELECT nombre_region FROM region WHERE id_region = ca.id_region)) AS region,
@@ -471,7 +483,8 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                                                 mo.descripcion AS modalidad,
                                                 IF (ca.id_kilos = 0,'',(SELECT kilos FROM kilogramos WHERE id_kilos = ca.id_kilos)) AS kilos
                                             FROM categorias AS ca
-                                            INNER JOIN modalidades AS mo ON ca.modalidad=mo.num_registro";
+                                            INNER JOIN modalidades AS mo ON ca.modalidad=mo.num_registro
+                                            INNER JOIN nivel AS ni       ON ca.id_nivel=ni.id_nivel";
 
                                     $resgistros = $obj_conexion->RetornarRegistros($sql);
 
@@ -485,7 +498,7 @@ $_SESSION['titulo']  = 'Agregar Registros de CATEGORIAS';
                                             ?>
                                             <tr>
                                                 <td><?php echo $resgistros[$i]['num_registro'] ?></td>
-                                                <td><?php echo $resgistros[$i]['descripcion'] ?></td>
+                                                <td><?php echo $resgistros[$i]['nivel'] ?></td>
                                                 <td><?php echo $resgistros[$i]['edad'] ?></td>
                                                 <td><?php echo $resgistros[$i]['estilo'] ?></td>
                                                 <td><?php echo $resgistros[$i]['region'] ?></td>

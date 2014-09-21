@@ -8,10 +8,18 @@ $nivel      = "SELECT  id_nivel,  nivel FROM nivel_academico";
 $tip_sangre = "SELECT  id_tipo,  tipo_sangre FROM tipo_sangre";
 $codigo     = "SELECT  id,  codigo FROM codigo_telefono";
 
+
+$cedula_re = "SELECT CONCAT(cedula,'-',representado) AS cedula,CONCAT(nacionalidad,'-',cedula,' (<span style=\"color:red\">',representado,'</span>)   ',nombre) AS nombre  FROM atletas";
+
+
 $resultado = $obj_conexion->RetornarRegistros($sql);
 $result    = $obj_conexion->RetornarRegistros($nivel);
 $resul     = $obj_conexion->RetornarRegistros($tip_sangre);
 $resulcod  = $obj_conexion->RetornarRegistros($codigo);
+$resulcedu = $obj_conexion->RetornarRegistros($cedula_re);
+
+
+
 
 $archivo_actual      = basename($_SERVER['PHP_SELF']);
 $_SESSION['archivo'] = $archivo_actual;
@@ -27,20 +35,60 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
         <link href="../css/estilos.css" rel="stylesheet" media="screen"/>
         <link href="../css/jquery.dataTables.css" rel="stylesheet" media="screen"/>
         <link href="../css/datepicker.css" rel="stylesheet" media="screen"/>         
+        <link href="../css/select2.css" rel="stylesheet" media="screen"/>
+        <link href="../css/select2-bootstrap.css" rel="stylesheet" media="screen"/>
+        <link href="../css/autocomplete.css" rel="stylesheet" media="screen"/>
 
         <script type="text/javascript" src="../js/jquery-1.11.0.js"></script>
         <script type="text/javascript" src="../js/validarcampos.js"></script>
         <script type="text/javascript" src="../js/bootstrap-datepicker.js"></script>
         <script type="text/javascript" src="../js/bootstrap-datepicker.es.js"></script>      
         <script type="text/javascript" src="../js/tab.js"></script>
+        <script type="text/javascript" src="../js/select2.js"></script>
+        <script type="text/javascript" src="../js/select2_locale_es.js"></script>
         <script type="text/javascript" src="../js/jquery.dataTables.js"></script>
+        <script type="text/javascript" src="../js/jquery.auto-complete.js"></script>
         <style type="text/css">
             body{
                 background-color: transparent;
             }
+            
+        /* autoComplete styles */
+        .autocomplete-suggestions {
+            text-align: left; cursor: default; border: 1px solid #ccc; border-top: 0; background: #fff; box-shadow: -1px 1px 3px rgba(0,0,0,.1);
+
+            /* core styles should not be changed */
+            position: absolute; display: none; z-index: 9999; max-height: 254px; overflow: hidden; overflow-y: auto; box-sizing: border-box;
+        }
+        .cursor{
+            cursor: pointer;
+            text-align: center;
+        }
+        .cursor:hover{
+            color: #1F8DD6;
+            text-decoration: underline;
+        }
+        .autocomplete-suggestion { position: relative; padding: 0 .6em; line-height: 23px; white-space: nowrap; overflow: hidden; font-size: 1.02em; color: #333; }
+        .autocomplete-suggestion b { font-weight: normal; color: #1f8dd6; }
+        .autocomplete-suggestion.selected { background: #f0f0f0; }
+            
         </style>
         <script type="text/javascript">
-            $(document).ready(function() {
+
+
+            function FormatResult(item) {
+                var markup = "";
+                if (item.name !== undefined) {
+                    markup += "<option value='" + item.id + "'>" + item.name + "</option>";
+                }
+                return markup;
+            }
+
+            function FormatSelection(item) {
+                return item.name;
+            }
+
+            $(document).ready(function () {
 
                 // Configuracion de la tabla donde se muestran los registros
                 var TAatletas = $('#tbl_atletas').dataTable({
@@ -79,7 +127,47 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
 
                 var correo = '0123456789abcdefghijklmnopqrstuvwxyz_-.#$&*@';
                 $('#email').validar(correo);
-
+                
+                $('#cedula').autoComplete({
+                    
+                    minChars: 3,
+                    cache: false,
+                    autoFill: true,
+                    onSelect: function (cedula, b) {
+                        var repre = $('input:checkbox#representado:checked').length;
+                        var acc = 'BuscarDatos';
+                        if(repre == 0 && b !== 'add'){
+                           cedula = b.substring(0, b.length-2);
+                        }else if(repre == 1 && b != 'add'){
+                            cedula = b.replace(',', "-");;
+                        }else if(repre == 1 && b == 'add'){
+                            cedula = cedula.substring(0, cedula.length-2);
+                            acc    = 'BuscarNuevo';
+                        }
+                            $.get("buscar_att.php", {cedula:cedula,repre:repre,accion:acc}, function (resultado) {
+                                $('#cedula').val(cedula);
+                                if(acc == 'BuscarNuevo'){
+                                    $('#cedula').val(resultado);
+                                }
+                                
+                        });
+                    },
+                     source: function(term, response){
+                        try { xhr.abort(); } catch(e){}
+                        var xhr = $.getJSON('buscar_att.php', { cedula: term,repre: $('input:checkbox#representado:checked').length,accion:'BuscarTodos'}, function(data){ response(data); 
+                        
+                        });
+                        var matches = [];
+                        for (i=0; i<xhr.length; i++)
+                            if (~xhr[i].toLowerCase().indexOf(term)) matches.push(xhr[i]);
+                        response(matches);
+                         
+                    }
+                });
+                
+                $('#representado').change('on',function(){
+                    $('#cedula').val('').focus();
+                });
                 /** Finde validaciones de campos ***/
 
                 /****Calendario*****/
@@ -92,18 +180,18 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                     autoclose: true
                 });
 
-                $('#ingresar').click(function() {
+                $('#ingresar').click(function () {
 
                     var nacionalidad = $('#nacionalidad');
-                    var asociacion   = $('#asociacion');
-                    
+                    var asociacion = $('#asociacion');
+
                     if (nacionalidad.find('option').filter(':selected').val() == 0) {
                         alert('Debe Seleccionar la nacionalidad');
                         nacionalidad.focus();
                     } else if ($('#cedula').val() == '') {
                         alert('Debe Ingresar la Cedula');
                         $('#cedula').focus();
-                   } else if ($('#nombre').val() == '') {
+                    } else if ($('#nombre').val() == '') {
                         alert('Debe Ingresar el Nombre');
                         $('#nombre').focus();
                     } else if ($('#fechnac').val() == '') {
@@ -112,16 +200,16 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                     } else if (asociacion.find('option').filter(':selected').val() == 0) {
                         alert('Debe Seleccionar la Asociacion ');
                         asociacion.focus();
-                     } else if ($('#peso').val() == '') {
+                    } else if ($('#peso').val() == '') {
                         alert('Debe Ingresar el Peso ');
                         $('#peso').focus();
                     } else {
-                       // return  false;
+                        // return  false;
                         var accion = $(this).text();
                         $('#accion').val(accion)
                         $('#cedula').prop('disabled', false);
                         if (accion == 'Registrar') {
-                            $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
+                            $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function (resultado) {
                                 if (resultado == 'exito') {
                                     alert('Registro con exito');
                                     $('input:text').val();
@@ -153,7 +241,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                             if (r == true) {
                                 var sexo = $('input:radio[name="sexo"]:checked').val();
                                 var aso = $('#asociacion').find('option:selected').text();
-                                $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function(resultado) {
+                                $.post("../controlador/atletas.php", $("#frmatletas").serialize(), function (resultado) {
                                     if (resultado == 'exito') {
                                         alert('Modificaci\u00f3n  con exito');
 
@@ -174,7 +262,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
 //}
                 });
 
-                $('table#tbl_atletas').on('click', '.modificar', function() {
+                $('table#tbl_atletas').on('click', '.modificar', function () {
 
                     $('#fila').remove();
                     var padre = $(this).closest('tr');
@@ -203,7 +291,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
 //                    $('#peso').val(peso);
 //                    $('input:radio[name="sexo"][value="' + sexo + '"]').prop('checked', true);
 
-                    $.post("../controlador/atletas.php", {cedula: cedula, accion: 'BuscarDatos'}, function(resultado) {
+                    $.post("../controlador/atletas.php", {cedula: cedula, accion: 'BuscarDatos'}, function (resultado) {
                         var datos = resultado.split(";");
                         $('#nacionalidad').val(datos[0]);
                         $('#pasaporte').val(datos[1]);
@@ -235,7 +323,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                     });
                 });
 
-                $('#limpiar').click(function() {
+                $('#limpiar').click(function () {
                     $('#cedula').prop('disabled', false);
                     $('input:text').val('');
                     $('textarea').val('');
@@ -272,10 +360,34 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                                 <option value="E">EXTRAJERO</option>
                             </select>
                         </td>
-                        <td width="106"><span style="margin-left: 40px;">C&eacute;dula :</span></td>
-                        <td width="337">
-                            <div  id="d_cedula" class="form-group">
-                                <input type="text" style="background-color: #ffffff" class="form-control has-error" id="cedula" name="cedula" value="" maxlength="8"/>
+
+                        <td width="337" colspan="2" style="padding-left: 3%">
+                            <table border="0" style="width: 100%">
+                                <tr>
+                                    <td style="width: 30%">Representado :<input type="checkbox" name="representado" id="representado" value="re" /></td>
+                                    <td style="width: 10%">
+                                        C&eacute;dula: 
+                                    </td>
+                                    <td style="width: 100%">
+                                        <div  id="d_cedula" class="form-group">
+
+                                            <input type="text" class="form-control" id="cedula" name="cedula" value="" data-source="buscar_att.php?cedula=" />
+                                           <!--<input type="hidden" id="cedula" name="cedula" style="width:300px" class="input-xlarge" />-->
+<!--                                            <select  name="cedula" class="form-control" id="cedula" style="width:100%">
+                                               <option value="0">Seleccione</option>
+                                            <?php
+                                            for ($i = 0; $i < count($resulcedu); $i++) {
+                                                ?>
+                                                       <option value="<?php echo $resulcedu[$i]['cedula']; ?>"><?php echo utf8_encode($resulcedu[$i]['nombre']); ?></option>
+                                                <?php
+                                            }
+                                            ?>
+                                           </select>-->
+                                           <!--<input type="text" style="background-color: #ffffff" class="form-control has-error" id="cedula" name="cedula" value="" maxlength="8"/>-->
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                             </div>
                         </td>                        
                     </tr>
@@ -295,7 +407,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                         </td>
                     </tr>
 
-                    
+
                     <tr>
                         <td width="106">Asociaci&oacute;n :</td>
                         <td>
@@ -336,7 +448,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                             <input type="radio" name="estatus" value="inactivo" id="estatus" />Inactivo
                         </div>
                     </td>
-                </tr>
+                    </tr>
                     </tr> 
 
                     <tr>
@@ -503,7 +615,7 @@ $_SESSION['titulo']  = 'Agregar Registros de ATLETAS';
                                                     </select>
                                                 </div>
                                             </td>
-                                            
+
                                         </tr>
                                         <tr>
                                             <td>&nbsp;</td>
